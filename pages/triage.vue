@@ -1,8 +1,8 @@
 <template>
-  <v-container fill-height fluid>
-    <v-layout row wrap justify-center>
-      <v-flex xs3></v-flex>
-      <v-flex xs6>
+  <v-container class="fill-height" fluid>
+    <v-row justify="center">
+      <v-col cols="3"></v-col>
+      <v-col cols="6">
         <div :id="charts.topicUserDiagram.id">
           <v-btn
             @click="
@@ -18,10 +18,10 @@
             :users="usersSet"
           ></topic-user>
         </div>
-      </v-flex>
-      <v-flex xs3></v-flex>
-      <v-flex xs3></v-flex>
-      <v-flex xs6>
+      </v-col>
+      <v-col cols="3"></v-col>
+      <v-col cols="3"></v-col>
+      <v-col cols="6">
         <div :id="charts.concentricChart.id">
           <v-btn
             @click="
@@ -50,10 +50,10 @@
             :number-of-tracks="charts.concentricChart.tracks"
           ></concentric-chart>
         </div>
-      </v-flex>
-      <v-flex xs3></v-flex>
-      <v-flex xs3></v-flex>
-      <v-flex xs6>
+      </v-col>
+      <v-col cols="3"></v-col>
+      <v-col cols="3"></v-col>
+      <v-col cols="6">
         <div :id="charts.userSimilarity.id">
           <v-btn
             @click="
@@ -79,14 +79,14 @@
             :number-of-tracks="charts.userSimilarity.tracks"
           ></user-similarity>
         </div>
-      </v-flex>
-      <v-flex xs3></v-flex>
-    </v-layout>
-    <v-layout row justify-center>
-      <v-flex xs8>
-        <treemap :users="usersSet"></treemap>
-      </v-flex>
-    </v-layout>
+      </v-col>
+      <v-col cols="3"></v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="8">
+        <!--        <treemap :users="usersSet"></treemap>-->
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -94,14 +94,14 @@
 import TopicUser from '../components/Triage/TopicUserAssociationDiagram'
 import ConcentricChart from '../components/Triage/ConcentricChart'
 import UserSimilarity from '../components/Triage/UserSimilarity'
-import Treemap from '../components/Treemap/Treemap'
+// import Treemap from '../components/Treemap/Treemap'
 export default {
   name: 'Triage',
   components: {
     UserSimilarity,
     TopicUser,
     ConcentricChart,
-    Treemap
+    // Treemap,
   },
   data() {
     return {
@@ -130,8 +130,8 @@ export default {
             'Tom Steyer',
             'Elizabeth Warren',
             'Marianne Williamson',
-            'Andrew Yang'
-          ]
+            'Andrew Yang',
+          ],
         },
         {
           id: 'impeachment',
@@ -141,8 +141,8 @@ export default {
             'Impeached45',
             'ImpeachmentHearing',
             'ImpeachedPresident',
-            'IMPOTUS'
-          ]
+            'IMPOTUS',
+          ],
         },
         {
           id: 'republican',
@@ -152,8 +152,8 @@ export default {
             'trump',
             'Joe Walsh',
             'Bill Weld',
-            'Mark Sanford'
-          ]
+            'Mark Sanford',
+          ],
         },
         {
           id: 'libertarian',
@@ -169,8 +169,8 @@ export default {
             'Sam Robb',
             'Kim Ruff',
             'Vermin Supreme',
-            'Arvin Vohra'
-          ]
+            'Arvin Vohra',
+          ],
         },
         {
           id: 'green',
@@ -182,9 +182,9 @@ export default {
             'Dennis Lambert',
             'Kent Mesplay',
             'David Rolde',
-            'Chad Wilson'
-          ]
-        }
+            'Chad Wilson',
+          ],
+        },
       ],
       usersSet: [
         {
@@ -195,34 +195,34 @@ export default {
               id: 2,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu May 15 15:20:20 +0000 2020'
+              created_at: 'Thu May 15 15:20:20 +0000 2020',
             },
             {
               id: 31,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Mar 14 13:24:15 +0000 2020'
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
             },
             {
               id: 32,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Mar 14 13:24:15 +0000 2020'
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
             },
             {
               id: 33,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Mar 14 13:24:15 +0000 2020'
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
             },
             {
               id: 34,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Mar 14 13:24:15 +0000 2020'
-            }
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'b',
@@ -232,52 +232,52 @@ export default {
               id: 4,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon May 13 15:24:15 +0000 2020'
+              created_at: 'Mon May 13 15:24:15 +0000 2020',
             },
             {
               id: 5,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu May 14 19:21:20 +0000 2020'
+              created_at: 'Thu May 14 19:21:20 +0000 2020',
             },
             {
               id: 51,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Apr 1 20:20:20 +0000 2020'
+              created_at: 'Thu Apr 1 20:20:20 +0000 2020',
             },
             {
               id: 52,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu May 2 03:20:20 +0000 2020'
+              created_at: 'Thu May 2 03:20:20 +0000 2020',
             },
             {
               id: 53,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 13 13:18:20 +0000 2020'
+              created_at: 'Thu Mar 13 13:18:20 +0000 2020',
             },
             {
               id: 54,
               keywords: ['Booker'],
               topics: ['democraticn'],
-              created_at: 'Thu Feb 18 19:18:20 +0000 2020'
+              created_at: 'Thu Feb 18 19:18:20 +0000 2020',
             },
             {
               id: 55,
               keywords: ['Cory Booker'],
               topics: ['democratic'],
-              created_at: 'Thu May 12 19:18:20 +0000 2019'
+              created_at: 'Thu May 12 19:18:20 +0000 2019',
             },
             {
               id: 55,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Feb 14 19:18:20 +0000 2018'
-            }
+              created_at: 'Thu Feb 14 19:18:20 +0000 2018',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'c',
@@ -287,22 +287,22 @@ export default {
               id: 7,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2014'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
             },
             {
               id: 8,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2017'
+              created_at: 'Thu Mar 11 19:20:20 +0000 2017',
             },
             {
               id: 9,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
-            }
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'd',
@@ -312,22 +312,22 @@ export default {
               id: 10,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2019'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
             },
             {
               id: 11,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2019'
+              created_at: 'Thu Mar 11 19:20:20 +0000 2019',
             },
             {
               id: 12,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
-            }
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'e',
@@ -337,22 +337,22 @@ export default {
               id: 13,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2019'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
             },
             {
               id: 14,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2018'
+              created_at: 'Thu Mar 11 19:20:20 +0000 2018',
             },
             {
               id: 15,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2018'
-            }
+              created_at: 'Thu Jan 2 15:24:15 +0000 2018',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'f',
@@ -362,22 +362,22 @@ export default {
               id: 16,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2019'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
             },
             {
               id: 17,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2019'
+              created_at: 'Thu Mar 11 19:20:20 +0000 2019',
             },
             {
               id: 18,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 30 15:24:15 +0000 2020'
-            }
+              created_at: 'Thu Jan 30 15:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'g',
@@ -387,22 +387,22 @@ export default {
               id: 19,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2019'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
             },
             {
               id: 20,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2017'
+              created_at: 'Thu Mar 11 19:20:20 +0000 2017',
             },
             {
               id: 21,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
-            }
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         },
         {
           screen_name: 'h',
@@ -412,40 +412,40 @@ export default {
               id: 22,
               keywords: ['democrats'],
               topics: ['democratic'],
-              created_at: 'Mon Dec 13 15:24:15 +0000 2014'
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
             },
             {
               id: 23,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 12 18:20:20 +0000 2020'
+              created_at: 'Thu Mar 12 18:20:20 +0000 2020',
             },
             {
               id: 24,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
             },
             {
               id: 25,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
             },
             {
               id: 26,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
             },
             {
               id: 27,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020'
-            }
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
           ],
-          selected: false
+          selected: false,
         } /*
         ,
         {
@@ -544,7 +544,7 @@ export default {
             { keywords: ['Donald Trump'], topics: ['republican'] }
           ],
           selected: false
-        } */
+        } */,
       ],
       flat: true,
       color: 'transparent',
@@ -559,7 +559,7 @@ export default {
           label: 'Agent-Topic Association ',
           width: 600,
           height: 1000,
-          sunburst: false
+          sunburst: false,
         },
         concentricChart: {
           id: 'concentric-chart',
@@ -568,7 +568,7 @@ export default {
           height: 1000,
           padding: { top: 20, bottom: 0, left: 0, right: 0 },
           tracks: 3,
-          timeUnit: '12'
+          timeUnit: '12',
         },
         userSimilarity: {
           id: 'user-similarity',
@@ -578,9 +578,9 @@ export default {
           padding: { top: 20, bottom: 0, left: 0, right: 0 },
           tracks: 3,
           focalUser: 0,
-          adjacency: false
-        }
-      }
+          adjacency: false,
+        },
+      },
     }
   },
   mounted() {
@@ -588,7 +588,7 @@ export default {
     window.addEventListener('resize', this.resize)
   },
   methods: {
-    resize: function() {
+    resize() {
       const chordDiv = document.getElementById(this.charts.topicUserDiagram.id)
       const concentricDiv = document.getElementById(
         this.charts.concentricChart.id
@@ -599,8 +599,8 @@ export default {
       if (concentricDiv) {
         this.charts.concentricChart.width = concentricDiv.clientWidth - 5
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
