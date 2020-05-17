@@ -19,7 +19,7 @@
                 color="primary"
                 class="subheading"
               >
-                check
+                mdi-check
               </v-icon>
             </v-list-tile-avatar>
 
@@ -37,9 +37,9 @@
             </v-list-tile-content>
             <!--            <v-spacer></v-spacer>-->
             <!--            <v-layout align-center justify-end>-->
-            <!--              <v-icon class="mr-1" small>favorite</v-icon>-->
+            <!--              <v-icon class="mr-1" small>mdi-favorite</v-icon>-->
             <!--              <span class="subheading mr-2">{{ tweet.favorite_count }}</span>-->
-            <!--              <v-icon class="mr-1" small>share</v-icon>-->
+            <!--              <v-icon class="mr-1" small>mdi-share</v-icon>-->
             <!--              <span class="subheading">{{ tweet.retweet_count }}</span>-->
             <!--            </v-layout>-->
           </v-list-tile>
@@ -47,13 +47,13 @@
           <span class="caption">{{ niceDate }}</span>
           <v-btn v-if="!contextMenu" flat fab icon small @click="clicked">
             <v-icon color="indigo">
-              {{ tweet.selected ? 'remove_circle' : 'add_circle' }}
+              mdi-{{ tweet.selected ? 'remove-circle' : 'add-circle' }}
             </v-icon>
           </v-btn>
           <v-dialog v-model="dialog" max-width="600px">
             <template v-slot:activator="{ on }">
               <v-btn flat fab icon small color="red" v-on="on">
-                <v-icon>edit</v-icon>
+                <v-icon>mdi-edit</v-icon>
               </v-btn>
             </template>
             <v-card>
@@ -83,7 +83,7 @@
                             @input="data.parent.selectItem(data.item)"
                           >
                             <v-avatar class="accent white--text">
-                              <v-icon>account_circle</v-icon>
+                              <v-icon>mdi-account-circle</v-icon>
                             </v-avatar>
                             {{ data.item }}
                           </v-chip>
@@ -107,7 +107,7 @@
                             @input="data.parent.selectItem(data.item)"
                           >
                             <v-avatar class="accent white--text">
-                              <v-icon>tag</v-icon>
+                              <v-icon>mdi-tag</v-icon>
                             </v-avatar>
                             {{ data.item }}
                           </v-chip>
@@ -129,7 +129,7 @@
             </v-card>
           </v-dialog>
           <v-btn flat fab icon small @click="expand = !expand">
-            <v-icon>{{ expand ? 'menu' : 'menu_open' }}</v-icon>
+            <v-icon>mdi-{{ expand ? 'menu' : 'menu-open' }}</v-icon>
           </v-btn>
         </v-card-actions>
         <v-card-text>
@@ -137,10 +137,10 @@
             <v-col v-show="expand" cols="12" class="transition-ease-in-out">
               <v-tabs v-model="active" centered grow slider-color="grey">
                 <v-tab ripple>
-                  <v-icon>emoji_emotions</v-icon>
+                  <v-icon>mdi-emoji-emotions</v-icon>
                 </v-tab>
                 <v-tab ripple>
-                  <v-icon>speaker_notes</v-icon>
+                  <v-icon>mdi-speaker-notes</v-icon>
                 </v-tab>
                 <v-tab-item>
                   <div
@@ -155,7 +155,7 @@
                     >
                       <v-avatar style="margin-right: 0px;">
                         <v-icon>
-                          {{ label.result > 0 ? 'mood' : 'mood_bad' }}
+                          mdi-{{ label.result > 0 ? 'mood' : 'mood-bad' }}
                         </v-icon>
                       </v-avatar>
                       <strong>{{ (+label.result).toPrecision(2) }}</strong>
@@ -172,13 +172,13 @@
                     <span>{{ label.id }}: </span> <br />
                     <v-chip :color="colorScale(label.result.group)" outline>
                       <v-avatar style="margin-right: 0px;">
-                        <v-icon>account_circle</v-icon>
+                        <v-icon>mdi-account-circle</v-icon>
                       </v-avatar>
                       <strong>{{ label.result.group }}</strong>
                     </v-chip>
                     <v-chip :color="colorScale(label.result.theme)" outline>
                       <v-avatar style="margin-right: 0px;">
-                        <v-icon>label</v-icon>
+                        <v-icon>mdi-label</v-icon>
                       </v-avatar>
                       <strong>{{ label.result.theme }}</strong>
                     </v-chip>

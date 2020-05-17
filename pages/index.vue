@@ -76,7 +76,7 @@
               @click.stop="toggleConsuming(scenario)"
             >
               <v-icon>
-                {{ scenario.consuming ? 'pause' : 'power_settings_new' }}
+                mdi-{{ scenario.consuming ? 'pause' : 'power_settings_new' }}
               </v-icon>
             </v-btn>
             <div class="font-weight-light grey--text title mb-2">

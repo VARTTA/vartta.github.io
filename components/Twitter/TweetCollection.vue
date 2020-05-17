@@ -33,7 +33,7 @@
         >
           <template v-slot:badge>
             <v-icon small dark @click="removeTweet.call(this, tweet)">
-              close
+              mdi-close
             </v-icon>
           </template>
           <v-avatar elevation>

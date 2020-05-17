@@ -19,7 +19,9 @@
     </v-card-text>
     <v-card-actions>
       <v-btn icon small @click="meta.show = !meta.show">
-        <v-icon>{{ meta.show ? 'help' : 'help_outline' }}</v-icon>
+        <v-icon>
+          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}
+        </v-icon>
       </v-btn>
     </v-card-actions>
     <v-slide-y-transition>

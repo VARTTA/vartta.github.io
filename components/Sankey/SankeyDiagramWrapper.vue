@@ -8,7 +8,7 @@
     </v-card-title>
     <!--    <v-card-actions>-->
     <!--      <v-btn icon @click="meta.show = !meta.show">-->
-    <!--        <v-icon>{{ meta.show ? 'help' : 'help_outline' }}</v-icon>-->
+    <!--        <v-icon>mdi-{{ meta.show ? 'help_circle' : 'help_circle_outline' }}</v-icon>-->
     <!--      </v-btn>-->
     <!--    </v-card-actions>-->
     <!--    <v-slide-y-transition>-->
