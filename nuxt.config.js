@@ -63,7 +63,8 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
+      icons: { iconfont: 'md' },
       themes: {
         dark: {
           primary: colors.blue.darken2,

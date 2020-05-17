@@ -26,13 +26,15 @@
     </v-card-text>
     <v-card-actions>
       <v-btn icon small @click="meta.show = !meta.show">
-        <v-icon>{{ meta.show ? 'help' : 'help_outline' }}</v-icon>
+        <v-icon>
+          mdi-{{ meta.show ? 'help_circle' : 'help_circle_outline' }}
+        </v-icon>
       </v-btn>
     </v-card-actions>
     <v-slide-y-transition>
       <v-card-actions v-show="meta.show">
         <v-btn icon small @click="reset">
-          <v-icon>refresh</v-icon>
+          <v-icon>mdi-refresh</v-icon>
         </v-btn>
 
         <v-spacer></v-spacer>
