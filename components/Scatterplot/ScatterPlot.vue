@@ -35,7 +35,7 @@
         :transform="'translate(' + chartLeft + ',' + chartBottom + ')'"
       >
         <text
-          class="label"
+          class="label title"
           :transform="'translate(' + (chartWidth / 2 + 90) + ',+31)'"
         >
           {{ axesMeta.x.label }}
@@ -46,7 +46,7 @@
         :transform="'translate(' + chartLeft + ',' + chartTop + ')'"
       >
         <text
-          class="label"
+          class="label title"
           :transform="
             'rotate(-90) translate(' + -(chartHeight / 2 - 70) + ',-25)'
           "
@@ -456,10 +456,9 @@ export default {
 }
 
 /* Axis Labels */
-.axis >>> .label {
+.svg >>> .label {
   fill: currentColor;
-  font-size: large;
-  font-weight: bolder;
+  stroke: currentColor;
   text-anchor: end;
 }
 

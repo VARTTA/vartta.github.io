@@ -27,7 +27,7 @@
     <v-card-actions>
       <v-btn icon small @click="meta.show = !meta.show">
         <v-icon>
-          mdi-{{ meta.show ? 'help_circle' : 'help_circle_outline' }}
+          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}
         </v-icon>
       </v-btn>
     </v-card-actions>
@@ -56,8 +56,8 @@
           thumb-label="always"
           min="1"
           max="20"
-          prepend-icon="remove_circle"
-          append-icon="add_circle"
+          prepend-icon="mdi-minus-circle"
+          append-icon="mdi-plus-circle"
           @click:prepend="decrement"
           @click:append="increment"
         >

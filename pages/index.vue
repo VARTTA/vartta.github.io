@@ -3,30 +3,35 @@
     <v-col class="text-center" cols="12">
       <v-card flat color="transparent">
         <v-card-text>
-          <h1>Welcome to VARTTA</h1>
-          <p>
+          <h1 class="display-1">Welcome to VARTTA</h1>
+          <h2 class="title">
             VARTTA: Visual Analytics for Real-Time Twitter datA. <br />
-            To start, select one of the cases below.
+          </h2>
+          <p>To start, please select one of the following scenarios.</p>
+          <p>
+            Citation:
+            <a href="https://www.mdpi.com/2306-5729/5/1/20"
+              >Haghighati, A.; Sedig, K. VARTTA: A Visual Analytics System for
+              Making Sense of Real-Time Twitter Data. Data 2020, 5, 20.</a
+            >
           </p>
           <p>
             Find a bug? Please report it on the Github
             <a
-              href="https://github.com/anewage/tweetycs-web/issues"
+              href="https://github.com/InsightfulSummer/vartta-web/issues"
               target="_blank"
               title="contribute"
               >issue board</a
             >.
           </p>
+          <p>
+            &copy;<a href="http://insight.uwo.ca">Insight Lab</a> at
+            <a href="https://uwo.ca">Western</a>
+          </p>
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col
-      v-for="(scenario, index) in scenarios"
-      :key="index"
-      cols="12"
-      md="4"
-      class="mt-2"
-    >
+    <v-col v-for="(scenario, index) in scenarios" :key="index" cols="12" md="4">
       <v-hover>
         <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
           <v-img :aspect-ratio="16 / 9" :src="scenario.cloud">
@@ -76,12 +81,9 @@
               @click.stop="toggleConsuming(scenario)"
             >
               <v-icon>
-                mdi-{{ scenario.consuming ? 'pause' : 'power_settings_new' }}
+                mdi-{{ scenario.consuming ? 'pause' : 'power' }}
               </v-icon>
             </v-btn>
-            <div class="font-weight-light grey--text title mb-2">
-              Twitter discussions on
-            </div>
             <h3
               :class="
                 'display-1 font-weight-light mb-2 ' + scenario.color + '--text'

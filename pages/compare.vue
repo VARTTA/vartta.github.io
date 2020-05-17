@@ -2,7 +2,7 @@
   <!--  TODO: update grid system-->
   <v-row>
     <v-col cols="12" class="mt-5 text-center">
-      <span>Number of Panels:</span>
+      <span>Comparisons:</span>
       <v-slider
         v-model="comparisonSlider"
         :tick-labels="[1, 2, 3, 4, 6, 12]"
@@ -17,11 +17,7 @@
     <v-col
       v-for="(comparison, index) in comparisons"
       :key="index"
-      :xs6="comparisons.length === 2"
-      :xs4="comparisons.length === 3"
-      :xs3="comparisons.length === 4"
-      :xs2="comparisons.length === 6"
-      :xs1="comparisons.length === 12"
+      :cols="12 / comparisons.length"
     >
       <v-col cols="12">
         <v-card flat color="transparent">
