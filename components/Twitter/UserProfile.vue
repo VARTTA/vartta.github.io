@@ -15,23 +15,23 @@ import { Timeline } from 'vue-tweet-embed'
 export default {
   name: 'UserProfile',
   components: {
-    'time-line': Timeline
+    'time-line': Timeline,
   },
   props: {
     username: {
       type: String,
-      default: ''
+      default: '',
     },
     options: {
       type: Object,
-      default: function() {
+      default() {
         return {
           tweetLimit: '10',
           chrome: 'transparent',
-          dnt: 'true'
+          dnt: 'true',
         }
-      }
-    }
+      },
+    },
   },
   updated() {
     if (window.twttr) {
@@ -39,13 +39,13 @@ export default {
       window.twttr.widgets.createTimeline(
         {
           sourceType: 'profile',
-          screenName: this.username
+          screenName: this.username,
         },
         document.getElementById('timeline-target'),
         this.options
       )
     }
-  }
+  },
 }
 </script>
 

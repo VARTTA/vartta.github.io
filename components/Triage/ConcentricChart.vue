@@ -103,17 +103,17 @@ export default {
   props: {
     chartDomID: {
       type: String,
-      default: 'concentric-chart'
+      default: 'concentric-chart',
     },
     topics: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     meta: {
       type: Object,
-      default: function() {
+      default() {
         return {
           id: 'concentric-chart',
           label: 'Agent-Time Association ',
@@ -121,71 +121,71 @@ export default {
           height: 500,
           fillOpacity: 0.6,
           timeUnit: 12,
-          padding: { top: 0, bottom: 0, left: 0, right: 0 }
+          padding: { top: 0, bottom: 0, left: 0, right: 0 },
         }
-      }
+      },
     },
     users: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     numberOfTracks: {
       type: Number,
-      default: function() {
+      default() {
         return 3
-      }
+      },
     },
     axis: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fill: '#eef1f1',
           fillOpacity: 0.4,
           stroke: '#829ba8',
           stroke_width: '1',
-          stroke_opacity: 0.9
+          stroke_opacity: 0.9,
         }
-      }
+      },
     },
     line: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fill: '#7f93ac',
           fillOpacity: 0.5,
           stroke: '#d4dee7',
           stroke_width: '0.1',
-          stroke_opacity: 0.2
+          stroke_opacity: 0.2,
         }
-      }
+      },
     },
     token: {
       type: Object,
-      default: function() {
+      default() {
         return {
           size: '10',
           color: '#829ba8',
           opacity: '0.7',
           strokeSize: '0.8',
           strokeOpacity: '0.8',
-          strokeColor: '#6eecbf'
+          strokeColor: '#6eecbf',
         }
-      }
+      },
     },
     label: {
       type: Object,
-      default: function() {
+      default() {
         return {
           fontSize: '10',
           fill: '#104842',
-          opacity: '0.7'
+          opacity: '0.7',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -193,18 +193,18 @@ export default {
       transitionDuration: 50,
       unit: 0,
       innerRCoefficient: 1,
-      outerRCoefficient: 1
+      outerRCoefficient: 1,
     }
   },
   computed: {
-    radius: function() {
+    radius() {
       return Math.min(this.meta.width) / 2
     },
     /**
      * Returns labels of outer circle based on selected time unit(e.g. Jan - Dec , or Sun - Sat)
      **/
-    concentricLabels: function() {
-      return d => {
+    concentricLabels() {
+      return (d) => {
         const now = new Date()
         let label = null
         let title = null
@@ -226,7 +226,7 @@ export default {
             'Sept.',
             'Oct.',
             'Nov.',
-            'Dec.'
+            'Dec.',
           ]
           title = `${monthNames[label - 1]}`
         } else if (this.meta.timeUnit === '7') {
@@ -245,8 +245,8 @@ export default {
     /**
      * Places the label of each tracks on its circle (e.g. Year 2020 , Year 2019, ...)
      **/
-    concentricTransform: function() {
-      return d => {
+    concentricTransform() {
+      return (d) => {
         const circlePadding = 0.9
         return this.radiusCalculation(d) * circlePadding * -1
       }
@@ -256,8 +256,8 @@ export default {
      * to change the ratio of radius, we should change this function
      * radius(d) = coef * r
      */
-    radiusCalculation: function() {
-      return d => {
+    radiusCalculation() {
+      return (d) => {
         const coef = ((d + 1) * (d + 2)) / 2
         const total =
           ((this.numberOfTracks + 1) * (this.numberOfTracks + 2)) / 2
@@ -280,8 +280,8 @@ export default {
     /**
      * draw lines to divide to the number of selected unit time
      **/
-    divider: function() {
-      return d => {
+    divider() {
+      return (d) => {
         const x0 = this.PolarToCartesianX(
           this.labelAngleScale(d),
           this.radiusCalculation(0)
@@ -304,19 +304,19 @@ export default {
     /**
      * Places time slot labels based on selected unit time
      **/
-    textTransform: function() {
-      return d => {
+    textTransform() {
+      return (d) => {
         const clockFormat = !!(
           this.meta.timeUnit === '24' || this.meta.timeUnit === '60'
         )
         const x = !clockFormat
           ? this.labelX({
               x0: this.labelAngleScale(d),
-              x1: this.labelAngleScale(d + 1)
+              x1: this.labelAngleScale(d + 1),
             })
           : this.labelX({
               x0: this.labelAngleScale(d),
-              x1: this.labelAngleScale(d)
+              x1: this.labelAngleScale(d),
             })
         // circlePadding is defined for symmetric distances to circle in both sides
         const textLabel =
@@ -325,7 +325,7 @@ export default {
         const y = this.labelY({
           // to bring labels in the inner ares: radiusCalculation(0)
           y0: this.radiusCalculation(this.numberOfTracks) * circlePadding,
-          y1: this.radiusCalculation(this.numberOfTracks)
+          y1: this.radiusCalculation(this.numberOfTracks),
         })
         return `rotate(${x - 90}) translate(${y},0) rotate(${
           x < 180 ? 0 : 180
@@ -335,8 +335,8 @@ export default {
     /**
      * Places the label of each tracks on its circle (e.g. Year 2020 , Year 2019, ...)
      **/
-    timeSlotLabel: function() {
-      return d => {
+    timeSlotLabel() {
+      return (d) => {
         if (this.meta.timeUnit === '12') {
           const monthNames = [
             'Jan',
@@ -350,7 +350,7 @@ export default {
             'Sep',
             'Oct',
             'Nov',
-            'Dec'
+            'Dec',
           ]
           return monthNames[d]
         }
@@ -362,13 +362,13 @@ export default {
         return d + 1
       }
     },
-    labelX: function() {
-      return d => {
+    labelX() {
+      return (d) => {
         return (((d.x0 + d.x1) / 2) * 180) / Math.PI
       }
     },
-    labelY: function() {
-      return d => {
+    labelY() {
+      return (d) => {
         return (d.y0 + d.y1) / 2
       }
     },
@@ -376,7 +376,7 @@ export default {
     /**
      * value of the selected time unit in ms
      **/
-    unitRange: function() {
+    unitRange() {
       let temp = 0
       if (this.meta.timeUnit === '12') {
         // years ago
@@ -405,15 +405,15 @@ export default {
         .domain([0, this.unitRange])
         .range([0, 2 * Math.PI])
     },
-    circleFill: function() {
-      return d => {
+    circleFill() {
+      return (d) => {
         return this.colorToken(d)
       }
     },
-    circleSize: function() {
+    circleSize() {
       return this.radius * 0.015
     },
-    colorToken: function() {
+    colorToken() {
       const that = this
       return d3.scaleOrdinal(
         d3.quantize(d3.interpolateTurbo, that.numberOfCandidateUsers)
@@ -423,7 +423,7 @@ export default {
      * Returns the place of a user on the stack of users in each track
      * this will feed radius of PolarToCartesianX/Y(angle, radius) for placing a token
      **/
-    usersStackScale: function() {
+    usersStackScale() {
       return (userIndex, track) => {
         const scale = d3
           .scaleLinear()
@@ -432,7 +432,7 @@ export default {
             1.5 * this.circleSize,
             this.radiusCalculation(track + 1) -
               this.radiusCalculation(track) -
-              this.circleSize * 1.5
+              this.circleSize * 1.5,
           ])
         return scale(userIndex)
       }
@@ -440,7 +440,7 @@ export default {
     /**
      * the value of minimum acceptable date in ms
      **/
-    minDate: function() {
+    minDate() {
       let temp = 0
       const now = new Date()
       if (this.meta.timeUnit === '12') {
@@ -501,7 +501,7 @@ export default {
     /**
      * List of tweets that can be shown based on selected time unit and number of tracks
      **/
-    candidates: function() {
+    candidates() {
       const array = []
       let newIndex = 0
       for (const userIndex in this.users) {
@@ -513,10 +513,10 @@ export default {
           ) {
             array.push({
               index: newIndex,
-              userIndex: userIndex,
+              userIndex,
               name: this.users[userIndex].screen_name,
-              tweet: tweet,
-              tweetTime: tweet.created_at
+              tweet,
+              tweetTime: tweet.created_at,
             })
             newIndex += 1
           }
@@ -527,20 +527,20 @@ export default {
     /**
      * Number of users that their tweets are in candidates tweets
      **/
-    numberOfCandidateUsers: function() {
+    numberOfCandidateUsers() {
       const usersArray = []
       for (const tweet of this.candidates)
         if (!usersArray.includes(tweet.name)) usersArray.push(tweet.name)
       return usersArray.length
     },
-    maxDate: function() {
+    maxDate() {
       return new Date()
     },
     /**
      * Returns number of the track for a token
      **/
-    findTrack: function() {
-      return tweet => {
+    findTrack() {
+      return (tweet) => {
         return (
           this.numberOfTracks -
           Math.floor(
@@ -555,8 +555,8 @@ export default {
      * Returns the distance of a tweet from the beginning of its corresponded track
      * to feed the tokenRadialScale()
      **/
-    findTimeSlot: function() {
-      return tweetTime => {
+    findTimeSlot() {
+      return (tweetTime) => {
         let temp = null
         const twYear = new Date(tweetTime).getFullYear()
         const twMonth = new Date(tweetTime).getMonth()
@@ -587,7 +587,7 @@ export default {
     /**
      * Returns the radius at which the user should be placed (stackScale(index,track) + radiusCalculation(track))
      **/
-    totalDistance: function() {
+    totalDistance() {
       return (tweet, userIndex) => {
         const track = this.findTrack(tweet)
         return (
@@ -595,27 +595,27 @@ export default {
         )
       }
     },
-    chartTopPadding: function() {
+    chartTopPadding() {
       return this.meta.padding.top + this.radius
-    }
+    },
   },
   mounted() {
     this.setupSVG()
   },
   methods: {
-    setupSVG: function() {
+    setupSVG() {
       this.svg = d3.select('.concentric')
     },
     /**
      * @return {number}
      */
-    PolarToCartesianX: function(angle, radius) {
+    PolarToCartesianX(angle, radius) {
       return radius * Math.sin(-(angle + Math.PI))
     },
-    PolarToCartesianY: function(angle, radius) {
+    PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
-    }
-  }
+    },
+  },
 }
 </script>
 

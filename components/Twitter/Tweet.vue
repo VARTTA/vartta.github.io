@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-layout row text-xs-left>
-    <v-flex>
+  <v-row class="text-left">
+    <v-col>
       <v-card
         hover
         class="`elevation-${hover ? 12 : 2}`"
@@ -61,11 +61,12 @@
                 <span class="headline">Edit Tweet Labeling</span>
               </v-card-title>
               <v-card-text>
-                <v-container grid-list-md>
-                  <v-layout row wrap>
+                <!--                error  'grid-list-md' has been removed  vuetify/no-legacy-grid-->
+                <v-container>
+                  <v-row>
                     <!--  eslint-disable-next-line vue/no-v-html-->
-                    <v-flex xs12 v-html="decoratedText"></v-flex>
-                    <v-flex xs6>
+                    <v-col cols="12" v-html="decoratedText"></v-col>
+                    <v-col cols="6">
                       <v-combobox
                         v-model="customGroup"
                         :items="groups"
@@ -88,8 +89,8 @@
                           </v-chip>
                         </template>
                       </v-combobox>
-                    </v-flex>
-                    <v-flex xs6>
+                    </v-col>
+                    <v-col cols="6">
                       <v-combobox
                         v-model="customTheme"
                         :items="themes"
@@ -112,8 +113,8 @@
                           </v-chip>
                         </template>
                       </v-combobox>
-                    </v-flex>
-                  </v-layout>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -132,8 +133,8 @@
           </v-btn>
         </v-card-actions>
         <v-card-text>
-          <v-layout row wrap>
-            <v-flex v-show="expand" xs12 class="transition-ease-in-out">
+          <v-row>
+            <v-col v-show="expand" cols="12" class="transition-ease-in-out">
               <v-tabs v-model="active" centered grow slider-color="grey">
                 <v-tab ripple>
                   <v-icon>emoji_emotions</v-icon>
@@ -145,7 +146,7 @@
                   <div
                     v-for="label in sortedAnalysis"
                     :key="label.id"
-                    class="text-xs-center"
+                    class="text-center"
                   >
                     <span>{{ label.id }}: </span>
                     <v-chip
@@ -166,7 +167,7 @@
                   <div
                     v-for="label in sortedLabels"
                     :key="label.id"
-                    class="text-xs-center"
+                    class="text-center"
                   >
                     <span>{{ label.id }}: </span> <br />
                     <v-chip :color="colorScale(label.result.group)" outline>
@@ -185,8 +186,8 @@
                   </div>
                 </v-tab-item>
               </v-tabs>
-            </v-flex>
-            <v-flex xs12>
+            </v-col>
+            <v-col cols="12">
               <span v-if="tweet.possibly_sensitive" class="red--text caption">
                 Possibly Sensitive
               </span>
@@ -198,12 +199,12 @@
               <!--              >-->
               <!--                {{ tweet.labels.find(a => a.id === 'custom') }}-->
               <!--              </span>-->
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-card-text>
       </v-card>
-    </v-flex>
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -213,23 +214,23 @@ export default {
   props: {
     contextMenu: {
       type: Boolean,
-      default: false
+      default: false,
     },
     avgSentiment: {
       type: Number,
-      default: 0
+      default: 0,
     },
     influence: {
       type: Number,
-      default: 0
+      default: 0,
     },
     selected: {
       type: Boolean,
-      default: false
+      default: false,
     },
     tweet: {
       type: Object,
-      default: function() {
+      default() {
         return {
           id: 'sample',
           text:
@@ -251,16 +252,16 @@ export default {
             profile_image_url_https:
               'https://pbs.twimg.com/profile_images/942858479592554497/BbazLO9L_normal.jpg',
             profile_background_image_url_https:
-              'https://abs.twimg.com/images/themes/theme4/bg.gif'
+              'https://abs.twimg.com/images/themes/theme4/bg.gif',
           },
           analysis: {
             id: 'folan',
             title: 'Folan',
-            result: 0.88
-          }
+            result: 0.88,
+          },
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -268,7 +269,7 @@ export default {
       tempGroup: '',
       tempTheme: '',
       expand: false,
-      active: 0
+      active: 0,
     }
   },
   computed: {
@@ -282,10 +283,10 @@ export default {
       return this.tweet.analysis
     },
     groups() {
-      return this.sortedLabels.map(a => a.result.group)
+      return this.sortedLabels.map((a) => a.result.group)
     },
     themes() {
-      return this.sortedLabels.map(a => a.result.theme)
+      return this.sortedLabels.map((a) => a.result.theme)
     },
     selectedTweetCategorizationHeaders() {
       return [
@@ -293,20 +294,20 @@ export default {
           text: 'Labeling Method',
           align: 'left',
           sortable: true,
-          value: 'title'
+          value: 'title',
         },
         {
           text: 'User Group',
           align: 'left',
           sortable: true,
-          value: 'result.group'
+          value: 'result.group',
         },
         {
           text: 'Content Theme',
           align: 'left',
           sortable: true,
-          value: 'result.theme'
-        }
+          value: 'result.theme',
+        },
       ]
     },
     selectedTweetAnalysisHeaders() {
@@ -315,14 +316,14 @@ export default {
           text: 'Analysis Method',
           align: 'left',
           sortable: true,
-          value: 'title'
+          value: 'title',
         },
         {
           text: 'Sentiment',
           align: 'left',
           sortable: true,
-          value: 'result'
-        }
+          value: 'result',
+        },
       ]
     },
     niceDate() {
@@ -341,28 +342,28 @@ export default {
       else return ~~secs + 's'
     },
     customGroup: {
-      get: function() {
-        const label = this.tweet.labels.find(t => t.id === 'custom')
+      get() {
+        const label = this.tweet.labels.find((t) => t.id === 'custom')
         let group = this.tempGroup
         if (label) group = label.result.group
         return group
       },
-      set: function(val) {
+      set(val) {
         this.tempGroup = val
-      }
+      },
     },
     customTheme: {
-      get: function() {
-        const label = this.tweet.labels.find(t => t.id === 'custom')
+      get() {
+        const label = this.tweet.labels.find((t) => t.id === 'custom')
         let theme = this.tempTheme
         if (label) theme = label.result.theme
         return theme
       },
-      set: function(val) {
+      set(val) {
         this.tempTheme = val
-      }
+      },
     },
-    decoratedText: function() {
+    decoratedText() {
       let text = this.tweet.original_text
       for (const kw of this.tweet.keywords) {
         const regEx = new RegExp(kw, 'ig')
@@ -409,10 +410,10 @@ export default {
           }) +
         '</p>'
       )
-    }
+    },
   },
   methods: {
-    clicked: function() {
+    clicked() {
       if (this.tweet.selected) this.$emit('deselected', this.tweet)
       else this.$emit('selected', this.tweet)
     },
@@ -421,13 +422,13 @@ export default {
         this.$emit('customLabelTweet', {
           tweet: this.tweet,
           group: this.tempGroup,
-          theme: this.tempTheme
+          theme: this.tempTheme,
         })
       this.dialog = false
       // eslint-disable-next-line no-console
       console.log(this.tweet.text, this.customGroup, this.customTheme)
-    }
-  }
+    },
+  },
 }
 </script>
 

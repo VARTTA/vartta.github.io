@@ -1,12 +1,13 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-flex xs4 text-xs-center class="boxed" grow>
+  <v-col cols="4" class="boxed text-center grow">
     <b class="title">{{ title }}</b>
     <v-divider></v-divider>
-    <v-flex
+    <v-col
       :id="'tweetcollection-' + title"
       style="overflow: auto; height: 55vh;"
     >
-      <v-layout :id="'tweetcontainer-' + title" column justify-center>
+      <!--      error  'column' has been removed  vuetify/no-legacy-grid-->
+      <v-row :id="'tweetcontainer-' + title" justify="center">
         <tweet
           v-for="(tweet, index) in sortedTweets"
           :id="'tweet-' + tweet.id_str"
@@ -17,11 +18,11 @@
           @deselected="removeTweet"
           @customLabelTweet="updateTweet"
         ></tweet>
-      </v-layout>
-    </v-flex>
+      </v-row>
+    </v-col>
     <v-divider></v-divider>
     <v-container v-if="selectedTweets.length > 0" fluid>
-      <v-layout row wrap justify-space-around align-center>
+      <v-row justify="space-around" align="center">
         <v-badge
           v-for="(tweet, index) in selectedTweets"
           :key="index"
@@ -43,9 +44,9 @@
             />
           </v-avatar>
         </v-badge>
-      </v-layout>
+      </v-row>
     </v-container>
-  </v-flex>
+  </v-col>
 </template>
 
 <script>
@@ -53,23 +54,23 @@ import Tweet from './Tweet'
 export default {
   name: 'TweetCollection',
   components: {
-    tweet: Tweet
+    tweet: Tweet,
   },
   props: {
     title: {
       type: String,
-      default: 'Title'
+      default: 'Title',
     },
     tweets: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
-    }
+      },
+    },
   },
   data() {
     return {
-      selectedTweets: []
+      selectedTweets: [],
     }
   },
   computed: {
@@ -80,50 +81,50 @@ export default {
       })
     },
     target() {
-      return tweet => {
+      return (tweet) => {
         return '#' + 'tweet-' + tweet.id_str
       }
     },
     options() {
-      return topic => {
+      return (topic) => {
         return {
           duration: 300,
           offset: 60,
           easing: 'easeInOutCubic',
-          container: '#' + 'tweetcollection-' + topic
+          container: '#' + 'tweetcollection-' + topic,
         }
       }
-    }
+    },
   },
   methods: {
-    addTweet: function(tweet) {
+    addTweet(tweet) {
       tweet.selected = true
       tweet.hover = false
       tweet.exam = false
-      if (!this.selectedTweets.map(a => a.id_str).includes(tweet.id_str)) {
+      if (!this.selectedTweets.map((a) => a.id_str).includes(tweet.id_str)) {
         if (this.selectedTweets.length < 4) {
           this.selectedTweets.push(tweet)
           this.$emit('tweetSelect', tweet)
         }
       }
     },
-    removeTweet: function(tweet) {
+    removeTweet(tweet) {
       tweet.selected = false
       const index = this.selectedTweets.findIndex(
-        a => a.id_str === tweet.id_str
+        (a) => a.id_str === tweet.id_str
       )
       this.selectedTweets.splice(index, 1)
       this.$emit('tweetDeselect', tweet)
     },
-    updateTweet: function(data) {
+    updateTweet(data) {
       this.$emit('updateTweet', data)
     },
-    clicked: function(tweet) {
+    clicked(tweet) {
       // eslint-disable-next-line no-console
       console.log(this.target(tweet), this.options(this.title), this.$vuetify)
       this.$vuetify.goTo(this.target(tweet), this.options(this.title))
-    }
-  }
+    },
+  },
 }
 </script>
 

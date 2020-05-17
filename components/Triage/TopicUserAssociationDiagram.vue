@@ -61,9 +61,9 @@
     <g id="Ribbons" :duration="transitionDuration">
       <g v-for="(node, index) in packed.children" :key="index">
         <path
-          v-for="(arc, index) in findArcs(node)"
+          v-for="(arc, ind) in findArcs(node)"
           :id="'path-' + node.data.name + '-' + arc.data.name"
-          :key="index"
+          :key="ind"
           class="ribbon highlightable"
           :fill="ribbon.fill"
           :fill-opacity="ribbon.fillOpacity"
@@ -110,79 +110,79 @@ export default {
   props: {
     chartDomID: {
       type: String,
-      default: 'topic-user'
+      default: 'topic-user',
     },
     topics: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     meta: {
       type: Object,
-      default: function() {
+      default() {
         return {
           id: 'topic-user-diagram',
           label: 'Agent-Topic Association ',
           width: 500,
           height: 500,
-          fillOpacity: 0.6
+          fillOpacity: 0.6,
         }
-      }
+      },
     },
     users: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     innerRadiusSize: {
       type: Number,
-      default: 0
+      default: 0,
     },
     line: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fillOpacity: 0.7,
           stroke: '#61768e',
-          stroke_width: '0.6'
+          stroke_width: '0.6',
         }
-      }
+      },
     },
     ribbon: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fill: '#869bb4',
           fillOpacity: 0.1,
           stroke: '#61768e',
           stroke_width: '0.6',
-          stroke_opacity: 0.4
+          stroke_opacity: 0.4,
         }
-      }
+      },
     },
     text: {
       type: Object,
-      default: function() {
+      default() {
         return {}
-      }
+      },
     },
     token: {
       type: Object,
-      default: function() {
+      default() {
         return {
           size: '10',
           color: '#d6d0bc',
           opacity: '0.75',
           strokeSize: '0.7',
           strokeOpacity: '0.8',
-          strokeColor: '#797362'
+          strokeColor: '#797362',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -190,27 +190,27 @@ export default {
       arcGroup: null,
       arcsCoefficient: 0.85,
       transitionDuration: 50,
-      sunburst: false
+      sunburst: false,
     }
   },
   computed: {
-    radius: function() {
+    radius() {
       return Math.min(this.meta.width) / 2
     },
-    innerAreaRadius: function() {
+    innerAreaRadius() {
       return this.radius / 3
     },
-    arcFunction: function() {
+    arcFunction() {
       return d3
         .arc()
-        .startAngle(d => d.x0)
-        .endAngle(d => d.x1)
-        .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.018))
+        .startAngle((d) => d.x0)
+        .endAngle((d) => d.x1)
+        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.018))
         .padRadius(this.radius / 2)
-        .innerRadius(function(d) {
+        .innerRadius(function (d) {
           return this.innerRadiusTerm(d)
         })
-        .outerRadius(function(d) {
+        .outerRadius(function (d) {
           return this.outerRadiusTerm(d)
         })
     },
@@ -218,76 +218,76 @@ export default {
      * formatting Topic data, to apply arc() on it
      * each element has a name, and children (for non-leaf nodes) or a value (for leaf nodes)
      **/
-    hierarchizeTopicData: function() {
-      const child = this.topics.map(a => {
-        const c = a.keywords.map(kw => {
+    hierarchizeTopicData() {
+      const child = this.topics.map((a) => {
+        const c = a.keywords.map((kw) => {
           return {
             name: kw,
-            value: 1 * Math.random()
+            value: 1 * Math.random(),
           }
         })
         return {
           ...a,
           children: c,
-          name: a.id
+          name: a.id,
         }
       })
       return {
         name: 'U.S. Elections',
-        children: child
+        children: child,
       }
     },
     /**
      * formating Topic data, to apply pack() on it
      **/
-    hierarchizeUsersData: function() {
-      const child = this.users.map(a => {
-        const c = a.tweets.map(tw => {
+    hierarchizeUsersData() {
+      const child = this.users.map((a) => {
+        const c = a.tweets.map((tw) => {
           return {
             name: 'tweet',
             tweets: tw,
-            value: 1
+            value: 1,
           }
         })
         c.value = 1
         return {
           ...a,
           children: c,
-          name: a.screen_name
+          name: a.screen_name,
         }
       })
       return {
         name: 'Tweeters',
-        children: child
+        children: child,
       }
     },
-    partitions: function() {
-      return function(ddd) {
+    partitions() {
+      return function (ddd) {
         return d3.partition().size([2 * Math.PI, this.radius])(
           d3
             .hierarchy(ddd)
-            .sum(d => d.value)
+            .sum((d) => d.value)
             .sort((a, b) => b.value - a.value)
         )
       }
     },
-    root: function() {
+    root() {
       return this.partitions(this.hierarchizeTopicData)
         .descendants()
-        .filter(d => d.depth)
+        .filter((d) => d.depth)
     },
-    rootText: function() {
+    rootText() {
       return this.partitions(this.hierarchizeTopicData)
         .descendants()
-        .filter(d => d.depth && ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10)
+        .filter((d) => d.depth && ((d.y0 + d.y1) / 2) * (d.x1 - d.x0) > 10)
     },
-    sliceColor: function() {
-      return d => {
+    sliceColor() {
+      return (d) => {
         while (d.depth > 1) d = d.parent
         return this.color(d.data.name)
       }
     },
-    color: function() {
+    color() {
       const that = this
       return d3.scaleOrdinal(
         d3.quantize(
@@ -296,7 +296,7 @@ export default {
         )
       )
     },
-    colorToken: function() {
+    colorToken() {
       const that = this
       return d3.scaleOrdinal(
         d3.quantize(
@@ -305,8 +305,8 @@ export default {
         )
       )
     },
-    labelTransform: function() {
-      return d => {
+    labelTransform() {
+      return (d) => {
         const x = this.labelTransferX(d)
         const y = this.labelTransferY(d)
         return `rotate(${x - 90}) translate(${y},0) rotate(${
@@ -315,24 +315,24 @@ export default {
       }
     },
     // TODO: this function should to be relative to radius
-    labelFont: function() {
-      return d => {
+    labelFont() {
+      return (d) => {
         if (d.data.name.length * 4 > this.radius / 3) return 6.5
         return 8
       }
     },
-    ancestorPath: function() {
-      return d => {
+    ancestorPath() {
+      return (d) => {
         return `${d
           .ancestors()
-          .map(d => d.data.name)
+          .map((d) => d.data.name)
           .reverse()
           .join('/')}\n`
       }
     },
-    innerRadiusTerm: function() {
+    innerRadiusTerm() {
       const margin = 2
-      return d => {
+      return (d) => {
         return this.meta.sunburst
           ? d.y0 + margin
           : this.radius - d.y1 + this.innerAreaRadius + margin
@@ -342,70 +342,69 @@ export default {
      * to magnify sunburst: multiply d.y0 & d.y1 to a value> 1 (and to a value < 1 to reduce)
      * to magnify the inner area radius (the white circle in the middle): add a term to that
      **/
-    outerRadiusTerm: function() {
-      return d => {
+    outerRadiusTerm() {
+      return (d) => {
         return this.meta.sunburst
           ? d.y1
           : this.radius - d.y0 + this.innerAreaRadius
       }
     },
-    labelTransferX: function() {
-      return d => {
+    labelTransferX() {
+      return (d) => {
         return (((d.x0 + d.x1) / 2) * 180) / Math.PI
       }
     },
-    labelTransferY: function() {
-      return d => {
+    labelTransferY() {
+      return (d) => {
         return this.meta.sunburst
           ? (d.y0 + d.y1) / 2
           : ((d.y0 + d.y1) / d.depth ** 1.4) * 0.8
       }
     },
-    pack: function() {
-      return function(d) {
+    pack() {
+      return function (d) {
         const packRadius = this.radius * 0.78
-        return d3
-          .pack()
-          .size([packRadius, packRadius])
-          .padding(30)(d3.hierarchy(d).sum(d => d.value))
+        return d3.pack().size([packRadius, packRadius]).padding(30)(
+          d3.hierarchy(d).sum((d) => d.value)
+        )
       }
     },
-    packed: function() {
+    packed() {
       return this.pack(this.hierarchizeUsersData)
     },
-    circleTransform: function() {
+    circleTransform() {
       return 'translate(' + this.radius * 0.6 + ',' + this.radius * 0.6 + ')'
     },
-    circleX: function() {
-      return d => {
+    circleX() {
+      return (d) => {
         return d.x
       }
     },
-    circleY: function() {
-      return d => {
+    circleY() {
+      return (d) => {
         return d.y
       }
     },
-    circleFill: function() {
-      return d => {
+    circleFill() {
+      return (d) => {
         return this.colorToken(d)
       }
     },
-    circleSize: function() {
+    circleSize() {
       return this.radius * 0.02
     },
     /**
      * Related arcs to a user, only at one of depth 1 or 2
      **/
-    findArcs: function() {
-      return user => {
+    findArcs() {
+      return (user) => {
         let res = []
         const desiredDepth = this.meta.sunburst ? 1 : 2
         const desiredField = this.meta.sunburst ? 'topics' : 'keywords'
-        const arcs = this.root.filter(d => d.depth === desiredDepth)
+        const arcs = this.root.filter((d) => d.depth === desiredDepth)
         for (const tw of user.data.children)
           res = res.concat(
-            arcs.filter(d => tw.tweets[desiredField].includes(d.data.name))
+            arcs.filter((d) => tw.tweets[desiredField].includes(d.data.name))
           )
         return res
       }
@@ -413,13 +412,13 @@ export default {
     /**
      * Related arcs to a user, at both 1 and 2 depths
      **/
-    relatedArcs: function() {
-      return user => {
+    relatedArcs() {
+      return (user) => {
         let res = []
         for (const tw of user.data.children)
           res = res.concat(
             this.root.filter(
-              d =>
+              (d) =>
                 tw.tweets.topics.includes(d.data.name) ||
                 tw.tweets.keywords.includes(d.data.name)
             )
@@ -427,8 +426,8 @@ export default {
         return res
       }
     },
-    isUsed: function() {
-      return arc => {
+    isUsed() {
+      return (arc) => {
         for (const user of this.packed.children)
           for (const tw of user.data.tweets)
             if (tw.keywords.includes(arc.data.name)) return true
@@ -438,8 +437,8 @@ export default {
     /**
      * Related users to a specific arc
      **/
-    relatedUsers: function() {
-      return arc => {
+    relatedUsers() {
+      return (arc) => {
         let res = []
         for (const user of this.packed.children)
           for (const tw of user.data.tweets)
@@ -453,7 +452,7 @@ export default {
      * transforms node coordinate by transforms done on bubbles
      * returns a sequence of dots for drawing a ribbon
      **/
-    createConnectorPath: function() {
+    createConnectorPath() {
       return (arc, userNode) => {
         const { start, end } = this.calculateCoordinate(arc)
         const node = {}
@@ -469,8 +468,8 @@ export default {
     /**
      * converts polar coordinates of arc start and end points to cartesian
      **/
-    calculateCoordinate: function() {
-      return arc => {
+    calculateCoordinate() {
+      return (arc) => {
         const startAngle = arc.x0
         const endAngle = arc.x1
         const radius = this.innerAreaRadius * 0.98
@@ -486,31 +485,30 @@ export default {
     /**
      * takes start/end/node points and returns coordination of a path (ribbon)
      **/
-    drawCurvePath: function() {
-      return d => {
+    drawCurvePath() {
+      return (d) => {
         return (
           `M ${d.start.x},${d.start.y}` +
-          `C ${d.start.x},${(d.start.y + d.node.y) / 2} ${d.node.x},${(d.start
-            .y +
-            d.node.y) /
-            2} ${d.node.x},${d.node.y}` +
+          `C ${d.start.x},${(d.start.y + d.node.y) / 2} ${d.node.x},${
+            (d.start.y + d.node.y) / 2
+          } ${d.node.x},${d.node.y}` +
           `L ${d.node.x},${d.node.y}` +
-          `C ${d.node.x},${(d.node.y + d.end.y) / 2} ${d.end.x},${(d.node.y +
-            d.end.y) /
-            2} ${d.end.x},${d.end.y}`
+          `C ${d.node.x},${(d.node.y + d.end.y) / 2} ${d.end.x},${
+            (d.node.y + d.end.y) / 2
+          } ${d.end.x},${d.end.y}`
         )
       }
-    }
+    },
   },
   mounted() {
     this.setupSVG()
   },
   methods: {
-    setupSVG: function() {
+    setupSVG() {
       this.svg = d3.select('.chord')
       this.arcGroup = d3.select('#arcs')
     },
-    removeHighlights: function() {
+    removeHighlights() {
       const elems = document.getElementsByClassName('highlightable')
       for (const el of elems) {
         if (el) {
@@ -520,9 +518,7 @@ export default {
       }
     },
     // Highlight a user and the connected topics/subtopics
-    highlightConnectedSet: function(
-      elements = { user: null, path: null, arc: null }
-    ) {
+    highlightConnectedSet(elements = { user: null, path: null, arc: null }) {
       // Find elements to highlight
       let whiteList = []
       // Only user is a candidate (the mouse is on user)
@@ -605,7 +601,7 @@ export default {
           el.classList.add('greyed')
         }
       }
-      whiteList = whiteList.map(str => document.getElementById(str))
+      whiteList = whiteList.map((str) => document.getElementById(str))
       // Highlight the known elements
       for (const el of whiteList) {
         // Prevent error while brushing
@@ -614,8 +610,8 @@ export default {
           el.classList.add('highlighted')
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -79,17 +79,17 @@ export default {
   props: {
     chartDomID: {
       type: String,
-      default: 'user-similarity'
+      default: 'user-similarity',
     },
     topics: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     meta: {
       type: Object,
-      default: function() {
+      default() {
         return {
           id: 'user-similarity',
           label: 'Agents Similarity',
@@ -97,87 +97,87 @@ export default {
           height: 500,
           fillOpacity: 0.6,
           focalUser: 0,
-          padding: { top: 0, bottom: 0, left: 0, right: 0 }
+          padding: { top: 0, bottom: 0, left: 0, right: 0 },
         }
-      }
+      },
     },
     users: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     numberOfTracks: {
       type: Number,
-      default: function() {
+      default() {
         return 3
-      }
+      },
     },
     axis: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fill: '#e6e9e9',
           fillOpacity: 0.4,
           stroke: '#829ba8',
           stroke_width: '1',
-          stroke_opacity: 0.9
+          stroke_opacity: 0.9,
         }
-      }
+      },
     },
     line: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: true,
           fill: '#a3ac6e',
           fillOpacity: 0.5,
           stroke: '#d4dee7',
           stroke_width: '0.1',
-          stroke_opacity: 0.2
+          stroke_opacity: 0.2,
         }
-      }
+      },
     },
     token: {
       type: Object,
-      default: function() {
+      default() {
         return {
           size: '10',
           color: '#829ba8',
           opacity: '0.7',
           strokeSize: '0.8',
           strokeOpacity: '0.8',
-          strokeColor: '#6eecbf'
+          strokeColor: '#6eecbf',
         }
-      }
+      },
     },
     label: {
       type: Object,
-      default: function() {
+      default() {
         return {
           fontSize: '10',
           fill: '#104842',
-          opacity: '0.7'
+          opacity: '0.7',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       svg: null,
-      transitionDuration: 50
+      transitionDuration: 50,
     }
   },
   computed: {
-    radius: function() {
+    radius() {
       return Math.min(this.meta.width) / 2
     },
     /**
      * Places the label of each tracks on its circle (e.g. 1st, 2nd, ...)
      **/
-    concentricTransform: function() {
-      return d => {
+    concentricTransform() {
+      return (d) => {
         const circlePadding = 0.9
         return this.radiusCalculation(d) * circlePadding * -1
       }
@@ -187,8 +187,8 @@ export default {
      * to change the ratio of radius, we should change this function
      * radius(d) = coef * r
      */
-    radiusCalculation: function() {
-      return d => {
+    radiusCalculation() {
+      return (d) => {
         const coef = ((d + 1) * (d + 2)) / 2
         const total =
           ((this.numberOfTracks + 1) * (this.numberOfTracks + 2)) / 2
@@ -199,8 +199,8 @@ export default {
         return scale(coef)
       }
     },
-    concentricLabels: function() {
-      return d => {
+    concentricLabels() {
+      return (d) => {
         const distance =
           this.meta.adjacency === false ? d : this.meta.tracks - d + 1
         let postfix = 'th'
@@ -220,15 +220,15 @@ export default {
         .domain([0, 1])
         .range([0, 2 * Math.PI])
     },
-    circleFill: function() {
-      return d => {
+    circleFill() {
+      return (d) => {
         return this.colorToken(d)
       }
     },
-    circleSize: function() {
+    circleSize() {
       return this.radius * 0.06
     },
-    colorToken: function() {
+    colorToken() {
       const that = this
       return d3.scaleOrdinal(
         d3.quantize(d3.interpolateViridis, that.users.length)
@@ -237,7 +237,7 @@ export default {
     /**
      * List of users that can be shown based on selected user
      **/
-    candidates: function() {
+    candidates() {
       const array = []
       let newIndex = 0
       for (const userIndex in this.users)
@@ -247,9 +247,9 @@ export default {
         ) {
           array.push({
             index: newIndex,
-            userIndex: userIndex,
+            userIndex,
             screen_name: this.users[userIndex].screen_name,
-            w2v: this.users[userIndex].w2v
+            w2v: this.users[userIndex].w2v,
           })
           newIndex += 1
         }
@@ -259,8 +259,8 @@ export default {
      * Returns the distance of a tweet from the beginning of its corresponded track to scatter users in same level
      * to feed the tokenRadialScale()
      **/
-    findAngle: function() {
-      return candid => {
+    findAngle() {
+      return (candid) => {
         const sameLevel = this.sameLevelUsers(candid.w2v)
         let index = 1
         const totalNumber = sameLevel.length
@@ -274,8 +274,8 @@ export default {
     /**
      * Returns all users in same level for a certain user
      **/
-    sameLevelUsers: function() {
-      return distance => {
+    sameLevelUsers() {
+      return (distance) => {
         const sameDistanceUsers = []
         for (const user of this.users) {
           if (user.w2v === distance) sameDistanceUsers.push(user)
@@ -286,8 +286,8 @@ export default {
     /**
      * Returns the radius at which the user should be placed
      **/
-    tokenRadius: function() {
-      return userDistance => {
+    tokenRadius() {
+      return (userDistance) => {
         const track =
           this.meta.adjacency === false
             ? userDistance
@@ -298,27 +298,27 @@ export default {
         )
       }
     },
-    chartTopPadding: function() {
+    chartTopPadding() {
       return this.meta.padding.top + this.radius
-    }
+    },
   },
   mounted() {
     this.setupSVG()
   },
   methods: {
-    setupSVG: function() {
+    setupSVG() {
       this.svg = d3.select('.concentric')
     },
     /**
      * @return {number}
      */
-    PolarToCartesianX: function(angle, radius) {
+    PolarToCartesianX(angle, radius) {
       return radius * Math.sin(-(angle + Math.PI))
     },
-    PolarToCartesianY: function(angle, radius) {
+    PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
-    }
-  }
+    },
+  },
 }
 </script>
 

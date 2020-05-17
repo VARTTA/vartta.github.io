@@ -25,63 +25,63 @@ import ContextMap from './ContextMap'
 export default {
   name: 'ContextMapWrapper',
   components: {
-    'context-map': ContextMap
+    'context-map': ContextMap,
   },
   props: {
     id: {
       type: String,
-      default: 'heatmap'
+      default: 'heatmap',
     },
     divId: {
       type: String,
-      default: 'heatmap-div'
+      default: 'heatmap-div',
     },
     height: {
       type: Number,
-      default: 0
+      default: 0,
     },
     width: {
       type: Number,
-      default: 0
+      default: 0,
     },
     color: {
       type: String,
-      default: 'transparent'
+      default: 'transparent',
     },
     flat: {
       type: Boolean,
-      default: true
+      default: true,
     },
     label: {
       type: String,
-      default: 'This Amazing Scatter Plot'
+      default: 'This Amazing Scatter Plot',
     },
     tweets: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     topics: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       colorRange: ['#d7ffdb', '#006c03'],
       meta: {
         show: false,
-        info: 'Hello this is only a help box!'
-      }
+        info: 'Hello this is only a help box!',
+      },
     }
   },
   computed: {
     contextMapData() {
       return this.tweets
-    }
+    },
   },
   methods: {
     topicSelected(data) {
@@ -89,8 +89,8 @@ export default {
     },
     tweetClicked(data) {
       this.$emit('tweetClicked', data)
-    }
-  }
+    },
+  },
 }
 </script>
 

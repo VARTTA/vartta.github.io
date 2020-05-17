@@ -71,93 +71,93 @@ import ScatterPlot from './ScatterPlot'
 export default {
   name: 'ScatterPlotWrapper',
   components: {
-    'scatter-plot': ScatterPlot
+    'scatter-plot': ScatterPlot,
   },
   props: {
     id: {
       type: String,
-      default: 'scatterplot'
+      default: 'scatterplot',
     },
     divId: {
       type: String,
-      default: 'scatterplot-div'
+      default: 'scatterplot-div',
     },
     height: {
       type: Number,
-      default: 0
+      default: 0,
     },
     width: {
       type: Number,
-      default: 0
+      default: 0,
     },
     color: {
       type: String,
-      default: 'transparent'
+      default: 'transparent',
     },
     flat: {
       type: Boolean,
-      default: true
+      default: true,
     },
     label: {
       type: String,
-      default: 'This Amazing Scatter Plot'
+      default: 'This Amazing Scatter Plot',
     },
     selectedData: {
       type: Object,
-      default: function() {
+      default() {
         return {}
-      }
+      },
     },
     dataset: {
       type: Array,
-      default: function() {
+      default() {
         return []
-      }
+      },
     },
     siftDataset: {
       type: Boolean,
-      default: true
+      default: true,
     },
     selectedAnalysisMethod: {
       type: String,
-      default: ''
+      default: '',
     },
     showMeta: {
       type: Boolean,
-      default: false
+      default: false,
     },
     axesMeta: {
       type: Object,
-      default: function() {
+      default() {
         return {
           x: {
             selector: 'x',
             initialBound: [-1, 200],
             scaleToContent: false,
             zoomEnabled: true,
-            label: 'User Influence'
+            label: 'User Influence',
           },
           y: {
             selector: 'y',
             initialBound: [-1, 1],
             scaleToContent: false,
             zoomEnabled: false,
-            label: 'Average Sentiment'
-          }
+            label: 'Average Sentiment',
+          },
         }
-      }
+      },
     },
     line: {
       type: Object,
-      default: function() {
+      default() {
         return {
           show: false,
           fill: 'none',
           stroke: 'grey',
-          stroke_width: '1.0'
+          stroke_width: '1.0',
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -166,8 +166,8 @@ export default {
       colorRange: ['#d4e3f4', '#14004f'],
       meta: {
         show: false,
-        info: 'Hello this is only a help box!'
-      }
+        info: 'Hello this is only a help box!',
+      },
     }
   },
   computed: {
@@ -177,7 +177,7 @@ export default {
         // Sift the dataset by the selected analysis method
         if (this.selectedAnalysisMethod === '') return res
         const bucket = this.dataset.filter(
-          cat => cat._id === this.selectedAnalysisMethod
+          (cat) => cat._id === this.selectedAnalysisMethod
         )[0]
 
         // Construct the individual items to be represented
@@ -195,7 +195,7 @@ export default {
             id_str: item.user.id_str,
             // meta data
             tweets: item.tweets,
-            user: item.user
+            user: item.user,
           })
         }
       } else {
@@ -209,7 +209,7 @@ export default {
           res.push({
             ...tweet,
             x: new Date(tweet.date),
-            y: avgSentiment
+            y: avgSentiment,
           })
         }
       }
@@ -217,27 +217,27 @@ export default {
       return res.sort((a, b) => {
         return a.x > b.x ? 1 : -1
       })
-    }
+    },
   },
   methods: {
-    zoomed: function(transform) {
+    zoomed(transform) {
       this.transform = transform
     },
-    increment: function() {
+    increment() {
       this.radius += 1
     },
-    decrement: function() {
+    decrement() {
       this.radius -= 1
     },
-    circleClicked: function(data) {
+    circleClicked(data) {
       this.$emit('circleClicked', data)
     },
-    reset: function() {
+    reset() {
       this.transform = d3.zoomIdentity
       this.colorRange = ['#d4e3f4', '#14004f']
       this.radius = 4
-    }
-  }
+    },
+  },
 }
 </script>
 
