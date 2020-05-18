@@ -36,7 +36,6 @@ export const mutations = {
     state.rawTweets = []
   },
   resetSelectedScenario(state) {
-    console.log('scenario reset')
     state.selectedScenario = null
   },
   updateAggregatedTopics(state, data) {
@@ -80,7 +79,6 @@ export const mutations = {
     //   state.rawTweets.splice(-state.limit)
   },
   updateSelectedScenario(state, scenario) {
-    console.log('updating with ', scenario)
     state.selectedScenario = scenario
   },
 }

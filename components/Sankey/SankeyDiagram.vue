@@ -275,10 +275,4 @@ export default {
   opacity: 1;
   stroke-opacity: unset;
 }
-
-.svg >>> .rect,
-.svg >>> .path {
-  transition: all 250ms;
-  -webkit-transition: all 250ms;
-}
 </style>

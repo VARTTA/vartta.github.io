@@ -21,9 +21,6 @@
     >
       <v-col cols="12">
         <v-card flat color="transparent">
-          <!--          <v-card-title>-->
-          <!--            <h2>{{ index + 1 }} - Control Box</h2>-->
-          <!--          </v-card-title>-->
           <v-card-actions>
             <v-row align="center" justify="center">
               <v-col cols="6" class="text-center">
@@ -70,47 +67,6 @@
           </v-card-actions>
         </v-card>
       </v-col>
-      <!--      <v-flex xs12>-->
-      <!--        <v-card flat color="transparent">-->
-      <!--          &lt;!&ndash;          <v-card-title>&ndash;&gt;-->
-      <!--          &lt;!&ndash;            <h2>{{ index + 1 }} - Control Box</h2>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          </v-card-title>&ndash;&gt;-->
-      <!--          <v-card-actions>-->
-      <!--            <v-layout row align-center justify-space-around>-->
-      <!--              <v-flex v-if="analysisMethods.length === 0" text-xs-center>-->
-      <!--                <v-progress-circular-->
-      <!--                  :size="50"-->
-      <!--                  color="cyan"-->
-      <!--                  indeterminate-->
-      <!--                ></v-progress-circular>-->
-      <!--              </v-flex>-->
-      <!--              <v-flex v-if="analysisMethods.length !== 0" xs12>-->
-      <!--                <h4>Sentiment Analysis Methods</h4>-->
-      <!--                <v-select-->
-      <!--                  :value="comparison.analysis"-->
-      <!--                  class="no-overflow"-->
-      <!--                  :items="analysisMethods"-->
-      <!--                  item-text="title"-->
-      <!--                  item-value="id"-->
-      <!--                  label="Sentiment Analysis Methods"-->
-      <!--                  @change="-->
-      <!--                    commitAnalysisMethodChange.call(this, arguments[0], index)-->
-      <!--                  "-->
-      <!--                ></v-select>-->
-      <!--                &lt;!&ndash;                <v-radio-group v-model="comparison.analysis" column>&ndash;&gt;-->
-      <!--                &lt;!&ndash;                  <v-radio&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    v-for="method in analysisMethods"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :key="method.id + '-' + index"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :label="method.title"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :value="method.id"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    color="cyan"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                  ></v-radio>&ndash;&gt;-->
-      <!--                &lt;!&ndash;                </v-radio-group>&ndash;&gt;-->
-      <!--              </v-flex>-->
-      <!--            </v-layout>-->
-      <!--          </v-card-actions>-->
-      <!--        </v-card>-->
-      <!--      </v-flex>-->
       <v-col class="text-center" cols="12">
         <sankey-diagram-wrapper
           :id="charts.sankey.id + '-comparison-' + index"
@@ -144,20 +100,6 @@
           :dataset="aggregatedKeywords"
         ></heat-map-wrapper>
       </v-col>
-      <!--      <v-flex text-xs-center xs12>-->
-      <!--        <scatter-plot-wrapper-->
-      <!--          :id="charts.scatterplot.id + '-comparison-' + index"-->
-      <!--          :div-id="charts.scatterplot.divId + '-comparison-' + index"-->
-      <!--          :label="index + 1 + ' - ' + charts.scatterplot.label"-->
-      <!--          :width="charts.scatterplot.width"-->
-      <!--          :height="charts.scatterplot.height"-->
-      <!--          :selected-analysis-method="comparison.analysis"-->
-      <!--          :color="color"-->
-      <!--          :flat="flat"-->
-      <!--          :dataset="aggregatedUsers"-->
-      <!--          @circleClicked="updateTweets"-->
-      <!--        ></scatter-plot-wrapper>-->
-      <!--      </v-flex>-->
     </v-col>
   </v-row>
 </template>
