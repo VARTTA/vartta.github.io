@@ -392,7 +392,7 @@ export default {
     },
     /***
      *  tokenShiftRatio should change with packSizeRatio to keep bubbles in right place
-     *  tokenShiftRatio = 1 - (packSizeRatio /2 )
+     *  tokenShiftRatio = 1 - (packSizeRatio / 2 )
      * */
     circleTransform() {
       return (
