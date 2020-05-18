@@ -105,268 +105,502 @@ export default {
   },
   data() {
     return {
-      // usersSet: [
-      //   {
-      //     screen_name: 'a',
-      //     w2v: 1,
-      //     tweets: [
-      //       {
-      //         id: 2,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu May 15 15:20:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 31,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Mar 14 13:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 32,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Mar 14 13:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 33,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Mar 14 13:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 34,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Mar 14 13:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'b',
-      //     w2v: 2,
-      //     tweets: [
-      //       {
-      //         id: 4,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon May 13 15:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 5,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu May 14 19:21:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 51,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Apr 1 20:20:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 52,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu May 2 03:20:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 53,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 13 13:18:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 54,
-      //         keywords: ['Booker'],
-      //         topics: ['democraticn'],
-      //         created_at: 'Thu Feb 18 19:18:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 55,
-      //         keywords: ['Cory Booker'],
-      //         topics: ['democratic'],
-      //         created_at: 'Thu May 12 19:18:20 +0000 2019',
-      //       },
-      //       {
-      //         id: 55,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Feb 14 19:18:20 +0000 2018',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'c',
-      //     w2v: 3,
-      //     tweets: [
-      //       {
-      //         id: 7,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2014',
-      //       },
-      //       {
-      //         id: 8,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 11 19:20:20 +0000 2017',
-      //       },
-      //       {
-      //         id: 9,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'd',
-      //     w2v: 4,
-      //     tweets: [
-      //       {
-      //         id: 10,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2019',
-      //       },
-      //       {
-      //         id: 11,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 11 19:20:20 +0000 2019',
-      //       },
-      //       {
-      //         id: 12,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'e',
-      //     w2v: 1,
-      //     tweets: [
-      //       {
-      //         id: 13,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2019',
-      //       },
-      //       {
-      //         id: 14,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 11 19:20:20 +0000 2018',
-      //       },
-      //       {
-      //         id: 15,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2018',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'f',
-      //     w2v: 2,
-      //     tweets: [
-      //       {
-      //         id: 16,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2019',
-      //       },
-      //       {
-      //         id: 17,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 11 19:20:20 +0000 2019',
-      //       },
-      //       {
-      //         id: 18,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 30 15:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'g',
-      //     w2v: 6,
-      //     tweets: [
-      //       {
-      //         id: 19,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2019',
-      //       },
-      //       {
-      //         id: 20,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 11 19:20:20 +0000 2017',
-      //       },
-      //       {
-      //         id: 21,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      //   {
-      //     screen_name: 'h',
-      //     w2v: 1,
-      //     tweets: [
-      //       {
-      //         id: 22,
-      //         keywords: ['democrats'],
-      //         topics: ['democratic'],
-      //         created_at: 'Mon Dec 13 15:24:15 +0000 2014',
-      //       },
-      //       {
-      //         id: 23,
-      //         keywords: ['Adam Kokesh'],
-      //         topics: ['libertarian'],
-      //         created_at: 'Thu Mar 12 18:20:20 +0000 2020',
-      //       },
-      //       {
-      //         id: 24,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 25,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 26,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //       {
-      //         id: 27,
-      //         keywords: ['IMPOTUS'],
-      //         topics: ['impeachment'],
-      //         created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-      //       },
-      //     ],
-      //     selected: false,
-      //   },
-      // ],
+      usersSet: [
+        {
+          screen_name: 'a',
+          w2v: 1,
+          tweets: [
+            {
+              id: 2,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu May 15 15:20:20 +0000 2020',
+            },
+            {
+              id: 31,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
+            },
+            {
+              id: 32,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
+            },
+            {
+              id: 33,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
+            },
+            {
+              id: 34,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Mar 14 13:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'b',
+          w2v: 2,
+          tweets: [
+            {
+              id: 4,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon May 13 15:24:15 +0000 2020',
+            },
+            {
+              id: 5,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu May 14 19:21:20 +0000 2020',
+            },
+            {
+              id: 51,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Apr 1 20:20:20 +0000 2020',
+            },
+            {
+              id: 52,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu May 2 03:20:20 +0000 2020',
+            },
+            {
+              id: 53,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 13 13:18:20 +0000 2020',
+            },
+            {
+              id: 54,
+              keywords: ['Booker'],
+              topics: ['democraticn'],
+              created_at: 'Thu Feb 18 19:18:20 +0000 2020',
+            },
+            {
+              id: 55,
+              keywords: ['Cory Booker'],
+              topics: ['democratic'],
+              created_at: 'Thu May 12 19:18:20 +0000 2019',
+            },
+            {
+              id: 55,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Feb 14 19:18:20 +0000 2018',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'c',
+          w2v: 3,
+          tweets: [
+            {
+              id: 7,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+            {
+              id: 8,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 11 19:20:20 +0000 2017',
+            },
+            {
+              id: 9,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'd',
+          w2v: 4,
+          tweets: [
+            {
+              id: 10,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
+            },
+            {
+              id: 11,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 11 19:20:20 +0000 2019',
+            },
+            {
+              id: 12,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'e',
+          w2v: 1,
+          tweets: [
+            {
+              id: 13,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
+            },
+            {
+              id: 14,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 11 19:20:20 +0000 2018',
+            },
+            {
+              id: 15,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2018',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'f',
+          w2v: 2,
+          tweets: [
+            {
+              id: 16,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
+            },
+            {
+              id: 17,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 11 19:20:20 +0000 2019',
+            },
+            {
+              id: 18,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 30 15:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'g',
+          w2v: 6,
+          tweets: [
+            {
+              id: 19,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2019',
+            },
+            {
+              id: 20,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 11 19:20:20 +0000 2017',
+            },
+            {
+              id: 21,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'h',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+            {
+              id: 23,
+              keywords: ['Adam Kokesh'],
+              topics: ['libertarian'],
+              created_at: 'Thu Mar 12 18:20:20 +0000 2020',
+            },
+            {
+              id: 24,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+            {
+              id: 25,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+            {
+              id: 26,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+            {
+              id: 27,
+              keywords: ['IMPOTUS'],
+              topics: ['impeachment'],
+              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'i',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'j',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'k',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'l',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'm',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'n',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'o',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'p',
+          w2v: 4,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'q',
+          w2v: 2,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'r',
+          w2v: 4,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 's',
+          w2v: 3,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 't',
+          w2v: 5,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'u',
+          w2v: 2,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'v',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'w',
+          w2v: 3,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'x',
+          w2v: 1,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'y',
+          w2v: 2,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+        {
+          screen_name: 'z',
+          w2v: 4,
+          tweets: [
+            {
+              id: 22,
+              keywords: ['democrats'],
+              topics: ['democratic'],
+              created_at: 'Mon Dec 13 15:24:15 +0000 2014',
+            },
+          ],
+          selected: false,
+        },
+      ],
       flat: true,
       color: 'transparent',
       highlightedTopic: '',
@@ -412,15 +646,15 @@ export default {
       get() {
         return this.$store.state.topics
       },
-    },
-    usersSet: {
+    } /*,
+     usersSet: {
       set(val) {
         this.$store.commit('triage/updateUsersSet', val)
       },
       get() {
         return this.$store.state.triage.usersSet
       },
-    },
+    }, */,
   },
   mounted() {
     this.resize()
