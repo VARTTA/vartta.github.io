@@ -15,6 +15,10 @@
               Making Sense of Real-Time Twitter Data. Data 2020, 5, 20.</a
             >
           </p>
+          <h4>
+            Please note that this is a work in progress. This version is under
+            heavy developments :)
+          </h4>
           <p>
             Find a bug? Please report it on the Github
             <a
@@ -37,16 +41,7 @@
           <v-img :aspect-ratio="16 / 9" :src="scenario.cloud">
             <v-expand-transition>
               <div
-                v-if="disconnected"
-                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
-                style="height: 100%;"
-              >
-                Disconnected
-              </div>
-              <div
-                v-else-if="
-                  selectedScenario && selectedScenario.id !== scenario.id
-                "
+                v-if="selectedScenario && selectedScenario.id !== scenario.id"
                 class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
                 style="height: 100%;"
               >
@@ -73,11 +68,7 @@
               large
               right
               top
-              :disabled="
-                disconnected ||
-                (selectedScenario && selectedScenario.id !== scenario.id)
-              "
-              :loading="disconnected"
+              :disabled="(selectedScenario && selectedScenario.id !== scenario.id)"
               @click.stop="toggleConsuming(scenario)"
             >
               <v-icon>
@@ -93,6 +84,61 @@
             </h3>
             <div class="font-weight-light title mb-2">
               {{ scenario.subtitle }}
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-hover>
+    </v-col>
+    <v-col cols="6">
+      <v-hover>
+        <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
+          <v-img :aspect-ratio="16 / 9" src="/form.png">
+            <v-expand-transition>
+              <div
+                v-if="disconnected"
+                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
+                style="height: 100%;"
+              >
+                Disconnected
+              </div>
+              <div
+                v-else-if="selectedScenario && selectedScenario.id !== ''"
+                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
+                style="height: 100%;"
+              >
+                Another scenario is selected...
+              </div>
+              <div
+                v-else-if="hover"
+                class="d-flex text-center transition-fast-in-fast-out darken-2 v-card--reveal display-3 white--text primary"
+                style="height: 100%;"
+              >
+                Start
+              </div>
+            </v-expand-transition>
+          </v-img>
+          <v-card-text class="pt-4" style="position: relative;">
+            <v-btn
+              absolute
+              color="primary"
+              class="white--text"
+              fab
+              large
+              right
+              top
+              :disabled="
+                disconnected || (selectedScenario && selectedScenario.id !== '')
+              "
+              :loading="disconnected"
+              @click.stop=""
+            >
+              <v-icon>mdi-cloud-upload</v-icon>
+            </v-btn>
+            <h3 class="display-1 font-weight-light mb-2 primary--text">
+              Custom Scenario
+            </h3>
+            <div class="font-weight-light title mb-2">
+              You need to be connected to server...
             </div>
           </v-card-text>
         </v-card>

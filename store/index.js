@@ -44,7 +44,7 @@ function initialState() {
         subtitle: 'Causes of mortality, diseases, natural disasters, and more',
         color: 'orange',
         consuming: false,
-        cloud: '/public-health.png',
+        cloud: '/samples/phealth/cloud.png',
         channels: [
           {
             id: 'neoplasms',
@@ -279,7 +279,7 @@ function initialState() {
         subtitle: "Citizens' comments about urban spaces...",
         color: 'blue',
         consuming: false,
-        cloud: '/smartcity.webp',
+        cloud: '/samples/smartcity/cloud.png',
         channels: [
           {
             id: 'transportation',
@@ -352,7 +352,7 @@ function initialState() {
         subtitle: 'Debates about policies, political parties, and more',
         color: 'purple',
         consuming: false,
-        cloud: '/politics.png',
+        cloud: '/samples/politics/cloud.png',
         channels: [
           {
             id: 'democratic',
@@ -464,7 +464,7 @@ export const state = () => ({
       subtitle: 'Causes of mortality, diseases, natural disasters, and more',
       color: 'orange',
       consuming: false,
-      cloud: '/public-health.png',
+      cloud: '/samples/phealth/cloud.png',
       channels: [
         {
           id: 'neoplasms',
@@ -699,7 +699,7 @@ export const state = () => ({
       subtitle: "Citizens' comments about urban spaces...",
       color: 'blue',
       consuming: false,
-      cloud: '/smartcity.webp',
+      cloud: '/samples/smartcity/cloud.png',
       channels: [
         {
           id: 'transportation',
@@ -759,6 +759,12 @@ export const state = () => ({
           ],
         },
       ],
+      data: {
+        tweets: smartcity_tweets,
+        agusers: smartcity_agusers,
+        agtopics: smartcity_agtopics,
+        agkeywords: smartcity_agkeywords,
+      },
     },
     {
       id: 'politics',
@@ -766,7 +772,7 @@ export const state = () => ({
       subtitle: 'Debates about policies, political parties, and more',
       color: 'purple',
       consuming: false,
-      cloud: '/politics.png',
+      cloud: '/samples/politics/cloud.png',
       channels: [
         {
           id: 'democratic',
