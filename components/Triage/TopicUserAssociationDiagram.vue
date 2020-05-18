@@ -207,6 +207,8 @@ export default {
       arcsCoefficient: 0.85,
       transitionDuration: 50,
       sunburst: false,
+      tokenShiftRatio: 0.65,
+      packSizeRatio: 0.7,
     }
   },
   computed: {
@@ -379,7 +381,7 @@ export default {
     },
     pack() {
       return function (d) {
-        const packRadius = this.radius * 0.78
+        const packRadius = this.radius * this.packSizeRatio
         return d3.pack().size([packRadius, packRadius]).padding(30)(
           d3.hierarchy(d).sum((d) => d.value)
         )
@@ -388,8 +390,18 @@ export default {
     packed() {
       return this.pack(this.hierarchizeUsersData)
     },
+    /***
+     *  tokenShiftRatio should change with packSizeRatio to keep bubbles in right place
+     *  tokenShiftRatio = 1 - (packSizeRatio /2 )
+     * */
     circleTransform() {
-      return 'translate(' + this.radius * 0.6 + ',' + this.radius * 0.6 + ')'
+      return (
+        'translate(' +
+        this.radius * this.tokenShiftRatio +
+        ',' +
+        this.radius * this.tokenShiftRatio +
+        ')'
+      )
     },
     circleX() {
       return (d) => {
@@ -475,8 +487,8 @@ export default {
       return (arc, userNode) => {
         const { start, end } = this.calculateCoordinate(arc)
         const node = {}
-        node.x = userNode.x + this.radius * 0.6
-        node.y = userNode.y + this.radius * 0.6
+        node.x = userNode.x + this.radius * this.tokenShiftRatio
+        node.y = userNode.y + this.radius * this.tokenShiftRatio
         start.x = start.x + this.radius
         start.y = start.y + this.radius
         end.x = end.x + this.radius
