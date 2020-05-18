@@ -6,6 +6,23 @@
     :fill-opacity="meta.fillOpacity"
     class="svg chord"
   >
+    <defs>
+      <pattern
+        v-for="(user, index) in users"
+        :id="user.screen_name"
+        :key="index + '-' + user.screen_name + '-image'"
+        patternContentUnits="objectBoundingBox"
+        height="100%"
+        width="100%"
+      >
+        <image
+          width="1"
+          height="1"
+          preserveAspectRatio="none"
+          :xlink:href="user.profile_image_url_https"
+        ></image>
+      </pattern>
+    </defs>
     <!--SUNBURST-->
     <g
       id="sunburstSlices"
@@ -91,8 +108,7 @@
           :stroke="token.strokeColor"
           :stroke-opacity="token.strokeOpacity"
           :stroke-width="token.strokeSize"
-          :fill="circleFill(index)"
-          :fill-opacity="token.opacity"
+          :fill="'url(#' + item.data.screen_name + ')'"
           :transform="circleTransform"
           @mouseover="highlightConnectedSet({ user: item })"
           @mouseout="removeHighlights"
