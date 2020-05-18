@@ -416,7 +416,7 @@ export default {
     colorToken() {
       const that = this
       return d3.scaleOrdinal(
-        d3.quantize(d3.interpolateTurbo, that.numberOfCandidateUsers)
+        d3.quantize(d3.interpolateRainbow, that.users.length)
       )
     },
     /**
