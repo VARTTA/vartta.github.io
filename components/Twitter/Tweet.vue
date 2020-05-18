@@ -1,210 +1,235 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-row class="text-left">
-    <v-col>
-      <v-card
-        hover
-        class="`elevation-${hover ? 12 : 2}`"
-        :color="!contextMenu && selected ? 'blue lighten-5' : 'white'"
-        style="flex: initial !important; overflow: hidden;"
-      >
-        <v-card-actions>
-          <v-list-tile class="grow" style="max-width: 70%;">
-            <v-list-tile-avatar>
-              <v-img
-                class="elevation-6"
-                :src="tweet.user.profile_image_url_https || '/person.png'"
-              ></v-img>
-              <v-icon
-                v-if="tweet.user.verified"
-                color="primary"
-                class="subheading"
-              >
-                mdi-check
-              </v-icon>
-            </v-list-tile-avatar>
-
-            <v-list-tile-content style="margin-left: -4px;">
-              <v-list-tile-title>{{ tweet.user.name }}</v-list-tile-title>
-              <v-list-tile-sub-title class="caption">
-                <a
-                  style="text-decoration: none;"
-                  :href="'https://twitter.com/' + tweet.user.screen_name"
-                  target="_blank"
-                >
-                  @{{ tweet.user.screen_name }}
-                </a>
-              </v-list-tile-sub-title>
-            </v-list-tile-content>
-            <!--            <v-spacer></v-spacer>-->
-            <!--            <v-layout align-center justify-end>-->
-            <!--              <v-icon class="mr-1" small>mdi-favorite</v-icon>-->
-            <!--              <span class="subheading mr-2">{{ tweet.favorite_count }}</span>-->
-            <!--              <v-icon class="mr-1" small>mdi-share</v-icon>-->
-            <!--              <span class="subheading">{{ tweet.retweet_count }}</span>-->
-            <!--            </v-layout>-->
-          </v-list-tile>
-          <v-spacer></v-spacer>
-          <span class="caption">{{ niceDate }}</span>
-          <v-btn v-if="!contextMenu" flat fab icon small @click="clicked">
-            <v-icon color="indigo">
-              mdi-{{ tweet.selected ? 'remove-circle' : 'add-circle' }}
-            </v-icon>
-          </v-btn>
-          <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{ on }">
-              <v-btn flat fab icon small color="red" v-on="on">
-                <v-icon>mdi-edit</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Edit Tweet Labeling</span>
-              </v-card-title>
-              <v-card-text>
-                <!--                error  'grid-list-md' has been removed  vuetify/no-legacy-grid-->
-                <v-container>
-                  <v-row>
-                    <!--  eslint-disable-next-line vue/no-v-html-->
-                    <v-col cols="12" v-html="decoratedText"></v-col>
-                    <v-col cols="6">
-                      <v-combobox
-                        v-model="customGroup"
-                        :items="groups"
-                        chips
-                        label="User Category"
-                        clearable
-                      >
-                        <template v-slot:selection="data">
-                          <v-chip
-                            :key="JSON.stringify(data.item)"
-                            :selected="data.selected"
-                            class="v-chip--select-multi"
-                            @click.stop="data.parent.selectedIndex = data.index"
-                            @input="data.parent.selectItem(data.item)"
-                          >
-                            <v-avatar class="accent white--text">
-                              <v-icon>mdi-account-circle</v-icon>
-                            </v-avatar>
-                            {{ data.item }}
-                          </v-chip>
-                        </template>
-                      </v-combobox>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-combobox
-                        v-model="customTheme"
-                        :items="themes"
-                        chips
-                        label="Content Theme"
-                        clearable
-                      >
-                        <template v-slot:selection="data">
-                          <v-chip
-                            :key="JSON.stringify(data.item)"
-                            :selected="data.selected"
-                            class="v-chip--select-multi"
-                            @click.stop="data.parent.selectedIndex = data.index"
-                            @input="data.parent.selectItem(data.item)"
-                          >
-                            <v-avatar class="accent white--text">
-                              <v-icon>mdi-tag</v-icon>
-                            </v-avatar>
-                            {{ data.item }}
-                          </v-chip>
-                        </template>
-                      </v-combobox>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" flat @click="closeDialog(false)">
-                  Close
-                </v-btn>
-                <v-btn color="blue darken-1" flat @click="closeDialog(true)">
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-btn flat fab icon small @click="expand = !expand">
-            <v-icon>mdi-{{ expand ? 'menu' : 'menu-open' }}</v-icon>
-          </v-btn>
-        </v-card-actions>
-        <v-card-text>
-          <v-row>
-            <v-col v-show="expand" cols="12" class="transition-ease-in-out">
-              <v-tabs v-model="active" centered grow slider-color="grey">
-                <v-tab ripple>
-                  <v-icon>mdi-emoji-emotions</v-icon>
-                </v-tab>
-                <v-tab ripple>
-                  <v-icon>mdi-speaker-notes</v-icon>
-                </v-tab>
-                <v-tab-item>
-                  <div
-                    v-for="label in sortedAnalysis"
-                    :key="label.id"
-                    class="text-center"
-                  >
-                    <span>{{ label.id }}: </span>
-                    <v-chip
-                      :color="label.result > 0 ? 'green' : 'orange'"
-                      outline
-                    >
-                      <v-avatar style="margin-right: 0px;">
-                        <v-icon>
-                          mdi-{{ label.result > 0 ? 'mood' : 'mood-bad' }}
-                        </v-icon>
-                      </v-avatar>
-                      <strong>{{ (+label.result).toPrecision(2) }}</strong>
-                    </v-chip>
-                    <v-divider></v-divider>
-                  </div>
-                </v-tab-item>
-                <v-tab-item>
-                  <div
-                    v-for="label in sortedLabels"
-                    :key="label.id"
-                    class="text-center"
-                  >
-                    <span>{{ label.id }}: </span> <br />
-                    <v-chip :color="colorScale(label.result.group)" outline>
-                      <v-avatar style="margin-right: 0px;">
-                        <v-icon>mdi-account-circle</v-icon>
-                      </v-avatar>
-                      <strong>{{ label.result.group }}</strong>
-                    </v-chip>
-                    <v-chip :color="colorScale(label.result.theme)" outline>
-                      <v-avatar style="margin-right: 0px;">
-                        <v-icon>mdi-label</v-icon>
-                      </v-avatar>
-                      <strong>{{ label.result.theme }}</strong>
-                    </v-chip>
-                    <v-divider></v-divider>
-                  </div>
-                </v-tab-item>
-              </v-tabs>
-            </v-col>
-            <v-col cols="12">
-              <span v-if="tweet.possibly_sensitive" class="red--text caption">
-                Possibly Sensitive
+  <div>
+    <v-row class="text-left">
+      <v-col cols="2">
+        <v-row justify="start" align="center">
+          <v-avatar>
+            <img
+              :src="tweet.user.profile_image_url_https || '/person.png'"
+              :alt="tweet.user.screen_name"
+            />
+          </v-avatar>
+        </v-row>
+      </v-col>
+      <v-col cols="10">
+        <v-row justify="start" align="center">
+          <div class="text-truncate" style="max-width: 85%;">
+            <a
+              style="text-decoration: none; color: unset !important;"
+              :href="'https://twitter.com/' + tweet.user.screen_name"
+              target="_blank"
+            >
+              <span class="font-weight-bold">
+                {{ tweet.user.name }}
               </span>
-              <!--  eslint-disable-next-line vue/no-v-html-->
-              <div class="body-2" v-html="decoratedText"></div>
-              <!--              <span-->
-              <!--                v-if="tweet.labels.find(a => a.id === 'custom')"-->
-              <!--                class="red&#45;&#45;text"-->
-              <!--              >-->
-              <!--                {{ tweet.labels.find(a => a.id === 'custom') }}-->
-              <!--              </span>-->
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+              <v-icon v-if="true" color="primary" small class="subheading">
+                mdi-check-decagram
+              </v-icon>
+              <span class="text--grey">@{{ tweet.user.screen_name }}</span>
+            </a>
+          </div>
+          <span class="caption">· {{ niceDate }}</span>
+        </v-row>
+        <v-row justify="start" align="start">
+          <div class="body-2" v-html="decoratedText"></div>
+        </v-row>
+      </v-col>
+      <v-col cols="12">
+        <v-btn icon text large><v-icon>mdi-account-circle</v-icon></v-btn>
+        <v-btn icon text large><v-icon>mdi-text-box</v-icon></v-btn>
+      </v-col>
+    </v-row>
+    <v-divider></v-divider>
+  </div>
+  <!--  <v-col cols="12">-->
+  <!--    <v-card-->
+  <!--      hover-->
+  <!--      class="`elevation-${hover ? 12 : 2}`"-->
+  <!--      :color="!contextMenu && selected ? 'blue lighten-5' : 'white'"-->
+  <!--      style="flex: initial !important; overflow: hidden;"-->
+  <!--    >-->
+  <!--      <v-card-actions>-->
+  <!--        <v-list-tile class="grow" style="max-width: 70%;">-->
+  <!--          <v-list-tile-avatar>-->
+  <!--            <v-img-->
+  <!--              class="elevation-6"-->
+  <!--              :src=""-->
+  <!--            ></v-img>-->
+  <!--          </v-list-tile-avatar>-->
+
+  <!--          <v-list-tile-content style="margin-left: -4px;">-->
+  <!--            <v-list-tile-title>{{ tweet.user.name }}</v-list-tile-title>-->
+  <!--            <v-list-tile-sub-title class="caption">-->
+
+  <!--            </v-list-tile-sub-title>-->
+  <!--          </v-list-tile-content>-->
+  <!--          &lt;!&ndash;            <v-spacer></v-spacer>&ndash;&gt;-->
+  <!--          &lt;!&ndash;            <v-layout align-center justify-end>&ndash;&gt;-->
+  <!--          &lt;!&ndash;              <v-icon class="mr-1" small>mdi-favorite</v-icon>&ndash;&gt;-->
+  <!--          &lt;!&ndash;              <span class="subheading mr-2">{{ tweet.favorite_count }}</span>&ndash;&gt;-->
+  <!--          &lt;!&ndash;              <v-icon class="mr-1" small>mdi-share</v-icon>&ndash;&gt;-->
+  <!--          &lt;!&ndash;              <span class="subheading">{{ tweet.retweet_count }}</span>&ndash;&gt;-->
+  <!--          &lt;!&ndash;            </v-layout>&ndash;&gt;-->
+  <!--        </v-list-tile>-->
+  <!--        <v-btn v-if="!contextMenu" text fab icon small @click="clicked">-->
+  <!--          <v-icon color="indigo">-->
+  <!--            mdi-{{ tweet.selected ? 'remove-circle' : 'add-circle' }}-->
+  <!--          </v-icon>-->
+  <!--        </v-btn>-->
+  <!--        <v-dialog v-model="dialog" max-width="600px">-->
+  <!--          <template v-slot:activator="{ on }">-->
+  <!--            <v-btn text fab icon small color="red" v-on="on">-->
+  <!--              <v-icon>mdi-edit</v-icon>-->
+  <!--            </v-btn>-->
+  <!--          </template>-->
+  <!--          <v-card>-->
+  <!--            <v-card-title>-->
+  <!--              <span class="headline">Edit Tweet Labeling</span>-->
+  <!--            </v-card-title>-->
+  <!--            <v-card-text>-->
+  <!--              &lt;!&ndash;                error  'grid-list-md' has been removed  vuetify/no-legacy-grid&ndash;&gt;-->
+  <!--              <v-container>-->
+  <!--                <v-row>-->
+  <!--                  &lt;!&ndash;  eslint-disable-next-line vue/no-v-html&ndash;&gt;-->
+  <!--                  <v-col cols="12" v-html="decoratedText"></v-col>-->
+  <!--                  <v-col cols="6">-->
+  <!--                    <v-combobox-->
+  <!--                      v-model="customGroup"-->
+  <!--                      :items="groups"-->
+  <!--                      chips-->
+  <!--                      label="User Category"-->
+  <!--                      clearable-->
+  <!--                    >-->
+  <!--                      <template v-slot:selection="data">-->
+  <!--                        <v-chip-->
+  <!--                          :key="JSON.stringify(data.item)"-->
+  <!--                          :selected="data.selected"-->
+  <!--                          class="v-chip&#45;&#45;select-multi"-->
+  <!--                          @click.stop="data.parent.selectedIndex = data.index"-->
+  <!--                          @input="data.parent.selectItem(data.item)"-->
+  <!--                        >-->
+  <!--                          <v-avatar class="accent white&#45;&#45;text">-->
+  <!--                            <v-icon>mdi-account-circle</v-icon>-->
+  <!--                          </v-avatar>-->
+  <!--                          {{ data.item }}-->
+  <!--                        </v-chip>-->
+  <!--                      </template>-->
+  <!--                    </v-combobox>-->
+  <!--                  </v-col>-->
+  <!--                  <v-col cols="6">-->
+  <!--                    <v-combobox-->
+  <!--                      v-model="customTheme"-->
+  <!--                      :items="themes"-->
+  <!--                      chips-->
+  <!--                      label="Content Theme"-->
+  <!--                      clearable-->
+  <!--                    >-->
+  <!--                      <template v-slot:selection="data">-->
+  <!--                        <v-chip-->
+  <!--                          :key="JSON.stringify(data.item)"-->
+  <!--                          :selected="data.selected"-->
+  <!--                          class="v-chip&#45;&#45;select-multi"-->
+  <!--                          @click.stop="data.parent.selectedIndex = data.index"-->
+  <!--                          @input="data.parent.selectItem(data.item)"-->
+  <!--                        >-->
+  <!--                          <v-avatar class="accent white&#45;&#45;text">-->
+  <!--                            <v-icon>mdi-tag</v-icon>-->
+  <!--                          </v-avatar>-->
+  <!--                          {{ data.item }}-->
+  <!--                        </v-chip>-->
+  <!--                      </template>-->
+  <!--                    </v-combobox>-->
+  <!--                  </v-col>-->
+  <!--                </v-row>-->
+  <!--              </v-container>-->
+  <!--            </v-card-text>-->
+  <!--            <v-card-actions>-->
+  <!--              <v-spacer></v-spacer>-->
+  <!--              <v-btn color="blue darken-1" text @click="closeDialog(false)">-->
+  <!--                Close-->
+  <!--              </v-btn>-->
+  <!--              <v-btn color="blue darken-1" text @click="closeDialog(true)">-->
+  <!--                Save-->
+  <!--              </v-btn>-->
+  <!--            </v-card-actions>-->
+  <!--          </v-card>-->
+  <!--        </v-dialog>-->
+  <!--        <v-btn text fab icon small @click="expand = !expand">-->
+  <!--          <v-icon>mdi-{{ expand ? 'menu' : 'menu-open' }}</v-icon>-->
+  <!--        </v-btn>-->
+  <!--      </v-card-actions>-->
+  <!--      <v-card-text>-->
+  <!--        <v-row>-->
+  <!--          <v-col v-show="expand" cols="12" class="transition-ease-in-out">-->
+  <!--            <v-tabs v-model="active" centered grow slider-color="grey">-->
+  <!--              <v-tab ripple>-->
+  <!--                <v-icon>mdi-emoji-emotions</v-icon>-->
+  <!--              </v-tab>-->
+  <!--              <v-tab ripple>-->
+  <!--                <v-icon>mdi-speaker-notes</v-icon>-->
+  <!--              </v-tab>-->
+  <!--              <v-tab-item>-->
+  <!--                <div-->
+  <!--                  v-for="label in sortedAnalysis"-->
+  <!--                  :key="label.id"-->
+  <!--                  class="text-center"-->
+  <!--                >-->
+  <!--                  <span>{{ label.id }}: </span>-->
+  <!--                  <v-chip-->
+  <!--                    :color="label.result > 0 ? 'green' : 'orange'"-->
+  <!--                    outlined-->
+  <!--                  >-->
+  <!--                    <v-avatar style="margin-right: 0px;">-->
+  <!--                      <v-icon>-->
+  <!--                        mdi-{{ label.result > 0 ? 'mood' : 'mood-bad' }}-->
+  <!--                      </v-icon>-->
+  <!--                    </v-avatar>-->
+  <!--                    <strong>{{ (+label.result).toPrecision(2) }}</strong>-->
+  <!--                  </v-chip>-->
+  <!--                  <v-divider></v-divider>-->
+  <!--                </div>-->
+  <!--              </v-tab-item>-->
+  <!--              <v-tab-item>-->
+  <!--                <div-->
+  <!--                  v-for="label in sortedLabels"-->
+  <!--                  :key="label.id"-->
+  <!--                  class="text-center"-->
+  <!--                >-->
+  <!--                  <span>{{ label.id }}: </span> <br />-->
+  <!--                  <v-chip :color="colorScale(label.result.group)" outlined>-->
+  <!--                    <v-avatar style="margin-right: 0px;">-->
+  <!--                      <v-icon>mdi-account-circle</v-icon>-->
+  <!--                    </v-avatar>-->
+  <!--                    <strong>{{ label.result.group }}</strong>-->
+  <!--                  </v-chip>-->
+  <!--                  <v-chip :color="colorScale(label.result.theme)" outlined>-->
+  <!--                    <v-avatar style="margin-right: 0px;">-->
+  <!--                      <v-icon>mdi-label</v-icon>-->
+  <!--                    </v-avatar>-->
+  <!--                    <strong>{{ label.result.theme }}</strong>-->
+  <!--                  </v-chip>-->
+  <!--                  <v-divider></v-divider>-->
+  <!--                </div>-->
+  <!--              </v-tab-item>-->
+  <!--            </v-tabs>-->
+  <!--          </v-col>-->
+  <!--          <v-col cols="12">-->
+  <!--              <span v-if="tweet.possibly_sensitive" class="red&#45;&#45;text caption">-->
+  <!--                Possibly Sensitive-->
+  <!--              </span>-->
+  <!--            &lt;!&ndash;  eslint-disable-next-line vue/no-v-html&ndash;&gt;-->
+  <!--            <div class="body-2" v-html="decoratedText"></div>-->
+  <!--            &lt;!&ndash;              <span&ndash;&gt;-->
+  <!--            &lt;!&ndash;                v-if="tweet.labels.find(a => a.id === 'custom')"&ndash;&gt;-->
+  <!--            &lt;!&ndash;                class="red&#45;&#45;text"&ndash;&gt;-->
+  <!--            &lt;!&ndash;              >&ndash;&gt;-->
+  <!--            &lt;!&ndash;                {{ tweet.labels.find(a => a.id === 'custom') }}&ndash;&gt;-->
+  <!--            &lt;!&ndash;              </span>&ndash;&gt;-->
+  <!--          </v-col>-->
+  <!--        </v-row>-->
+  <!--      </v-card-text>-->
+  <!--    </v-card>-->
+  <!--  </v-col>-->
 </template>
 
 <script>
@@ -368,7 +393,7 @@ export default {
       for (const kw of this.tweet.keywords) {
         const regEx = new RegExp(kw, 'ig')
         text = text.replace(regEx, (matched, index, original) => {
-          return '<mark>' + matched + '</mark>'
+          return '<u>' + matched + '</u>'
         })
       }
       return (
@@ -437,5 +462,11 @@ export default {
   border-style: solid;
   border-width: thin;
   border-color: #cecece;
+}
+.text-truncate {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

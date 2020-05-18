@@ -1,13 +1,13 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-col cols="4" class="boxed text-center grow">
-    <b class="title">{{ title }}</b>
-    <v-divider></v-divider>
-    <v-col
-      :id="'tweetcollection-' + title"
-      style="overflow: auto; height: 55vh;"
-    >
-      <!--      error  'column' has been removed  vuetify/no-legacy-grid-->
-      <v-row :id="'tweetcontainer-' + title" justify="center">
+  <v-col cols="4">
+    <v-card :id="'tweetcollection-' + title" outlined>
+      <v-card-title class="text-center">
+        <b class="title">{{ title }}</b>
+      </v-card-title>
+      <v-card-text
+        :id="'tweetcontainer-' + title"
+        style="overflow: auto; height: 55vh;"
+      >
         <tweet
           v-for="(tweet, index) in sortedTweets"
           :id="'tweet-' + tweet.id_str"
@@ -18,34 +18,36 @@
           @deselected="removeTweet"
           @customLabelTweet="updateTweet"
         ></tweet>
-      </v-row>
-    </v-col>
-    <v-divider></v-divider>
-    <v-container v-if="selectedTweets.length > 0" fluid>
-      <v-row justify="space-around" align="center">
-        <v-badge
-          v-for="(tweet, index) in selectedTweets"
-          :key="index"
-          overlap
-          color="orange"
-          class="badge"
-          style="cursor: pointer;"
-        >
-          <template v-slot:badge>
-            <v-icon small dark @click="removeTweet.call(this, tweet)">
-              mdi-close
-            </v-icon>
-          </template>
-          <v-avatar elevation>
-            <img
-              :src="tweet.user.profile_image_url_https"
-              :alt="tweet.user.screen_name"
-              @click="clicked.call({}, tweet)"
-            />
-          </v-avatar>
-        </v-badge>
-      </v-row>
-    </v-container>
+      </v-card-text>
+      <v-card-text v-if="selectedTweets.length > 0">
+        <v-row justify="space-around" align="center">
+          <v-badge
+            v-for="(tweet, index) in selectedTweets"
+            :key="index"
+            overlap
+            color="orange"
+            class="badge"
+            style="cursor: pointer;"
+          >
+            <template v-slot:badge>
+              <v-icon small dark @click="removeTweet.call(this, tweet)">
+                mdi-close
+              </v-icon>
+            </template>
+            <v-avatar elevation>
+              <img
+                :src="tweet.user.profile_image_url_https"
+                :alt="tweet.user.screen_name"
+                @click="clicked.call({}, tweet)"
+              />
+            </v-avatar>
+          </v-badge>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        Some things to be added...
+      </v-card-actions>
+    </v-card>
   </v-col>
 </template>
 
