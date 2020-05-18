@@ -1,11 +1,3 @@
-export const strict = false
-function initialState() {
-  return {
-    selectedMachineLearningMethod: '',
-    selectedSentimentAnalysisMethod: '',
-    selectedTopic: '',
-  }
-}
 export const state = () => ({
   selectedMachineLearningMethod: '',
   selectedSentimentAnalysisMethod: '',
@@ -13,11 +5,14 @@ export const state = () => ({
 })
 
 export const mutations = {
-  reset(state) {
-    const initial = initialState()
-    Object.keys(initial).forEach((key) => {
-      state[key] = initial[key]
-    })
+  resetSelectedMachineLearningMethod(state) {
+    state.selectedMachineLearningMethod = ''
+  },
+  resetSelectedSentimentAnalysisMethod(state) {
+    state.selectedSentimentAnalysisMethod = ''
+  },
+  resetSelectedTopic(state) {
+    state.selectedTopic = ''
   },
   updateSelectedMachineLearningMethod(state, data) {
     state.selectedMachineLearningMethod = data
@@ -27,5 +22,13 @@ export const mutations = {
   },
   updateSelectedTopic(state, data) {
     state.selectedTopic = data
+  },
+}
+
+export const actions = {
+  reset({ commit }) {
+    commit('resetSelectedMachineLearningMethod')
+    commit('resetSelectedSentimentAnalysisMethod')
+    commit('resetSelectedTopic')
   },
 }

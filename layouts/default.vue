@@ -92,6 +92,10 @@ export default {
       clipped: true,
       drawer: false,
       fixed: false,
+      miniVariant: true,
+      right: true,
+      rightDrawer: false,
+      title: 'VARTTA',
       items: [
         {
           icon: 'mdi-apps',
@@ -119,10 +123,6 @@ export default {
           to: '/triage',
         },
       ],
-      miniVariant: true,
-      right: true,
-      rightDrawer: false,
-      title: 'VARTTA',
       // Data required for connection metrics
       pingPong: {
         start: 0,
@@ -151,9 +151,6 @@ export default {
       for (const num of this.pingPong.history) avg += num
       avg = (10 * avg) / (this.pingPong.history.length * 10)
       return avg
-    },
-    selectedScenario() {
-      return this.$store.state.scenarios.find((a) => a.consuming)
     },
     dark: {
       get() {
@@ -227,6 +224,7 @@ export default {
       this.$store.commit('updateAggregatedUsers', msg.aggregatedUsers)
       this.$store.commit('updateAggregatedKeywords', msg.aggregatedKeywords)
       this.$store.commit('addToRawTweets', msg.tweets)
+      // this.$store.commit('addToRawTweets', msg.users)
     },
   },
 }
