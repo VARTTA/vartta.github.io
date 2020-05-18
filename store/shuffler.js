@@ -2,6 +2,7 @@ export const strict = false
 function initialState() {
   return {
     topicsTreeSelections: [],
+    treeViewOpenItems: [],
     minimizeTopics: false,
   }
 }
@@ -22,5 +23,8 @@ export const mutations = {
   },
   updateMinimizeTopics(state, val) {
     state.minimizeTopics = val
+  },
+  updateTreeViewOpenItems(state, val) {
+    state.treeViewOpenItems = val
   },
 }

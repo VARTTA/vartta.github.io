@@ -1,237 +1,56 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-row>
-    <v-col class="shrink" :xs2="!minimizeTopics" :xs1="minimizeTopics">
-      <!--      error  'column' has been removed  vuetify/no-legacy-grid-->
-      <v-row class="fill-height" align="space-between" justify="start">
-        <v-col>
-          <v-card flat>
-            <v-toolbar card color="grey lighten-3">
-              <v-btn
-                :color="minimizeTopics ? 'grey' : 'indigo'"
-                icon
-                flat
-                dark
-                @click="minimizeTopics = !minimizeTopics"
-              >
-                <v-icon>
-                  mdi-{{ `chevron-${minimizeTopics ? 'right' : 'left'}` }}
-                </v-icon>
-              </v-btn>
-              <v-toolbar-title v-if="!minimizeTopics">Topics</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <!--              <v-dialog v-model="dialog" max-width="600px">-->
-              <!--                <template v-slot:activator="{ on }">-->
-              <!--                  <v-btn flat icon color="primary" v-on="on">-->
-              <!--                    <v-icon>edit</v-icon>-->
-              <!--                  </v-btn>-->
-              <!--                </template>-->
-              <!--                <v-card>-->
-              <!--                  <v-card-title>-->
-              <!--                    <span class="headline">Edit/Add Topic</span>-->
-              <!--                  </v-card-title>-->
-              <!--                  <v-card-text>-->
-              <!--                    <v-container grid-list-md>-->
-              <!--                      <v-layout wrap>-->
-              <!--                        <v-flex xs12>-->
-              <!--                          <v-combobox-->
-              <!--                            v-model="temp_topic.channel"-->
-              <!--                            :items="channels"-->
-              <!--                            item-text="name"-->
-              <!--                            item-value="id"-->
-              <!--                            :return-object="false"-->
-              <!--                            :search-input.sync="search"-->
-              <!--                            label="Topic*"-->
-              <!--                            hint="Select an existing topic or add a new one."-->
-              <!--                            persistent-hint-->
-              <!--                          >-->
-              <!--                            <template v-slot:no-data>-->
-              <!--                              <v-list-tile>-->
-              <!--                                <v-list-tile-content>-->
-              <!--                                  <v-list-tile-title>-->
-              <!--                                    No results matching "<strong>{{-->
-              <!--                                      search-->
-              <!--                                    }}</strong>-->
-              <!--                                    ". Press <kbd>enter</kbd> to create a new-->
-              <!--                                    one-->
-              <!--                                  </v-list-tile-title>-->
-              <!--                                </v-list-tile-content>-->
-              <!--                              </v-list-tile>-->
-              <!--                            </template>-->
-              <!--                          </v-combobox>-->
-              <!--                        </v-flex>-->
-              <!--                        <v-flex xs12>-->
-              <!--                          <v-combobox-->
-              <!--                            v-model="temp_topic.keywords"-->
-              <!--                            :items="getChildren(temp_topic.channel)"-->
-              <!--                            :value="getChildren(temp_topic.channel)"-->
-              <!--                            item-text="name"-->
-              <!--                            item-value="id"-->
-              <!--                            :return-object="false"-->
-              <!--                            :search-input.sync="search2"-->
-              <!--                            label="Keyword(s)"-->
-              <!--                            hint="Add new keywords"-->
-              <!--                            multiple-->
-              <!--                            persistent-hint-->
-              <!--                            chips-->
-              <!--                            deletable-chips-->
-              <!--                          >-->
-              <!--                            <template v-slot:no-data>-->
-              <!--                              <v-list-tile>-->
-              <!--                                <v-list-tile-content>-->
-              <!--                                  <v-list-tile-title>-->
-              <!--                                    No results matching "<strong>{{-->
-              <!--                                      search2-->
-              <!--                                    }}</strong>-->
-              <!--                                    ". Press <kbd>enter</kbd> to create a new-->
-              <!--                                    one-->
-              <!--                                  </v-list-tile-title>-->
-              <!--                                </v-list-tile-content>-->
-              <!--                              </v-list-tile>-->
-              <!--                            </template>-->
-              <!--                          </v-combobox>-->
-              <!--                        </v-flex>-->
-              <!--                      </v-layout>-->
-              <!--                    </v-container>-->
-              <!--                    <small>*indicates required field</small>-->
-              <!--                  </v-card-text>-->
-              <!--                  <v-card-actions>-->
-              <!--                    <v-spacer></v-spacer>-->
-              <!--                    <v-btn-->
-              <!--                      color="blue darken-1"-->
-              <!--                      flat-->
-              <!--                      @click="closeDialog(false)"-->
-              <!--                    >-->
-              <!--                      Close-->
-              <!--                    </v-btn>-->
-              <!--                    <v-btn-->
-              <!--                      color="blue darken-1"-->
-              <!--                      flat-->
-              <!--                      @click="closeDialog(true)"-->
-              <!--                    >-->
-              <!--                      Save-->
-              <!--                    </v-btn>-->
-              <!--                  </v-card-actions>-->
-              <!--                </v-card>-->
-              <!--              </v-dialog>-->
-              <v-btn flat icon color="red" @click="topicsTreeSelections = []">
-                <v-icon>mdi-replay</v-icon>
-              </v-btn>
-            </v-toolbar>
-
-            <v-row>
-              <v-col>
-                <v-card-text class="text-truncate">
-                  <v-treeview
-                    v-model="topicsTreeSelections"
-                    class="text-truncate"
-                    :items="topicItems"
-                    selected-color="indigo"
-                    activatable
-                    multiple-active
-                    open-on-click
-                    selectable
-                    expand-icon="expand-more"
-                  >
-                  </v-treeview>
-                </v-card-text>
-              </v-col>
-            </v-row>
-          </v-card>
-          <!--          <v-card flat>-->
-          <!--            <v-toolbar card color="grey lighten-3">-->
-          <!--              <v-icon>mdi-class</v-icon>-->
-          <!--              <v-toolbar-title>Sources</v-toolbar-title>-->
-          <!--              <v-spacer></v-spacer>-->
-          <!--              <v-btn-->
-          <!--                flat-->
-          <!--                icon-->
-          <!--                color="red"-->
-          <!--                @click="userGroupsTreeSelections = []"-->
-          <!--              >-->
-          <!--                <v-icon>rmdi-eplay</v-icon>-->
-          <!--              </v-btn>-->
-          <!--            </v-toolbar>-->
-
-          <!--            <v-layout>-->
-          <!--              <v-flex>-->
-          <!--                <v-card-text-->
-          <!--                  style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;"-->
-          <!--                >-->
-          <!--                  <v-treeview-->
-          <!--                    v-model="userGroupsTreeSelections"-->
-          <!--                    :items="userGroupItems"-->
-          <!--                    selected-color="indigo"-->
-          <!--                    activatable-->
-          <!--                    multiple-active-->
-          <!--                    open-on-click-->
-          <!--                    selectable-->
-          <!--                    expand-icon="expand_more"-->
-          <!--                  >-->
-          <!--                  </v-treeview>-->
-          <!--                </v-card-text>-->
-          <!--              </v-flex>-->
-          <!--            </v-layout>-->
-          <!--          </v-card>-->
-          <!--          <v-card flat>-->
-          <!--            <v-toolbar card color="grey lighten-3">-->
-          <!--              <v-icon>class</v-icon>-->
-          <!--              <v-toolbar-title>Content Themes</v-toolbar-title>-->
-          <!--              <v-spacer></v-spacer>-->
-          <!--              <v-btn-->
-          <!--                flat-->
-          <!--                icon-->
-          <!--                color="red"-->
-          <!--                @click="contentThemeTreeSelections = []"-->
-          <!--              >-->
-          <!--                <v-icon>replay</v-icon>-->
-          <!--              </v-btn>-->
-          <!--            </v-toolbar>-->
-
-          <!--            <v-layout>-->
-          <!--              <v-flex>-->
-          <!--                <v-card-text-->
-          <!--                  style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;"-->
-          <!--                >-->
-          <!--                  <v-treeview-->
-          <!--                    v-model="contentThemeTreeSelections"-->
-          <!--                    :items="contentThemeItems"-->
-          <!--                    selected-color="indigo"-->
-          <!--                    activatable-->
-          <!--                    multiple-active-->
-          <!--                    open-on-click-->
-          <!--                    selectable-->
-          <!--                    expand-icon="expand_more"-->
-          <!--                  >-->
-          <!--                  </v-treeview>-->
-          <!--                </v-card-text>-->
-          <!--              </v-flex>-->
-          <!--            </v-layout>-->
-          <!--          </v-card>-->
-        </v-col>
-      </v-row>
+  <v-row align="start" justify="start">
+    <v-col :cols="minimizeTopics ? '2' : '3'">
+      <v-card outlined>
+        <v-card-title>
+          <v-toolbar-title>Topics</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="indigo"
+            icon
+            text
+            dark
+            @click="minimizeTopics = !minimizeTopics"
+          >
+            <v-icon>
+              mdi-{{ `unfold-${minimizeTopics ? 'more' : 'less'}-vertical` }}
+            </v-icon>
+          </v-btn>
+          <v-btn text icon color="red" @click="topicsTreeSelections = []">
+            <v-icon>mdi-replay</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text class="text-truncate">
+          <v-treeview
+            v-model="topicsTreeSelections"
+            class="text-truncate"
+            :items="topicItems"
+            :open="treeViewOpenItems"
+            color="indigo"
+            dense
+            activatable
+            transition
+            hoverable
+            multiple-active
+            open-on-click
+            selectable
+          >
+          </v-treeview>
+        </v-card-text>
+      </v-card>
     </v-col>
-    <v-col :xs10="!minimizeTopics" :xs11="minimizeTopics">
-      <!--      <v-btn block flat color="error" dark @click="rawTweets = []">-->
-      <!--        Empty Results-->
-      <!--        <v-icon right>delete</v-icon>-->
-      <!--      </v-btn>-->
-      <!--      error  'column' has been removed  vuetify/no-legacy-grid-->
+    <v-col :cols="minimizeTopics ? '10' : '9'">
       <v-row class="fill-height" justify="center">
-        <v-col id="topics-columns" class="smooth-scroll grow">
-          <v-row>
-            <v-col v-if="selectedChannels.length === 0" style="height: 55vh;">
-              <!--              error  'column' has been removed  vuetify/no-legacy-grid-->
-              <v-row
-                class="text-center fill-height"
-                justify="center"
-                align="center"
-              >
-                <h3 class="display-2 grey--text">
-                  Please select some topics or keywords...
-                </h3>
-                <v-btn loading disabled icon></v-btn>
-              </v-row>
-            </v-col>
+        <v-col cols="12">
+          <v-row
+            id="topics-columns"
+            align="start"
+            justify="start"
+            class="smooth-scroll flex-nowrap"
+            style="height: 100%; max-height: 100%;"
+            dense
+            no-gutters
+          >
             <tweet-collection
               v-for="(channel, index) in selectedChannels"
               :id="'column-' + channel"
@@ -246,86 +65,54 @@
               @tweetDeselect="tweetDeselect"
               @updateTweet="updateTweet"
             ></tweet-collection>
-            <!--            <v-flex v-for="(tweet, i) in filteredTweets" :key="i">-->
-            <!--              <tweet-->
-            <!--                :tweet="tweet"-->
-            <!--                :selected="tweet.selected"-->
-            <!--                @selected="setDetails"-->
-            <!--                @deselected="unsetDetails"-->
-            <!--                @customLabelTweet="updateTweet"-->
-            <!--              ></tweet>-->
-            <!--              &lt;!&ndash;              <test-tweet :id-str="tweet.id_str"></test-tweet>&ndash;&gt;-->
-            <!--            </v-flex>-->
           </v-row>
-        </v-col>
-        <v-col :id="charts.contextMap.divId" class="grow text-center">
-          <context-map-wrapper
-            :id="charts.contextMap.id"
-            :div-id="charts.contextMap.divId"
-            :label="charts.contextMap.label"
-            :width="charts.contextMap.width"
-            :height="charts.contextMap.height"
-            :topics="topics.map((a) => a.id).sort()"
-            :tweets="selectedTweets"
-            :flat="flat"
-            @topicSelected="topicSelected"
-            @tweetClicked="toggleTweetExamMenu"
-          ></context-map-wrapper>
-        </v-col>
-        <v-divider></v-divider>
-        <v-col>
-          <v-row>
-            <v-col
-              v-for="(tweet, index) in examMenu"
-              :key="'examMenu-' + index"
-              cols="3"
+          <v-responsive
+            v-if="selectedChannels.length === 0"
+            max-height="70vh"
+            class="text-center pa-2"
+          >
+            <v-row
+              class="text-center fill-height"
+              justify="center"
+              align="center"
             >
-              <tweet
-                :tweet="tweet"
-                :selected="tweet.selected"
-                :context-menu="true"
-              ></tweet>
-            </v-col>
-          </v-row>
+              <h3 class="display-2 grey--text">
+                Please select some topics or keywords...
+              </h3>
+              <v-btn loading disabled icon></v-btn>
+            </v-row>
+          </v-responsive>
         </v-col>
-        <!--        <v-flex :id="charts.scatterplot.divId" grow text-xs-center>-->
-        <!--          <sunburst-wrapper-->
-        <!--            :id="charts.sunburst.id"-->
-        <!--            :div-id="charts.sunburst.divId"-->
-        <!--            :width="charts.sunburst.width"-->
-        <!--            :height="charts.sunburst.height"-->
-        <!--            :dataset="topicItems"-->
-        <!--          ></sunburst-wrapper>-->
-        <!--          <scatter-plot-wrapper-->
-        <!--            :id="charts.scatterplot.id"-->
-        <!--            :div-id="charts.scatterplot.divId"-->
-        <!--            :label="charts.scatterplot.label"-->
-        <!--            :width="charts.scatterplot.width"-->
-        <!--            :height="charts.scatterplot.height"-->
-        <!--            :axes-meta="charts.scatterplot.axesMeta"-->
-        <!--            :line="charts.scatterplot.line"-->
-        <!--            :selected-data="selectedTweet"-->
-        <!--            :sift-dataset="false"-->
-        <!--            :dataset="filteredTweets"-->
-        <!--            :toolbox="false"-->
-        <!--            @circleClicked="-->
-        <!--              data => {-->
-        <!--                selectedTweet = data-->
-        <!--              }-->
-        <!--            "-->
-        <!--          ></scatter-plot-wrapper>-->
-        <!--          <v-data-table-->
-        <!--            :headers="selectedTweetCategorizationHeaders"-->
-        <!--            :items="selectedTweet.labels"-->
-        <!--            hide-actions-->
-        <!--          >-->
-        <!--            <template v-slot:items="props">-->
-        <!--              <td>{{ props.item.id }}</td>-->
-        <!--              <td>{{ props.item.result.group }}</td>-->
-        <!--              <td>{{ props.item.result.theme }}</td>-->
-        <!--            </template>-->
-        <!--          </v-data-table>-->
-        <!--        </v-flex>-->
+      </v-row>
+    </v-col>
+    <v-col :id="charts.contextMap.divId" class="grow text-center">
+      <context-map-wrapper
+        :id="charts.contextMap.id"
+        :div-id="charts.contextMap.divId"
+        :label="charts.contextMap.label"
+        :width="charts.contextMap.width"
+        :height="charts.contextMap.height"
+        :topics="topics.map((a) => a.id).sort()"
+        :tweets="selectedTweets"
+        :flat="flat"
+        @topicSelected="topicSelected"
+        @tweetClicked="toggleTweetExamMenu"
+      ></context-map-wrapper>
+    </v-col>
+    <v-divider></v-divider>
+    <v-col>
+      <v-row>
+        <v-col
+          v-for="(tweet, index) in examMenu"
+          :key="'examMenu-' + index"
+          cols="3"
+        >
+          <tweet
+            :tweet="tweet"
+            :selected="tweet.selected"
+            :context-menu="true"
+          ></tweet>
+        </v-col>
       </v-row>
     </v-col>
   </v-row>
@@ -420,6 +207,14 @@ export default {
       },
       get() {
         return this.$store.state.shuffler.minimizeTopics
+      },
+    },
+    treeViewOpenItems: {
+      set(val) {
+        this.$store.commit('shuffler/updateTreeViewOpenItems', val)
+      },
+      get() {
+        return this.$store.state.shuffler.treeViewOpenItems
       },
     },
     topicsTreeSelections: {

@@ -3,45 +3,45 @@
     <v-col class="text-center" cols="12">
       <v-card flat color="transparent">
         <v-card-text>
-          <h1>Welcome to VARTTA</h1>
-          <p>
+          <h1 class="display-1">Welcome to VARTTA</h1>
+          <h2 class="title">
             VARTTA: Visual Analytics for Real-Time Twitter datA. <br />
-            To start, select one of the cases below.
+          </h2>
+          <p>To start, please select one of the following scenarios.</p>
+          <p>
+            Citation:
+            <a href="https://www.mdpi.com/2306-5729/5/1/20"
+              >Haghighati, A.; Sedig, K. VARTTA: A Visual Analytics System for
+              Making Sense of Real-Time Twitter Data. Data 2020, 5, 20.</a
+            >
           </p>
+          <h4>
+            Please note that this is a work in progress. This version is under
+            heavy developments :)
+          </h4>
           <p>
             Find a bug? Please report it on the Github
             <a
-              href="https://github.com/anewage/tweetycs-web/issues"
+              href="https://github.com/InsightfulSummer/vartta-web/issues"
               target="_blank"
               title="contribute"
               >issue board</a
             >.
           </p>
+          <p>
+            &copy;<a href="http://insight.uwo.ca">Insight Lab</a> at
+            <a href="https://uwo.ca">Western</a>
+          </p>
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col
-      v-for="(scenario, index) in scenarios"
-      :key="index"
-      cols="12"
-      md="4"
-      class="mt-2"
-    >
+    <v-col v-for="(scenario, index) in scenarios" :key="index" cols="12" md="4">
       <v-hover>
         <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
           <v-img :aspect-ratio="16 / 9" :src="scenario.cloud">
             <v-expand-transition>
               <div
-                v-if="disconnected"
-                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
-                style="height: 100%;"
-              >
-                Disconnected
-              </div>
-              <div
-                v-else-if="
-                  selectedScenario && selectedScenario.id !== scenario.id
-                "
+                v-if="selectedScenario && selectedScenario.id !== scenario.id"
                 class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
                 style="height: 100%;"
               >
@@ -68,20 +68,13 @@
               large
               right
               top
-              :disabled="
-                disconnected ||
-                (selectedScenario && selectedScenario.id !== scenario.id)
-              "
-              :loading="disconnected"
+              :disabled="(selectedScenario && selectedScenario.id !== scenario.id)"
               @click.stop="toggleConsuming(scenario)"
             >
               <v-icon>
-                mdi-{{ scenario.consuming ? 'pause' : 'power_settings_new' }}
+                mdi-{{ scenario.consuming ? 'pause' : 'power' }}
               </v-icon>
             </v-btn>
-            <div class="font-weight-light grey--text title mb-2">
-              Twitter discussions on
-            </div>
             <h3
               :class="
                 'display-1 font-weight-light mb-2 ' + scenario.color + '--text'
@@ -91,6 +84,61 @@
             </h3>
             <div class="font-weight-light title mb-2">
               {{ scenario.subtitle }}
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-hover>
+    </v-col>
+    <v-col cols="6">
+      <v-hover>
+        <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
+          <v-img :aspect-ratio="16 / 9" src="/form.png">
+            <v-expand-transition>
+              <div
+                v-if="disconnected"
+                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
+                style="height: 100%;"
+              >
+                Disconnected
+              </div>
+              <div
+                v-else-if="selectedScenario && selectedScenario.id !== ''"
+                class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
+                style="height: 100%;"
+              >
+                Another scenario is selected...
+              </div>
+              <div
+                v-else-if="hover"
+                class="d-flex text-center transition-fast-in-fast-out darken-2 v-card--reveal display-3 white--text primary"
+                style="height: 100%;"
+              >
+                Start
+              </div>
+            </v-expand-transition>
+          </v-img>
+          <v-card-text class="pt-4" style="position: relative;">
+            <v-btn
+              absolute
+              color="primary"
+              class="white--text"
+              fab
+              large
+              right
+              top
+              :disabled="
+                disconnected || (selectedScenario && selectedScenario.id !== '')
+              "
+              :loading="disconnected"
+              @click.stop=""
+            >
+              <v-icon>mdi-cloud-upload</v-icon>
+            </v-btn>
+            <h3 class="display-1 font-weight-light mb-2 primary--text">
+              Custom Scenario
+            </h3>
+            <div class="font-weight-light title mb-2">
+              You need to be connected to server...
             </div>
           </v-card-text>
         </v-card>
@@ -145,6 +193,7 @@ export default {
         this.$store.commit('analytics/reset')
         this.$store.commit('compare/reset')
         this.$store.commit('shuffler/reset')
+        this.$store.commit('triage/reset')
         this.$store.commit('updateConsumingScenario', {
           id: scenario.id,
           flag: true,
@@ -156,6 +205,7 @@ export default {
         this.$store.commit('updateAggregatedUsers', scenario.data.agusers.a)
         this.$store.commit('updateAggregatedKeywords', scenario.data.agkeywords)
         this.$store.commit('addToRawTweets', scenario.data.tweets)
+        this.$store.commit('triage/updateUsersSet', scenario.data.users)
         socket.emit('pause_consuming')
         // eslint-disable-next-line no-console
         console.log(scenario.channels)

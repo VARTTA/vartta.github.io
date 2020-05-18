@@ -182,29 +182,13 @@ export default {
 </script>
 
 <style scoped>
-.svg {
-  /*background: lightgrey;*/
-}
-
 .x-axis >>> .tick,
 .y-axis >>> .tick {
   font-family: 'Roboto', sans-serif;
 }
 
-.circle {
-  transition: all 500ms;
-}
-
-.fade-enter-active {
-  fill: green;
-}
-
-.fade-leave-active {
-  fill: brown;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+.svg >>> rect {
+  transition: all 250ms;
+  -webkit-transition: all 250ms;
 }
 </style>

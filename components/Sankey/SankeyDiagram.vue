@@ -64,7 +64,7 @@
           :x="item.x0 < chartWidth / 2 ? item.x1 + 6 : item.x0 - 6"
           :y="(item.y1 + item.y0) / 2"
           :text-anchor="item.x0 < chartWidth / 2 ? 'start' : 'end'"
-          class="body-1"
+          class="label body-1"
         >
           {{ item.name }}
         </text>
@@ -260,6 +260,12 @@ export default {
 </script>
 
 <style scoped>
+/* Item Labels */
+.svg >>> .label {
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 .svg >>> .greyed {
   opacity: 0.2;
   stroke-opacity: 0.2;
@@ -270,31 +276,9 @@ export default {
   stroke-opacity: unset;
 }
 
-.svg >>> .object {
-  transition: opacity 500ms;
-}
-
-.svg >>> .v-enter {
-  opacity: 0;
-}
-
-.svg >>> .v-enter-to {
-  opacity: 100%;
-  fill: green;
-}
-
-.svg >>> .v-leave {
-  opacity: 100%;
-}
-
-.svg >>> .v-leave-to {
-  opacity: 0;
-  fill: red;
-}
-
 .svg >>> .rect,
 .svg >>> .path {
-  transition: all 500ms;
-  -webkit-transition: all 500ms;
+  transition: all 250ms;
+  -webkit-transition: all 250ms;
 }
 </style>

@@ -2,7 +2,7 @@
   <!--  TODO: update grid system-->
   <v-row>
     <v-col cols="12" class="mt-5 text-center">
-      <span>Number of Panels:</span>
+      <span>Comparisons:</span>
       <v-slider
         v-model="comparisonSlider"
         :tick-labels="[1, 2, 3, 4, 6, 12]"
@@ -17,11 +17,7 @@
     <v-col
       v-for="(comparison, index) in comparisons"
       :key="index"
-      :xs6="comparisons.length === 2"
-      :xs4="comparisons.length === 3"
-      :xs3="comparisons.length === 4"
-      :xs2="comparisons.length === 6"
-      :xs1="comparisons.length === 12"
+      :cols="12 / comparisons.length"
     >
       <v-col cols="12">
         <v-card flat color="transparent">
@@ -29,17 +25,17 @@
           <!--            <h2>{{ index + 1 }} - Control Box</h2>-->
           <!--          </v-card-title>-->
           <v-card-actions>
-            <v-row align="center" justify="space-around">
-              <v-col v-if="mlMethods.length === 0" class="text-center">
+            <v-row align="center" justify="center">
+              <v-col cols="6" class="text-center">
+                <h4>Text Categorization Methods</h4>
                 <v-progress-circular
+                  v-if="mlMethods.length === 0"
                   :size="50"
                   color="orange"
                   indeterminate
                 ></v-progress-circular>
-              </v-col>
-              <v-col v-if="mlMethods.length !== 0" cols="6" class="ma-1">
-                <h4>Text Categorization Methods</h4>
                 <v-select
+                  v-if="mlMethods.length !== 0"
                   :value="comparison.machineLearning"
                   class="no-overflow"
                   :items="mlMethods"
@@ -48,26 +44,17 @@
                   label="Text Categorization Method"
                   @change="commitMLChange.call(this, arguments[0], index)"
                 ></v-select>
-                <!--                <v-radio-group v-model="comparison.machineLearning" column>-->
-                <!--                  <v-radio-->
-                <!--                    v-for="method in mlMethods"-->
-                <!--                    :key="method.id + '-' + index"-->
-                <!--                    :label="method.title"-->
-                <!--                    :value="method.id"-->
-                <!--                    color="orange"-->
-                <!--                  ></v-radio>-->
-                <!--                </v-radio-group>-->
               </v-col>
-              <v-col v-if="analysisMethods.length === 0" class="text-center">
+              <v-col cols="6" class="text-center">
+                <h4>Sentiment Analysis Methods</h4>
                 <v-progress-circular
+                  v-if="analysisMethods.length === 0"
                   :size="50"
                   color="cyan"
                   indeterminate
                 ></v-progress-circular>
-              </v-col>
-              <v-col v-if="analysisMethods.length !== 0" cols="6">
-                <h4>Sentiment Analysis Methods</h4>
                 <v-select
+                  v-if="analysisMethods.length !== 0"
                   :value="comparison.analysis"
                   class="no-overflow"
                   :items="analysisMethods"
@@ -78,15 +65,6 @@
                     commitAnalysisMethodChange.call(this, arguments[0], index)
                   "
                 ></v-select>
-                <!--                <v-radio-group v-model="comparison.analysis" column>-->
-                <!--                  <v-radio-->
-                <!--                    v-for="method in analysisMethods"-->
-                <!--                    :key="method.id + '-' + index"-->
-                <!--                    :label="method.title"-->
-                <!--                    :value="method.id"-->
-                <!--                    color="cyan"-->
-                <!--                  ></v-radio>-->
-                <!--                </v-radio-group>-->
               </v-col>
             </v-row>
           </v-card-actions>
