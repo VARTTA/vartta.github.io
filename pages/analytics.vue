@@ -228,6 +228,7 @@ export default {
   mounted() {
     this.resize()
     window.addEventListener('resize', this.resize)
+    this.highlightTopic(this.selectedTopic, true)
     // this.$nextTick(() => {
     //   debugger
     //
@@ -253,7 +254,10 @@ export default {
       this.selectedUser = data.user
     },
     // Just to be consistent with the page compare
-    highlightTopic(item) {
+    highlightTopic(item, explicit = false) {
+      if (explicit)
+        // String is passed instead of an object
+        this.highlightedTopic = item
       this.highlightedTopic = item.id
     },
     updateSelectedTopic(item) {
