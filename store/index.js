@@ -7,6 +7,8 @@ import phealth_agtopics from '~/static/samples/phealth/agtopics.json'
 // eslint-disable-next-line camelcase
 import phealth_agusers from '~/static/samples/phealth/agusers.json'
 // eslint-disable-next-line camelcase
+import phealth_users from '~/static/samples/phealth/users.json'
+// eslint-disable-next-line camelcase
 import politics_tweets from '~/static/samples/politics/tweets.json'
 // eslint-disable-next-line camelcase
 import politics_agkeywords from '~/static/samples/politics/agkeywords.json'
@@ -15,6 +17,8 @@ import politics_agtopics from '~/static/samples/politics/agtopics.json'
 // eslint-disable-next-line camelcase
 import politics_agusers from '~/static/samples/politics/agusers.json'
 // eslint-disable-next-line camelcase
+import politics_users from '~/static/samples/politics/users.json'
+// eslint-disable-next-line camelcase
 import smartcity_tweets from '~/static/samples/smartcity/tweets.json'
 // eslint-disable-next-line camelcase
 import smartcity_agkeywords from '~/static/samples/smartcity/agkeywords.json'
@@ -22,6 +26,8 @@ import smartcity_agkeywords from '~/static/samples/smartcity/agkeywords.json'
 import smartcity_agtopics from '~/static/samples/smartcity/agtopics.json'
 // eslint-disable-next-line camelcase
 import smartcity_agusers from '~/static/samples/smartcity/agusers.json'
+// eslint-disable-next-line camelcase
+import smartcity_users from '~/static/samples/smartcity/users.json'
 export const strict = false
 function initialState() {
   return {
@@ -271,6 +277,7 @@ function initialState() {
           agusers: phealth_agusers,
           agtopics: phealth_agtopics,
           agkeywords: phealth_agkeywords,
+          users: phealth_users,
         },
       },
       {
@@ -344,6 +351,7 @@ function initialState() {
           agusers: smartcity_agusers,
           agtopics: smartcity_agtopics,
           agkeywords: smartcity_agkeywords,
+          users: smartcity_users,
         },
       },
       {
@@ -439,6 +447,7 @@ function initialState() {
           agusers: politics_agusers,
           agtopics: politics_agtopics,
           agkeywords: politics_agkeywords,
+          users: politics_users,
         },
       },
     ],
@@ -691,6 +700,7 @@ export const state = () => ({
         agusers: phealth_agusers,
         agtopics: phealth_agtopics,
         agkeywords: phealth_agkeywords,
+        users: phealth_users,
       },
     },
     {
@@ -764,6 +774,7 @@ export const state = () => ({
         agusers: smartcity_agusers,
         agtopics: smartcity_agtopics,
         agkeywords: smartcity_agkeywords,
+        users: smartcity_users,
       },
     },
     {
@@ -859,6 +870,7 @@ export const state = () => ({
         agusers: politics_agusers,
         agtopics: politics_agtopics,
         agkeywords: politics_agkeywords,
+        users: politics_users,
       },
     },
   ],

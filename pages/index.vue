@@ -193,6 +193,7 @@ export default {
         this.$store.commit('analytics/reset')
         this.$store.commit('compare/reset')
         this.$store.commit('shuffler/reset')
+        this.$store.commit('triage/reset')
         this.$store.commit('updateConsumingScenario', {
           id: scenario.id,
           flag: true,
@@ -204,6 +205,7 @@ export default {
         this.$store.commit('updateAggregatedUsers', scenario.data.agusers.a)
         this.$store.commit('updateAggregatedKeywords', scenario.data.agkeywords)
         this.$store.commit('addToRawTweets', scenario.data.tweets)
+        this.$store.commit('triage/updateUsersSet', scenario.data.users)
         socket.emit('pause_consuming')
         // eslint-disable-next-line no-console
         console.log(scenario.channels)

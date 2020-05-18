@@ -16,7 +16,7 @@
       <g
         v-for="(arc, index) in root"
         :id="'arc-' + arc.data.name"
-        :key="index"
+        :key="'arc-' + index"
         class="highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
         @mouseout="removeHighlights"
@@ -38,7 +38,7 @@
       <g
         v-for="(arc, index) in rootText"
         :id="'arc-' + arc.data.name"
-        :key="index"
+        :key="'label-arc-' + index"
         class="highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
         @mouseout="removeHighlights"
@@ -59,11 +59,11 @@
     </g>
     <!--Ribbons-->
     <g id="Ribbons" :duration="transitionDuration">
-      <g v-for="(node, index) in packed.children" :key="index">
+      <g v-for="(node, index) in packed.children" :key="'ribbon-' + index">
         <path
-          v-for="(arc, ind) in findArcs(node)"
+          v-for="arc in findArcs(node)"
           :id="'path-' + node.data.name + '-' + arc.data.name"
-          :key="ind"
+          :key="'path-' + node.data.name + '-' + arc.data.name"
           class="ribbon highlightable"
           :fill="ribbon.fill"
           :fill-opacity="ribbon.fillOpacity"
@@ -80,7 +80,7 @@
     </g>
     <!--Bubbles-->
     <g id="Bubbles" :duration="transitionDuration">
-      <g v-for="(item, index) in packed.children" :key="index">
+      <g v-for="(item, index) in packed.children" :key="'user-' + index">
         <!--TODO: tranform and colors need to be changed-->
         <circle
           :id="'user-' + item.data.screen_name"
@@ -415,14 +415,17 @@ export default {
     relatedArcs() {
       return (user) => {
         let res = []
-        for (const tw of user.data.children)
+        for (const tw of user.data.children) {
+          const topics = []
+          for (const k in tw.tweets.topics) topics.push(k)
           res = res.concat(
             this.root.filter(
               (d) =>
-                tw.tweets.topics.includes(d.data.name) ||
+                topics.includes(d.data.name) ||
                 tw.tweets.keywords.includes(d.data.name)
             )
           )
+        }
         return res
       }
     },
@@ -629,5 +632,10 @@ export default {
 .svg >>> .selected {
   opacity: 1;
   stroke-opacity: unset;
+}
+
+.svg >>> * {
+  transition: all 250ms;
+  -webkit-transition: all 250ms;
 }
 </style>
