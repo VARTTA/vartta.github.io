@@ -276,31 +276,9 @@ export default {
   stroke-opacity: unset;
 }
 
-.svg >>> .object {
-  transition: opacity 500ms;
-}
-
-.svg >>> .v-enter {
-  opacity: 0;
-}
-
-.svg >>> .v-enter-to {
-  opacity: 100%;
-  fill: green;
-}
-
-.svg >>> .v-leave {
-  opacity: 100%;
-}
-
-.svg >>> .v-leave-to {
-  opacity: 0;
-  fill: red;
-}
-
 .svg >>> .rect,
 .svg >>> .path {
-  transition: all 500ms;
-  -webkit-transition: all 500ms;
+  transition: all 250ms;
+  -webkit-transition: all 250ms;
 }
 </style>
