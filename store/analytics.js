@@ -1,34 +1,42 @@
 export const state = () => ({
-  selectedMachineLearningMethod: '',
-  selectedSentimentAnalysisMethod: '',
-  selectedTopic: '',
+  machineLearning: '',
+  analysis: '',
+  topic: null,
+  user: { screen_name: '' },
 })
 
 export const mutations = {
-  resetSelectedMachineLearningMethod(state) {
-    state.selectedMachineLearningMethod = ''
+  resetMachineLearning(state) {
+    state.machineLearning = ''
   },
-  resetSelectedSentimentAnalysisMethod(state) {
-    state.selectedSentimentAnalysisMethod = ''
+  resetAnalysis(state) {
+    state.analysis = ''
   },
-  resetSelectedTopic(state) {
-    state.selectedTopic = ''
+  resetTopic(state) {
+    state.topic = null
   },
-  updateSelectedMachineLearningMethod(state, data) {
-    state.selectedMachineLearningMethod = data
+  resetUser(state) {
+    state.user = { screen_name: '' }
   },
-  updateSelectedSentimentAnalysisMethod(state, data) {
-    state.selectedSentimentAnalysisMethod = data
+  updateMachineLearning(state, data) {
+    state.machineLearning = data
   },
-  updateSelectedTopic(state, data) {
-    state.selectedTopic = data
+  updateAnalysis(state, data) {
+    state.analysis = data
+  },
+  updateTopic(state, data) {
+    state.topic = data
+  },
+  updateUser(state, data) {
+    state.user = data
   },
 }
 
 export const actions = {
   reset({ commit }) {
-    commit('resetSelectedMachineLearningMethod')
-    commit('resetSelectedSentimentAnalysisMethod')
-    commit('resetSelectedTopic')
+    commit('resetAnalysis')
+    commit('resetMachineLearning')
+    commit('resetTopic')
+    commit('resetUser')
   },
 }

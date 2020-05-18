@@ -186,9 +186,4 @@ export default {
 .y-axis >>> .tick {
   font-family: 'Roboto', sans-serif;
 }
-
-.svg >>> rect {
-  transition: all 250ms;
-  -webkit-transition: all 250ms;
-}
 </style>

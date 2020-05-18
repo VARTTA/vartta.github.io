@@ -2,11 +2,6 @@
   <v-row dense>
     <v-col cols="12">
       <v-card flat color="transparent">
-        <!--        <v-card-title>-->
-        <!--          <h2>-->
-        <!--            Control Box-->
-        <!--          </h2>-->
-        <!--        </v-card-title>-->
         <v-card-actions>
           <v-row align="center" justify="space-around">
             <v-col v-if="mlMethods.length === 0" class="text-center">
@@ -26,15 +21,6 @@
                 item-value="id"
                 label="Text Categorization Method"
               ></v-select>
-              <!--              <v-radio-group v-model="selectedMachineLearningMethod" column>-->
-              <!--                <v-radio-->
-              <!--                  v-for="method in mlMethods"-->
-              <!--                  :key="method.id"-->
-              <!--                  :label="method.title"-->
-              <!--                  :value="method.id"-->
-              <!--                  color="orange"-->
-              <!--                ></v-radio>-->
-              <!--              </v-radio-group>-->
             </v-col>
             <v-col v-if="analysisMethods.length === 0" class="text-center">
               <v-progress-circular
@@ -53,15 +39,6 @@
                 item-value="id"
                 label="Sentiment Analysis Methods"
               ></v-select>
-              <!--              <v-radio-group v-model="selectedSentimentAnalysisMethod" column>-->
-              <!--                <v-radio-->
-              <!--                  v-for="method in analysisMethods"-->
-              <!--                  :key="method.id"-->
-              <!--                  :label="method.title"-->
-              <!--                  :value="method.id"-->
-              <!--                  color="cyan"-->
-              <!--                ></v-radio>-->
-              <!--              </v-radio-group>-->
             </v-col>
           </v-row>
         </v-card-actions>
@@ -139,9 +116,6 @@ export default {
       flat: true,
       color: 'transparent',
       highlightedTopic: '',
-      msg: '',
-      temp: [],
-      selectedUser: { screen_name: '' },
       // Charts and all of their configurations
       charts: {
         scatterplot: {
@@ -183,29 +157,34 @@ export default {
     },
     selectedTopic: {
       set(val) {
-        this.$store.commit('analytics/updateSelectedTopic', val)
+        this.$store.commit('analytics/updateTopic', val)
       },
       get() {
-        return this.$store.state.analytics.selectedTopic
+        return this.$store.state.analytics.topic
+      },
+    },
+    selectedUser: {
+      set(val) {
+        this.$store.commit('analytics/updateUser', val)
+      },
+      get() {
+        return this.$store.state.analytics.user
       },
     },
     selectedSentimentAnalysisMethod: {
       set(val) {
-        this.$store.commit(
-          'analytics/updateSelectedSentimentAnalysisMethod',
-          val
-        )
+        this.$store.commit('analytics/updateAnalysis', val)
       },
       get() {
-        return this.$store.state.analytics.selectedSentimentAnalysisMethod
+        return this.$store.state.analytics.analysis
       },
     },
     selectedMachineLearningMethod: {
       set(val) {
-        this.$store.commit('analytics/updateSelectedMachineLearningMethod', val)
+        this.$store.commit('analytics/updateMachineLearning', val)
       },
       get() {
-        return this.$store.state.analytics.selectedMachineLearningMethod
+        return this.$store.state.analytics.machineLearning
       },
     },
     analysisMethods() {
@@ -228,11 +207,7 @@ export default {
   mounted() {
     this.resize()
     window.addEventListener('resize', this.resize)
-    this.highlightTopic(this.selectedTopic, true)
-    // this.$nextTick(() => {
-    //   debugger
-    //
-    // })
+    if (this.selectedTopic !== null) this.highlightTopic(this.selectedTopic)
   },
   methods: {
     resize() {
@@ -243,34 +218,24 @@ export default {
       if (heatDiv) this.charts.heatmap.width = heatDiv.clientWidth - 5
       if (sankeyDiv) this.charts.sankey.width = sankeyDiv.clientWidth - 5
     },
-    // commitUpdates: function(msg) {
-    //   // Store the changes
-    //   this.$store.commit('updateAggregatedTopics', msg.aggregatedTopics)
-    //   this.$store.commit('updateAggregatedUsers', msg.aggregatedUsers)
-    //   this.$store.commit('updateAggregatedKeywords', msg.aggregatedKeywords)
-    //   this.$store.commit('updateTopics', msg.topics)
-    // },
     updateTweets(data) {
       this.selectedUser = data.user
     },
     // Just to be consistent with the page compare
-    highlightTopic(item, explicit = false) {
-      if (explicit)
-        // String is passed instead of an object
-        this.highlightedTopic = item
-      this.highlightedTopic = item.id
+    highlightTopic(id) {
+      this.highlightedTopic = id
     },
     updateSelectedTopic(item) {
       if (this.topics.map((a) => a.id).includes(item.id)) {
         this.selectedTopic = item.id
-        this.highlightTopic(item)
+        this.highlightTopic(item.id)
       }
     },
     applyHighlight(item) {
-      this.highlightTopic(item)
+      this.highlightTopic(item.id)
     },
     removeHighlight(item) {
-      this.highlightTopic({ id: this.selectedTopic })
+      this.highlightTopic(this.selectedTopic)
     },
   },
 }

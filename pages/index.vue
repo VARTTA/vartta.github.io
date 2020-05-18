@@ -254,6 +254,9 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none !important;
+}
 .v-card--reveal--disconnected {
   align-items: center;
   bottom: 0;
