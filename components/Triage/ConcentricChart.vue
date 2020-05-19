@@ -447,12 +447,12 @@ export default {
       if (this.meta.timeUnit === '12') {
         // years ago
         temp =
-          new Date(now.getFullYear() + 1, 0, 1) -
+          new Date(now.getFullYear(), now.getMonth(), now.getDate()) -
           new Date(now.getFullYear() - (this.numberOfTracks - 1), 0, 1)
       } else if (this.meta.timeUnit === '30') {
         // months ago
         temp =
-          new Date(now.getFullYear(), now.getMonth() + 1, 1) -
+          new Date(now.getFullYear(), now.getMonth(), now.getDate()) -
           new Date(
             now.getFullYear(),
             now.getMonth() - (this.numberOfTracks - 1),
@@ -474,7 +474,13 @@ export default {
       } else if (this.meta.timeUnit === '24') {
         // Days ago
         temp =
-          new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) -
+          new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            now.getHours(),
+            now.getMinutes()
+          ) -
           new Date(
             now.getFullYear(),
             now.getMonth(),
