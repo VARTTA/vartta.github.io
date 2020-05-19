@@ -437,6 +437,7 @@ export default {
         return scale(userIndex)
       }
     },
+
     /**
      * the value of minimum acceptable date in ms
      **/
@@ -541,14 +542,25 @@ export default {
      **/
     findTrack() {
       return (tweet) => {
-        return (
-          this.numberOfTracks -
-          Math.floor(
-            (new Date().getTime() - new Date(tweet.created_at).getTime()) /
-              this.unitRange
-          ) -
-          1
+        const now = new Date()
+        const twTime = new Date(tweet.created_at)
+        if (this.meta.timeUnit === '12') {
+          const timeSpan = now.getFullYear() - twTime.getFullYear()
+          return this.numberOfTracks - timeSpan - 1
+        }
+        let timeSpan = Math.floor(
+          (new Date().getTime() - twTime.getTime()) / this.unitRange
         )
+        if (this.meta.timeUnit === '30') {
+          if (now.getDate() - twTime.getDate() <= 0) timeSpan = timeSpan + 1
+        }
+        if (this.meta.timeUnit === '7') {
+          if (now.getDay() - twTime.getDay() <= 0) timeSpan = timeSpan + 1
+        }
+        if (this.meta.timeUnit === '24') {
+          if (now.getHours() - twTime.getHours() <= 0) timeSpan = timeSpan + 1
+        }
+        return this.numberOfTracks - timeSpan - 1
       }
     },
     /**

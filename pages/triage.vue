@@ -55,23 +55,29 @@
       <v-col cols="3"></v-col>
       <v-col cols="6">
         <div :id="charts.userSimilarity.id">
-          <v-btn
-            @click="
-              charts.userSimilarity.tracks =
-                charts.userSimilarity.tracks < 4
-                  ? charts.userSimilarity.tracks + 1
-                  : 1
-            "
-          >
-            NUMBER OF Neighbors {{ charts.userSimilarity.tracks }}
-          </v-btn>
-          <v-btn
-            @click="
-              charts.userSimilarity.adjacency = !charts.userSimilarity.adjacency
-            "
-          >
-            Adjacency
-          </v-btn>
+          <div>
+            <v-btn
+              @click="
+                charts.userSimilarity.tracks =
+                  charts.userSimilarity.tracks < 4
+                    ? charts.userSimilarity.tracks + 1
+                    : 1
+              "
+            >
+              NUMBER OF Neighbors {{ charts.userSimilarity.tracks }}
+            </v-btn>
+          </div>
+          <div></div>
+          <div>
+            <v-btn
+              @click="
+                charts.userSimilarity.adjacency = !charts.userSimilarity
+                  .adjacency
+              "
+            >
+              Adjacency
+            </v-btn>
+          </div>
           <user-similarity
             :meta="charts.userSimilarity"
             :topics="topics"
@@ -187,7 +193,7 @@ export default {
               id: 55,
               keywords: ['Cory Booker'],
               topics: ['democratic'],
-              created_at: 'Thu May 12 19:18:20 +0000 2019',
+              created_at: 'Thu Nov 12 19:18:20 +0000 2018',
             },
             {
               id: 55,
@@ -212,7 +218,7 @@ export default {
               id: 8,
               keywords: ['Adam Kokesh'],
               topics: ['libertarian'],
-              created_at: 'Thu Mar 11 19:20:20 +0000 2017',
+              created_at: 'Thu Aug 11 19:20:20 +0000 2017',
             },
             {
               id: 9,
@@ -646,15 +652,16 @@ export default {
       get() {
         return this.$store.state.topics
       },
-    } /*,
-     usersSet: {
+    },
+    selectedUsers: {},
+    /* usersSet: {
       set(val) {
         this.$store.commit('triage/updateUsersSet', val)
       },
       get() {
         return this.$store.state.triage.usersSet
       },
-    }, */,
+    }, */
   },
   mounted() {
     this.resize()
