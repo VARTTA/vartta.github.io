@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-row align="start" justify="start">
+  <v-row align="start" justify="start" no-gutters>
     <v-col :cols="minimizeTopics ? '2' : '3'">
       <v-card outlined>
         <v-card-title>
@@ -79,7 +79,7 @@
                 )
               "
               :title="channel"
-              :vertical-portion="verticalPortion - 10"
+              :vertical-portion="verticalPortion - 9"
               @tweetSelect="tweetSelect"
               @tweetDeselect="tweetDeselect"
               @updateTweet="updateTweet"
@@ -88,7 +88,22 @@
         </v-col>
       </v-row>
     </v-col>
-    <v-col :id="charts.contextMap.divId" class="grow text-center">
+    <v-col :cols="12">
+      <v-btn
+        block
+        text
+        @click="
+          $vuetify.goTo('#' + charts.contextMap.divId, {
+            duration: 300,
+            offset: 60,
+            easing: 'easeInOutCubic',
+          })
+        "
+      >
+        <v-icon>mdi-chevron-triple-down</v-icon>
+      </v-btn>
+    </v-col>
+    <v-col :id="charts.contextMap.divId" cols="12" class="grow text-center">
       <context-map-wrapper
         :id="charts.contextMap.id"
         :div-id="charts.contextMap.divId"
@@ -103,7 +118,7 @@
       ></context-map-wrapper>
     </v-col>
     <v-divider></v-divider>
-    <v-col>
+    <v-col cols="12">
       <v-row>
         <v-col
           v-for="(tweet, index) in examMenu"
@@ -114,6 +129,7 @@
             :tweet="tweet"
             :selected="tweet.selected"
             :context-menu="true"
+            @deselected="toggleTweetExamMenu"
           ></tweet>
         </v-col>
       </v-row>

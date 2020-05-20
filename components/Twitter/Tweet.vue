@@ -13,31 +13,23 @@
           </div>
           <div>
             <v-btn
-              v-if="!contextMenu"
-              alt="Add tweet to bottom pane"
+              alt="Remove tweet to bottom pane"
               icon
               text
-              small
-              class="mt-2"
-              color="primary"
+              color="yellow accent-4"
               @click="clicked"
             >
-              <v-icon
-                color="primary"
-                small
-                v-html="tweet.selected ? 'mdi-minus-circle' : 'mdi-plus-circle'"
-              >
-              </v-icon>
+              <v-icon>{{ selected ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
             </v-btn>
           </div>
           <div>
-            <v-btn icon text small color="error">
-              <v-icon small color="error">mdi-pencil</v-icon>
+            <v-btn icon text color="error">
+              <v-icon color="error">mdi-pencil</v-icon>
             </v-btn>
           </div>
         </v-row>
       </v-col>
-      <v-col cols="10">
+      <v-col cols="10" style="padding-bottom: 0 !important;">
         <v-row justify="start" align="center">
           <div class="text-truncate" style="max-width: 85%;">
             <a
@@ -65,10 +57,14 @@
           <div class="body-2" v-html="decoratedText"></div>
         </v-row>
       </v-col>
-      <v-col cols="12">
+      <v-col cols="12" style="padding-top: 0 !important;">
         <v-row align="center" justify="space-around">
-          <v-btn icon text large><v-icon>mdi-account-circle</v-icon></v-btn>
-          <v-btn icon text large><v-icon>mdi-text-box</v-icon></v-btn>
+          <v-col cols="6">
+            <v-btn block text><v-icon>mdi-account</v-icon></v-btn>
+          </v-col>
+          <v-col cols="6">
+            <v-btn block text><v-icon>mdi-text-box</v-icon></v-btn>
+          </v-col>
         </v-row>
       </v-col>
     </v-row>

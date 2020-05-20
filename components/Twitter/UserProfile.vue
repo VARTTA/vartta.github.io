@@ -1,5 +1,5 @@
 <template>
-  <div id="timeline-target">
+  <div id="timeline-target" style="max-height: 650px; overflow: auto;">
     <time-line
       v-if="username"
       :id="username"

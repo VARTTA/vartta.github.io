@@ -45,11 +45,10 @@
                 mdi-close
               </v-icon>
             </template>
-            <v-avatar elevation>
+            <v-avatar elevation @click="clicked.call({}, tweet)">
               <img
                 :src="tweet.user.profile_image_url_https"
                 :alt="tweet.user.screen_name"
-                @click="clicked.call({}, tweet)"
               />
             </v-avatar>
           </v-badge>
@@ -106,7 +105,7 @@ export default {
           duration: 300,
           offset: 60,
           easing: 'easeInOutCubic',
-          container: '#' + 'tweetcollection-' + topic,
+          container: '#' + 'tweetcontainer-' + topic,
         }
       }
     },
