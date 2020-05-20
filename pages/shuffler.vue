@@ -5,13 +5,7 @@
         <v-card-title>
           <v-toolbar-title>Topics</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn
-            color="indigo"
-            icon
-            text
-            dark
-            @click="minimizeTopics = !minimizeTopics"
-          >
+          <v-btn icon text @click="minimizeTopics = !minimizeTopics">
             <v-icon>
               mdi-{{ `unfold-${minimizeTopics ? 'more' : 'less'}-vertical` }}
             </v-icon>
@@ -20,7 +14,13 @@
             <v-icon>mdi-replay</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text class="text-truncate">
+        <v-divider></v-divider>
+        <v-card-text
+          class="text-truncate"
+          :style="
+            'overflow: auto !important; max-height: ' + verticalPortion + 'vh;'
+          "
+        >
           <v-treeview
             v-model="topicsTreeSelections"
             class="text-truncate"
@@ -51,6 +51,24 @@
             dense
             no-gutters
           >
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
             <tweet-collection
               v-for="(channel, index) in selectedChannels"
               :id="'column-' + channel"
@@ -61,27 +79,12 @@
                 )
               "
               :title="channel"
+              :vertical-portion="verticalPortion - 10"
               @tweetSelect="tweetSelect"
               @tweetDeselect="tweetDeselect"
               @updateTweet="updateTweet"
             ></tweet-collection>
           </v-row>
-          <v-responsive
-            v-if="selectedChannels.length === 0"
-            max-height="70vh"
-            class="text-center pa-2"
-          >
-            <v-row
-              class="text-center fill-height"
-              justify="center"
-              align="center"
-            >
-              <h3 class="display-2 grey--text">
-                Please select some topics or keywords...
-              </h3>
-              <v-btn loading disabled icon></v-btn>
-            </v-row>
-          </v-responsive>
         </v-col>
       </v-row>
     </v-col>
@@ -133,6 +136,7 @@ export default {
   },
   data() {
     return {
+      verticalPortion: 70,
       dialog: false,
       flat: true,
       contentThemeTreeSelections: [],
@@ -175,12 +179,6 @@ export default {
               show: false,
             },
           },
-        },
-        sunburst: {
-          id: 'sunburst',
-          divId: 'sunburst-div',
-          width: 300,
-          height: 300,
         },
       },
     }
@@ -231,6 +229,12 @@ export default {
         const tweets = this.tweets.filter((t) => t.keywords.includes(kw))
         res = [...res, ...tweets]
       }
+      // Making unique
+      const temp = {}
+      res.forEach((t, i) => {
+        if (t._id in temp) res.splice(i, 1)
+        temp[t._id] = null
+      })
       return res
     },
     selectedChannels() {

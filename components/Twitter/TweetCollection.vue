@@ -1,12 +1,17 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-col cols="4">
     <v-card :id="'tweetcollection-' + title" outlined>
-      <v-card-title class="text-center">
-        <b class="title">{{ title }}</b>
-      </v-card-title>
+      <v-card-actions>
+        <v-row align="center" justify="center">
+          <h2 class="font-weight-thin" style="text-transform: uppercase;">
+            {{ title }}
+          </h2>
+        </v-row>
+      </v-card-actions>
+      <v-divider></v-divider>
       <v-card-text
         :id="'tweetcontainer-' + title"
-        style="overflow: auto; height: 55vh;"
+        :style="'overflow: auto; height: ' + verticalPortion + 'vh;'"
       >
         <tweet
           v-for="(tweet, index) in sortedTweets"
@@ -19,18 +24,24 @@
           @customLabelTweet="updateTweet"
         ></tweet>
       </v-card-text>
-      <v-card-text v-if="selectedTweets.length > 0">
+      <v-divider></v-divider>
+      <v-card-actions>
         <v-row justify="space-around" align="center">
+          <p
+            v-if="selectedTweets.length === 0"
+            class="overline grey--text"
+            style="height: 32px;"
+          >
+            Tweet selections...
+          </p>
           <v-badge
             v-for="(tweet, index) in selectedTweets"
             :key="index"
             overlap
             color="orange"
-            class="badge"
-            style="cursor: pointer;"
           >
             <template v-slot:badge>
-              <v-icon small dark @click="removeTweet.call(this, tweet)">
+              <v-icon x-small dark @click="removeTweet.call(this, tweet)">
                 mdi-close
               </v-icon>
             </template>
@@ -43,9 +54,6 @@
             </v-avatar>
           </v-badge>
         </v-row>
-      </v-card-text>
-      <v-card-actions>
-        Some things to be added...
       </v-card-actions>
     </v-card>
   </v-col>
@@ -63,6 +71,10 @@ export default {
       type: String,
       default: 'Title',
     },
+    verticalPortion: {
+      type: Number,
+      default: 60,
+    },
     tweets: {
       type: Array,
       default() {
@@ -71,11 +83,12 @@ export default {
     },
   },
   data() {
-    return {
-      selectedTweets: [],
-    }
+    return {}
   },
   computed: {
+    selectedTweets() {
+      return this.tweets.filter((t) => t.selected)
+    },
     sortedTweets() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return this.tweets.sort((a, b) => {
@@ -97,6 +110,9 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    console.log('mounted')
   },
   methods: {
     addTweet(tweet) {
@@ -129,12 +145,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.boxed {
-  border-style: solid;
-  border-radius: 11.5px;
-  border-color: #cecece;
-  max-height: inherit;
-}
-</style>

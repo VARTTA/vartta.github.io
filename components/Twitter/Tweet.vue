@@ -2,13 +2,39 @@
   <div>
     <v-row class="text-left">
       <v-col cols="2">
-        <v-row justify="start" align="center">
-          <v-avatar>
-            <img
-              :src="tweet.user.profile_image_url_https || '/person.png'"
-              :alt="tweet.user.screen_name"
-            />
-          </v-avatar>
+        <v-row justify="center" align="center">
+          <div>
+            <v-avatar>
+              <img
+                :src="tweet.user.profile_image_url_https || '/person.png'"
+                :alt="tweet.user.screen_name"
+              />
+            </v-avatar>
+          </div>
+          <div>
+            <v-btn
+              v-if="!contextMenu"
+              alt="Add tweet to bottom pane"
+              icon
+              text
+              small
+              class="mt-2"
+              color="primary"
+              @click="clicked"
+            >
+              <v-icon
+                color="primary"
+                small
+                v-html="tweet.selected ? 'mdi-minus-circle' : 'mdi-plus-circle'"
+              >
+              </v-icon>
+            </v-btn>
+          </div>
+          <div>
+            <v-btn icon text small color="error">
+              <v-icon small color="error">mdi-pencil</v-icon>
+            </v-btn>
+          </div>
         </v-row>
       </v-col>
       <v-col cols="10">
@@ -22,7 +48,12 @@
               <span class="font-weight-bold">
                 {{ tweet.user.name }}
               </span>
-              <v-icon v-if="true" color="primary" small class="subheading">
+              <v-icon
+                v-if="tweet.user.verified"
+                color="primary"
+                small
+                class="subheading"
+              >
                 mdi-check-decagram
               </v-icon>
               <span class="text--grey">@{{ tweet.user.screen_name }}</span>
@@ -35,8 +66,10 @@
         </v-row>
       </v-col>
       <v-col cols="12">
-        <v-btn icon text large><v-icon>mdi-account-circle</v-icon></v-btn>
-        <v-btn icon text large><v-icon>mdi-text-box</v-icon></v-btn>
+        <v-row align="center" justify="space-around">
+          <v-btn icon text large><v-icon>mdi-account-circle</v-icon></v-btn>
+          <v-btn icon text large><v-icon>mdi-text-box</v-icon></v-btn>
+        </v-row>
       </v-col>
     </v-row>
     <v-divider></v-divider>
