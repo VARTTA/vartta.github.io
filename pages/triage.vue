@@ -94,12 +94,14 @@
         </div>
       </v-col>
       <v-col cols="3"></v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col cols="8">
-        <!--        <treemap :users="usersSet"></treemap>-->
+      <v-col class="text-center" cols="12" md="4">
+        <user-info
+          :selected-list="allSelected"
+          @removeFromPile="removeSelected"
+        ></user-info>
       </v-col>
     </v-row>
+    <v-row justify="center"></v-row>
   </v-container>
 </template>
 
@@ -107,10 +109,11 @@
 import TopicUser from '../components/Triage/TopicUserAssociationDiagram'
 import ConcentricChart from '../components/Triage/ConcentricChart'
 import UserSimilarity from '../components/Triage/UserSimilarity'
-// import Treemap from '../components/Treemap/Treemap'
+import UserInfo from '../components/Triage/UserInfo'
 export default {
   name: 'Triage',
   components: {
+    UserInfo,
     UserSimilarity,
     TopicUser,
     ConcentricChart,
@@ -118,7 +121,7 @@ export default {
   },
   data() {
     return {
-      usersSet: [
+      /* usersSet: [
         {
           screen_name: 'a',
           w2v: 1,
@@ -595,7 +598,7 @@ export default {
           ],
           selected: false,
         },
-      ],
+      ], */
       flat: true,
       color: 'transparent',
       highlightedTopic: '',
@@ -644,14 +647,14 @@ export default {
       },
     },
     selectedUsers: {},
-    /* usersSet: {
+    usersSet: {
       set(val) {
         this.$store.commit('triage/updateUsersSet', val)
       },
       get() {
         return this.$store.state.triage.usersSet
       },
-    }, */
+    },
   },
   mounted() {
     this.resize()
@@ -676,7 +679,7 @@ export default {
      * so two different functions are implemented, but they do same thing (we can change candid to integrated it and delete updateSelectedCandid)
      */
     updateSelectedCandid(user) {
-      this.selectedUser = user.name
+      this.selectedUser = { screen_name: user.name }
       if (!this.allSelected.includes(user.name)) {
         this.allSelected.push(user.name)
         // ToDo: add users profile when they are in the list
@@ -687,7 +690,7 @@ export default {
       }
     },
     updateSelectedUsers(user) {
-      this.selectedUser = user.screen_name
+      this.selectedUser = { screen_name: user.screen_name }
       if (!this.allSelected.includes(user.screen_name)) {
         this.allSelected.push(user.screen_name)
         // ToDo: add users profile when they are in the list
@@ -696,6 +699,11 @@ export default {
           return ele !== user.screen_name
         })
       }
+    },
+    removeSelected(user) {
+      this.allSelected = this.allSelected.filter(function (ele) {
+        return ele !== user
+      })
     },
   },
 }

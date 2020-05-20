@@ -669,6 +669,8 @@ export default {
         this.highlightConnectedSet({ user: selected })
       }
     },
+    // TODO: add keyword seach ( searching users with keywords)
+    // TODO: emit remove to the original selectedList to sync other charts
     arcClicked(ev, arc) {
       let keywordList = []
       // If keyword is selected add its parent
