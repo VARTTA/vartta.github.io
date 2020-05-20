@@ -260,25 +260,36 @@ export default {
         d3.quantize(d3.interpolateViridis, that.users.length)
       )
     },
+    centralUserW2v() {
+      return (username) => {
+        const findUser = this.users.find(function (ele) {
+          return ele.screen_name === username
+        })
+        return findUser
+      }
+    },
     /**
      * List of users that can be shown based on selected user
      **/
     candidates() {
       const array = []
       let newIndex = 0
-      for (const userIndex in this.users)
-        if (
-          this.users[userIndex].w2v - this.meta.focalUser <=
-          this.meta.tracks
-        ) {
-          array.push({
-            index: newIndex,
-            userIndex,
-            screen_name: this.users[userIndex].screen_name,
-            w2v: this.users[userIndex].w2v,
-          })
-          newIndex += 1
-        }
+      if (this.lastSelected) {
+        const focalW2v = this.centralUserW2v(this.lastSelected).w2v
+        for (const userIndex in this.users)
+          if (
+            Math.abs(this.users[userIndex].w2v - focalW2v) <
+            this.meta.tracks - 1
+          ) {
+            array.push({
+              index: newIndex,
+              userIndex,
+              screen_name: this.users[userIndex].screen_name,
+              w2v: this.users[userIndex].w2v,
+            })
+            newIndex += 1
+          }
+      }
       return array
     },
     /*    candidates() {

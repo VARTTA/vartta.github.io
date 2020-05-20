@@ -123,7 +123,7 @@ export default {
   },
   data() {
     return {
-      /* usersSet: [
+      usersSet: [
         {
           screen_name: 'a',
           w2v: 1,
@@ -600,7 +600,7 @@ export default {
           ],
           selected: false,
         },
-      ], */
+      ],
       flat: true,
       color: 'transparent',
       highlightedTopic: '',
@@ -648,15 +648,14 @@ export default {
         return this.$store.state.topics
       },
     },
-    selectedUsers: {},
-    usersSet: {
+    /* usersSet: {
       set(val) {
         this.$store.commit('triage/updateUsersSet', val)
       },
       get() {
         return this.$store.state.triage.usersSet
       },
-    },
+    }, */
   },
   mounted() {
     this.resize()
