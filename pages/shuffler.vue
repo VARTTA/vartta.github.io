@@ -3,7 +3,7 @@
     <v-col :cols="minimizeTopics ? '2' : '3'">
       <v-card outlined>
         <v-card-title>
-          <v-toolbar-title>Topics</v-toolbar-title>
+          <span class="title">Topics</span>
           <v-spacer></v-spacer>
           <v-btn icon text @click="minimizeTopics = !minimizeTopics">
             <v-icon>
