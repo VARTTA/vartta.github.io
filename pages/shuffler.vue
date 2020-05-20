@@ -7,10 +7,10 @@
           <v-spacer></v-spacer>
           <v-btn icon text @click="minimizeTopics = !minimizeTopics">
             <v-icon>
-              mdi-{{ `unfold-${minimizeTopics ? 'more' : 'less'}-vertical` }}
+              mdi-chevron-double-{{ minimizeTopics ? 'right' : 'left' }}
             </v-icon>
           </v-btn>
-          <v-btn text icon color="red" @click="topicsTreeSelections = []">
+          <v-btn text icon color="warning" @click="topicsTreeSelections = []">
             <v-icon>mdi-replay</v-icon>
           </v-btn>
         </v-card-title>
@@ -112,27 +112,11 @@
         :height="charts.contextMap.height"
         :topics="topics.map((a) => a.id).sort()"
         :tweets="selectedTweets"
-        :flat="flat"
+        :exam-menu="examMenu"
         @topicSelected="topicSelected"
         @tweetClicked="toggleTweetExamMenu"
+        @toggleTweetExamMenu="toggleTweetExamMenu"
       ></context-map-wrapper>
-    </v-col>
-    <v-divider></v-divider>
-    <v-col cols="12">
-      <v-row>
-        <v-col
-          v-for="(tweet, index) in examMenu"
-          :key="'examMenu-' + index"
-          cols="3"
-        >
-          <tweet
-            :tweet="tweet"
-            :selected="tweet.selected"
-            :context-menu="true"
-            @deselected="toggleTweetExamMenu"
-          ></tweet>
-        </v-col>
-      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -141,20 +125,17 @@
 import socket from '../lib/socket.io'
 import TweetCollection from '../components/Twitter/TweetCollection'
 import ContextMapWrapper from '../components/ContextMap/ContextMapWrapper'
-import Tweet from '../components/Twitter/Tweet'
 export default {
   name: 'PageShuffler',
   // layout: 'shuffler',
   components: {
     TweetCollection,
     'context-map-wrapper': ContextMapWrapper,
-    tweet: Tweet,
   },
   data() {
     return {
       verticalPortion: 70,
       dialog: false,
-      flat: true,
       contentThemeTreeSelections: [],
       userGroupsTreeSelections: [],
       selectedTweets: [],
@@ -163,7 +144,7 @@ export default {
         contextMap: {
           id: 'scatter-plot',
           divId: 'scatter-plot-div',
-          label: 'Context Menu',
+          label: 'Context Map',
           width: 700,
           height: 300,
           line: {
@@ -384,7 +365,8 @@ export default {
       //   this.charts.sunburst.height = sunburstDiv.clientWidth - 5
       // }
       const contextDiv = document.getElementById(this.charts.contextMap.divId)
-      if (contextDiv) this.charts.contextMap.width = contextDiv.clientWidth - 5
+      if (contextDiv)
+        this.charts.contextMap.width = contextDiv.clientWidth - 100
     },
     getChildren(topic) {
       if (!topic || topic === '') return []
@@ -447,7 +429,7 @@ export default {
       if (container)
         container.scrollIntoView({
           behavior: 'smooth',
-          block: 'nearest',
+          block: 'start',
           inline: 'start',
         })
     },

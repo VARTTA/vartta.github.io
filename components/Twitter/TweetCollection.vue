@@ -27,13 +27,18 @@
       <v-divider></v-divider>
       <v-card-actions>
         <v-row justify="space-around" align="center">
-          <p
+          <v-skeleton-loader
             v-if="selectedTweets.length === 0"
-            class="overline grey--text"
-            style="height: 32px;"
+            type="avatar"
+            boilerplate
           >
-            Tweet selections...
-          </p>
+          </v-skeleton-loader>
+          <v-skeleton-loader
+            v-if="selectedTweets.length === 0"
+            type="avatar"
+            boilerplate
+          >
+          </v-skeleton-loader>
           <v-badge
             v-for="(tweet, index) in selectedTweets"
             :key="index"

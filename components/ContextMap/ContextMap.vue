@@ -223,7 +223,7 @@ export default {
       }
     },
   },
-  beforeUpdate() {
+  updated() {
     // re-draw axes
     this.drawAxes()
   },
@@ -246,11 +246,11 @@ export default {
         this.axes.x.element
           .call(this.xAxisFunction)
           .selectAll('text')
-          .attr('class', 'body-2')
+          .attr('class', 'overline')
           .attr('dx', '-1em')
           .attr('dy', '0em')
           .attr('y', '4')
-          .attr('transform', 'rotate(+90)')
+          .attr('transform', 'rotate(+75)')
           .style('text-anchor', 'end')
         this.axes.x.element
           .selectAll('.tick')
