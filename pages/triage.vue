@@ -16,6 +16,9 @@
             :meta="charts.topicUserDiagram"
             :topics="topics"
             :users="usersSet"
+            :selected-list="allSelected"
+            @userSelected="updateSelectedUsers"
+            @arcUsersSelected="updateArcUsers"
           ></topic-user>
         </div>
       </v-col>
@@ -48,6 +51,8 @@
             :topics="topics"
             :users="usersSet"
             :number-of-tracks="charts.concentricChart.tracks"
+            :selected-list="allSelected"
+            @candidSelected="updateSelectedCandid"
           ></concentric-chart>
         </div>
       </v-col>
@@ -82,7 +87,9 @@
             :meta="charts.userSimilarity"
             :topics="topics"
             :users="usersSet"
+            :selected-list="allSelected"
             :number-of-tracks="charts.userSimilarity.tracks"
+            @neighborSelected="updateSelectedUsers"
           ></user-similarity>
         </div>
       </v-col>
@@ -346,24 +353,6 @@ export default {
               created_at: 'Thu Mar 12 18:20:20 +0000 2020',
             },
             {
-              id: 24,
-              keywords: ['IMPOTUS'],
-              topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-            },
-            {
-              id: 25,
-              keywords: ['IMPOTUS'],
-              topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-            },
-            {
-              id: 26,
-              keywords: ['IMPOTUS'],
-              topics: ['impeachment'],
-              created_at: 'Thu Jan 2 15:24:15 +0000 2020',
-            },
-            {
               id: 27,
               keywords: ['IMPOTUS'],
               topics: ['impeachment'],
@@ -613,6 +602,7 @@ export default {
       msg: '',
       temp: [],
       selectedUser: { screen_name: '' },
+      allSelected: [],
       // Charts and all of their configurations
       charts: {
         topicUserDiagram: {
@@ -678,6 +668,33 @@ export default {
       }
       if (concentricDiv) {
         this.charts.concentricChart.width = concentricDiv.clientWidth - 5
+      }
+    },
+    /***
+     *
+     * Candid in the ConcentricChart component have different attributes (name) instead of screen_name
+     * so two different functions are implemented, but they do same thing (we can change candid to integrated it and delete updateSelectedCandid)
+     */
+    updateSelectedCandid(user) {
+      this.selectedUser = user.name
+      if (!this.allSelected.includes(user.name)) {
+        this.allSelected.push(user.name)
+        // ToDo: add users profile when they are in the list
+      } else {
+        this.allSelected = this.allSelected.filter(function (ele) {
+          return ele !== user.name
+        })
+      }
+    },
+    updateSelectedUsers(user) {
+      this.selectedUser = user.screen_name
+      if (!this.allSelected.includes(user.screen_name)) {
+        this.allSelected.push(user.screen_name)
+        // ToDo: add users profile when they are in the list
+      } else {
+        this.allSelected = this.allSelected.filter(function (ele) {
+          return ele !== user.screen_name
+        })
       }
     },
   },

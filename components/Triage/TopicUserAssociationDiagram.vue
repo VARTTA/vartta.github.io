@@ -37,6 +37,7 @@
         class="highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
         @mouseout="removeHighlights"
+        @click="(ev) => arcClicked.call({}, ev, arc)"
       >
         <path
           class="line"
@@ -105,13 +106,14 @@
           :cx="circleX(item)"
           :cy="circleY(item)"
           :r="circleSize"
-          :stroke="token.strokeColor"
+          :stroke="strokeColor(item.data.screen_name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
+          :stroke-width="strokeSize(item.data.screen_name)"
           :fill="'url(#' + item.data.screen_name + ')'"
           :transform="circleTransform"
           @mouseover="highlightConnectedSet({ user: item })"
           @mouseout="removeHighlights"
+          @click="(ev) => userClicked.call({}, ev, item)"
         />
       </g>
     </g>
@@ -129,6 +131,12 @@ export default {
       default: 'topic-user',
     },
     topics: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    selectedList: {
       type: Array,
       default() {
         return []
@@ -209,6 +217,7 @@ export default {
       sunburst: false,
       tokenShiftRatio: 0.65,
       packSizeRatio: 0.7,
+      selectedArcs: [],
     }
   },
   computed: {
@@ -420,6 +429,18 @@ export default {
     },
     circleSize() {
       return this.radius * 0.02
+    },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2.5
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return '#69a63b'
+        else return '#61768e'
+      }
     },
     /**
      * Related arcs to a user, only at one of depth 1 or 2
@@ -641,6 +662,44 @@ export default {
           el.classList.add('highlighted')
         }
       }
+    },
+    userClicked(ev, selected) {
+      this.$emit('userSelected', selected.data)
+      if (!this.selectedList.includes(selected.data.screen_name)) {
+        this.highlightConnectedSet({ user: selected })
+      }
+    },
+    arcClicked(ev, arc) {
+      let keywordList = []
+      // If keyword is selected add its parent
+      if (arc.depth === 2) {
+        keywordList = keywordList.concat(arc)
+      } // If topic is selected add all its used keywords
+      else if (arc.depth === 1) {
+        for (const el of arc.children)
+          if (this.isUsed(el)) {
+            keywordList = keywordList.concat(el)
+          }
+      }
+      for (const kw of keywordList)
+        for (const tw of this.relatedUsers(kw)) {
+          // if arc is not selected, select all deselected users
+          if (!this.selectedArcs.includes(arc.data.name)) {
+            if (!this.selectedList.includes(tw.data.screen_name))
+              this.selectedList.push(tw.data.screen_name)
+          } // else it means the arc was selected and we should deselect selected users
+          else if (this.selectedList.includes(tw.data.screen_name)) {
+            this.selectedList = this.selectedList.filter(function (ele) {
+              return ele !== tw.data.screen_name
+            })
+          }
+        }
+      if (!this.selectedArcs.includes(arc.data.name))
+        this.selectedArcs.push(arc.data.name)
+      else
+        this.selectedArcs = this.selectedArcs.filter(function (ele) {
+          return ele !== arc.data.name
+        })
     },
   },
 }

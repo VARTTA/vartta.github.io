@@ -58,11 +58,12 @@
             )
           "
           :r="circleSize"
-          :stroke="token.stroke"
+          :stroke="strokeColor(candid.screen_name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
+          :stroke-width="strokeSize(candid.screen_name)"
           :fill="circleFill(index)"
           :fill-opacity="token.opacity"
+          @click="(ev) => clicked.call({}, ev, candid)"
         >
           <title>{{ candid.screen_name }}</title>
         </circle>
@@ -102,6 +103,12 @@ export default {
       },
     },
     users: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    selectedList: {
       type: Array,
       default() {
         return []
@@ -228,6 +235,19 @@ export default {
     circleSize() {
       return this.radius * 0.06
     },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2.5
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return '#69a63b'
+        // if (this.selectedList.includes(id)) return this.colorToken(id)
+        else return 'grey'
+      }
+    },
     colorToken() {
       const that = this
       return d3.scaleOrdinal(
@@ -317,6 +337,9 @@ export default {
     },
     PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
+    },
+    clicked(ev, neighbor) {
+      this.$emit('neighborSelected', neighbor)
     },
   },
 }

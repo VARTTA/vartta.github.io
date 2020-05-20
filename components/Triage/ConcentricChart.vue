@@ -81,11 +81,12 @@
             )
           "
           :r="circleSize"
-          :stroke="token.stroke"
+          :stroke="strokeColor(candid.name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
+          :stroke-width="strokeSize(candid.name)"
           :fill="circleFill(candid.userIndex)"
           :fill-opacity="token.opacity"
+          @click="(ev) => clicked.call({}, ev, candid)"
         >
           <!-- <title>{{ candid.name }}</title>-->
           <title>{{ candid.tweet.created_at }}</title>
@@ -135,6 +136,12 @@ export default {
       type: Number,
       default() {
         return 3
+      },
+    },
+    selectedList: {
+      type: Array,
+      default() {
+        return []
       },
     },
     axis: {
@@ -199,6 +206,18 @@ export default {
   computed: {
     radius() {
       return Math.min(this.meta.width) / 2
+    },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return this.colorToken(id)
+        else return 'grey'
+      }
     },
     /**
      * Returns labels of outer circle based on selected time unit(e.g. Jan - Dec , or Sun - Sat)
@@ -632,6 +651,9 @@ export default {
     },
     PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
+    },
+    clicked(ev, candid) {
+      this.$emit('candidSelected', candid)
     },
   },
 }
