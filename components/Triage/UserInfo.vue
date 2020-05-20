@@ -16,6 +16,12 @@
                 icon
                 :color="questionColor(username)"
                 @click="(ev) => questionClicked.call({}, ev, username)"
+                ><v-icon>mdi-account-question</v-icon></v-btn
+              >
+              <v-btn
+                icon
+                :color="searchColor(username)"
+                @click="(ev) => searchClicked.call({}, ev, username)"
                 ><v-icon>mdi-account-search</v-icon></v-btn
               >
             </v-list-item-icon>
@@ -38,6 +44,12 @@ export default {
       type: Array,
       default() {
         return []
+      },
+    },
+    lastSelected: {
+      type: String,
+      default() {
+        return ''
       },
     },
     options: {
@@ -63,6 +75,12 @@ export default {
         return 'grey'
       }
     },
+    searchColor(user) {
+      return (user) => {
+        if (this.lastSelected === user) return 'blue'
+        return 'grey'
+      }
+    },
   },
   methods: {
     questionClicked(ev, username) {
@@ -75,6 +93,9 @@ export default {
     },
     removeSelected(ev, username) {
       this.$emit('removeFromPile', username)
+    },
+    searchClicked(ev, username) {
+      this.$emit('searchClicked', username)
     },
   },
 }

@@ -18,7 +18,6 @@
             :users="usersSet"
             :selected-list="allSelected"
             @userSelected="updateSelectedUsers"
-            @arcUsersSelected="updateArcUsers"
           ></topic-user>
         </div>
       </v-col>
@@ -89,6 +88,7 @@
             :users="usersSet"
             :selected-list="allSelected"
             :number-of-tracks="charts.userSimilarity.tracks"
+            :last-selected="lastSelectedUser"
             @neighborSelected="updateSelectedUsers"
           ></user-similarity>
         </div>
@@ -97,7 +97,9 @@
       <v-col class="text-center" cols="12" md="4">
         <user-info
           :selected-list="allSelected"
+          :last-selected="lastSelectedUser"
           @removeFromPile="removeSelected"
+          @searchClicked="updateLastSelect"
         ></user-info>
       </v-col>
     </v-row>
@@ -604,7 +606,7 @@ export default {
       highlightedTopic: '',
       msg: '',
       temp: [],
-      selectedUser: { screen_name: '' },
+      lastSelectedUser: '',
       allSelected: [],
       // Charts and all of their configurations
       charts: {
@@ -679,7 +681,7 @@ export default {
      * so two different functions are implemented, but they do same thing (we can change candid to integrated it and delete updateSelectedCandid)
      */
     updateSelectedCandid(user) {
-      this.selectedUser = { screen_name: user.name }
+      this.lastSelectedUser = user.name
       if (!this.allSelected.includes(user.name)) {
         this.allSelected.push(user.name)
         // ToDo: add users profile when they are in the list
@@ -690,7 +692,7 @@ export default {
       }
     },
     updateSelectedUsers(user) {
-      this.selectedUser = { screen_name: user.screen_name }
+      this.lastSelectedUser = user.screen_name
       if (!this.allSelected.includes(user.screen_name)) {
         this.allSelected.push(user.screen_name)
         // ToDo: add users profile when they are in the list
@@ -704,6 +706,9 @@ export default {
       this.allSelected = this.allSelected.filter(function (ele) {
         return ele !== user
       })
+    },
+    updateLastSelect(user) {
+      this.lastSelectedUser = user
     },
   },
 }

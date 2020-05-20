@@ -108,6 +108,12 @@ export default {
         return []
       },
     },
+    lastSelected: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
     selectedList: {
       type: Array,
       default() {
@@ -275,6 +281,24 @@ export default {
         }
       return array
     },
+    /*    candidates() {
+      const array = []
+      let newIndex = 0
+      for (const userIndex in this.users)
+        if (
+          this.users[userIndex].w2v - this.meta.focalUser <=
+          this.meta.tracks
+        ) {
+          array.push({
+            index: newIndex,
+            userIndex,
+            screen_name: this.users[userIndex].screen_name,
+            w2v: this.users[userIndex].w2v,
+          })
+          newIndex += 1
+        }
+      return array
+    }, */
     /**
      * Returns the distance of a tweet from the beginning of its corresponded track to scatter users in same level
      * to feed the tokenRadialScale()
