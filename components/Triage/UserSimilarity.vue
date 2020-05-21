@@ -271,7 +271,7 @@ export default {
     /**
      * List of users that can be shown based on selected user
      **/
-    /* candidates() {
+    candidates() {
       const array = []
       let newIndex = 0
       if (this.lastSelected) {
@@ -286,25 +286,6 @@ export default {
               userIndex,
               screen_name: this.users[userIndex].screen_name,
               w2v: this.users[userIndex].w2v,
-            })
-            newIndex += 1
-          }
-      }
-      return array
-    }, */
-    // TODO: this version is just for testing pics. after adding w2v delete this and use the above
-    candidates() {
-      const array = []
-      let newIndex = 0
-      if (this.lastSelected) {
-        const focalW2v = this.centralUserW2v(this.lastSelected).id
-        for (const userIndex in this.users)
-          if (this.users[userIndex].id % 3 === focalW2v % 3) {
-            array.push({
-              index: newIndex,
-              userIndex,
-              screen_name: this.users[userIndex].screen_name,
-              w2v: this.users[userIndex].id % 3,
             })
             newIndex += 1
           }

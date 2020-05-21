@@ -84,7 +84,7 @@
           :stroke="strokeColor(candid.name)"
           :stroke-opacity="token.strokeOpacity"
           :stroke-width="strokeSize(candid.name)"
-          :fill="circleFill(candid.userIndex)"
+          :fill="'url(#' + candid.name + ')'"
           :fill-opacity="token.opacity"
           @click="(ev) => clicked.call({}, ev, candid)"
         >
@@ -426,7 +426,7 @@ export default {
     },
     circleFill() {
       return (d) => {
-        return this.colorToken(d)
+        return this.users
       }
     },
     circleSize() {
@@ -521,8 +521,7 @@ export default {
             now.getHours() - (this.numberOfTracks - 1)
           )
       }
-      temp = new Date(this.maxDate.getTime() - temp)
-      return temp
+      return new Date(this.maxDate.getTime() - temp)
     },
     /**
      * List of tweets that can be shown based on selected time unit and number of tracks

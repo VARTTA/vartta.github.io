@@ -126,6 +126,7 @@ export default {
       usersSet: [
         {
           id: 2382499392,
+          w2v: 1.2,
           id_str: '2382499392',
           name: 'Eric Edwards',
           screen_name: 'UCFONEBIGOHANA',
@@ -781,6 +782,7 @@ export default {
         },
         {
           id: 192797312,
+          w2v: 5.2,
           id_str: '192797312',
           name: 'Osman Naqs',
           screen_name: 'jinkinggon',
@@ -1544,6 +1546,7 @@ export default {
         },
         {
           id: 1134775576714260500,
+          w2v: 3.9,
           id_str: '1134775576714260480',
           name: 'ron',
           screen_name: 'ron84750909',
@@ -2017,6 +2020,7 @@ export default {
         },
         {
           id: 3104950051,
+          w2v: 4,
           id_str: '3104950051',
           name: 'Tommy',
           screen_name: 'birdman8272',
@@ -2748,6 +2752,7 @@ export default {
         },
         {
           id: 253110749,
+          w2v: 5.2,
           id_str: '253110749',
           name: 'Bobby From The Bronx',
           screen_name: 'newkingofmedia',
