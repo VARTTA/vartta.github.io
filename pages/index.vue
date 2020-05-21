@@ -104,7 +104,7 @@
         </v-card>
       </v-hover>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="12" md="6">
       <v-hover>
         <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
           <v-img :aspect-ratio="16 / 9" src="/form.png">
