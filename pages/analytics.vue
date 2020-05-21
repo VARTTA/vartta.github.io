@@ -228,7 +228,7 @@ export default {
     },
     updateSelectedTopic(item) {
       if (this.topics.map((a) => a.id).includes(item.id)) {
-        this.selectedTopic = item.id
+        this.$store.commit('analytics/updateTopic', item.id)
         this.highlightTopic(item.id)
       }
     },

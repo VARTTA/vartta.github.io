@@ -280,17 +280,20 @@ export default {
     updateComparisons(count) {
       this.$store.commit('compare/updateComparisons', count)
     },
-    highlightTopic(item) {
-      if (this.topics.map((a) => a.id).includes(item.id)) {
-        for (const comparison of this.comparisons) {
-          comparison.topic = item.id
+    highlightTopic(id) {
+      if (this.topics.map((a) => a.id).includes(id)) {
+        for (const i in this.comparisons) {
+          this.$store.commit('compare/updateComparisonTopic', {
+            index: i,
+            value: id,
+          })
         }
       }
     },
     updateSelectedTopic(item) {
       if (this.topics.map((a) => a.id).includes(item.id)) {
         this.selectedTopic = item.id
-        this.highlightTopic(item)
+        this.highlightTopic(item.id)
       }
     },
     applyHighlight(item) {
@@ -298,14 +301,14 @@ export default {
         const comps = this.$refs[index]
         for (const comp of comps) comp.applyHighlight(item)
       }
-      this.highlightTopic(item)
+      this.highlightTopic(item.id)
     },
     removeHighlight(item) {
       for (const index of Object.keys(this.$refs)) {
         const comps = this.$refs[index]
         for (const comp of comps) comp.removeHighlight(item)
       }
-      this.highlightTopic({ id: this.selectedTopic })
+      this.highlightTopic(this.selectedTopic)
     },
   },
 }
