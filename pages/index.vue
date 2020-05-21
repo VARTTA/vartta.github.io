@@ -245,7 +245,11 @@ export default {
         socket.emit('update_channels', this.$store.state.topics)
         socket.emit('initial_data_request', {})
       } else {
-        this.$store.commit('resetSelectedScenario')
+        this.$store.dispatch('reset')
+        this.$store.dispatch('analytics/reset')
+        this.$store.dispatch('compare/reset')
+        this.$store.dispatch('shuffler/reset')
+        this.$store.dispatch('triage/reset')
         socket.emit('pause_consuming')
       }
     },

@@ -365,8 +365,7 @@ export default {
       //   this.charts.sunburst.height = sunburstDiv.clientWidth - 5
       // }
       const contextDiv = document.getElementById(this.charts.contextMap.divId)
-      if (contextDiv)
-        this.charts.contextMap.width = contextDiv.clientWidth - 100
+      if (contextDiv) this.charts.contextMap.width = contextDiv.clientWidth - 50
     },
     getChildren(topic) {
       if (!topic || topic === '') return []
