@@ -669,7 +669,7 @@ export default {
         this.highlightConnectedSet({ user: selected })
       }
     },
-    // TODO: add keyword seach ( searching users with keywords), right now we only have topic search
+    // TODO: add keyword seach ( searching users with keywords), right now we only have topic search for
     // TODO: emit remove to the original selectedList to sync other charts
     arcClicked(ev, arc) {
       let keywordList = []

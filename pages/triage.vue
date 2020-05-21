@@ -15,7 +15,7 @@
           <topic-user
             :meta="charts.topicUserDiagram"
             :topics="topics"
-            :users="usersSet"
+            :users="userSet"
             :selected-list="allSelected"
             @userSelected="updateSelectedUsers"
           ></topic-user>
@@ -48,7 +48,7 @@
           <concentric-chart
             :meta="charts.concentricChart"
             :topics="topics"
-            :users="usersSet"
+            :users="userSet"
             :number-of-tracks="charts.concentricChart.tracks"
             :selected-list="allSelected"
             @candidSelected="updateSelectedCandid"
@@ -85,7 +85,7 @@
           <user-similarity
             :meta="charts.userSimilarity"
             :topics="topics"
-            :users="usersSet"
+            :users="userSet"
             :selected-list="allSelected"
             :number-of-tracks="charts.userSimilarity.tracks"
             :last-selected="lastSelectedUser"
@@ -123,10 +123,10 @@ export default {
   },
   data() {
     return {
-      usersSet: [
+      /* usersRawSet: [
         {
           id: 2382499392,
-          w2v: 1.2,
+          w2v: 7,
           id_str: '2382499392',
           name: 'Eric Edwards',
           screen_name: 'UCFONEBIGOHANA',
@@ -1546,7 +1546,7 @@ export default {
         },
         {
           id: 1134775576714260500,
-          w2v: 3.9,
+          w2v: 2.9,
           id_str: '1134775576714260480',
           name: 'ron',
           screen_name: 'ron84750909',
@@ -3140,7 +3140,7 @@ export default {
             },
           ],
         },
-      ],
+      ], */
       /*
       usersSet: [
         {
@@ -3656,14 +3656,46 @@ export default {
         return this.$store.state.topics
       },
     },
-    /* usersSet: {
+    usersRawSet: {
       set(val) {
         this.$store.commit('triage/updateUsersSet', val)
       },
       get() {
         return this.$store.state.triage.usersSet
       },
-    }, */
+    },
+    /***
+     *  Add any required attribute of data to users
+     * */
+    userSet() {
+      const users = []
+      let createdAt = ''
+      let id = ''
+      let w2v = 1
+      for (const item of this.usersRawSet) {
+        const topicArray = []
+        const keywordArray = []
+        for (const tweet of item.tweets) {
+          topicArray.push(Object.keys(tweet.topics))
+          keywordArray.push(Object.values(tweet.topics))
+          id = tweet.id
+          createdAt = tweet.created_at
+          w2v = tweet.id % 10
+        }
+        item.tweets.topics = []
+        for (const tpc of topicArray) item.tweets.topics.push(tpc)
+        item.tweets.keyword = []
+        for (const kw of keywordArray)
+          for (const k of kw) item.tweets.keyword.push(k)
+        item.tweets.id = id
+        item.tweets.created_at = createdAt
+        item.w2v = w2v
+        users.push(item)
+        console.log('item is here', item)
+      }
+      console.log('users are **', users)
+      return users
+    },
   },
   mounted() {
     this.resize()
