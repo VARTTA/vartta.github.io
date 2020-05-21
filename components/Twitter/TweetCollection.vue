@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-col cols="4">
-    <v-card :id="'tweetcollection-' + title" outlined>
+  <v-col md="6" lg="4" cols="12">
+    <v-card :id="'tweetcollection-' + title" outlined min-width="300">
       <v-card-actions>
         <v-row align="center" justify="center">
           <h2 class="font-weight-thin" style="text-transform: uppercase;">
@@ -115,9 +115,7 @@ export default {
       }
     },
   },
-  mounted() {
-    console.log('mounted')
-  },
+  mounted() {},
   methods: {
     addTweet(tweet) {
       tweet.selected = true
@@ -142,8 +140,6 @@ export default {
       this.$emit('updateTweet', data)
     },
     clicked(tweet) {
-      // eslint-disable-next-line no-console
-      console.log(this.target(tweet), this.options(this.title), this.$vuetify)
       this.$vuetify.goTo(this.target(tweet), this.options(this.title))
     },
   },

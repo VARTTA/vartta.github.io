@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-row align="start" justify="start" no-gutters>
-    <v-col :cols="minimizeTopics ? '2' : '3'">
+    <v-col :lg="minimizeTopics ? '2' : '3'" :cols="minimizeTopics ? '4' : '5'">
       <v-card outlined>
         <v-card-title>
           <span class="title">Topics</span>
@@ -39,7 +39,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col :cols="minimizeTopics ? '10' : '9'">
+    <v-col :lg="minimizeTopics ? '10' : '9'" :cols="minimizeTopics ? '8' : '7'">
       <v-row class="fill-height" justify="center">
         <v-col cols="12">
           <v-row

@@ -608,8 +608,6 @@ export default {
           theme: this.tempTheme,
         })
       this.dialog = false
-      // eslint-disable-next-line no-console
-      console.log(this.tweet.text, this.customGroup, this.customTheme)
     },
   },
 }

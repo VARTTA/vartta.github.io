@@ -103,6 +103,23 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <v-dialog v-model="tooSmall" max-width="290">
+      <v-card>
+        <v-card-title class="headline">
+          Too Small!
+        </v-card-title>
+        <v-card-text>
+          The screen is too small for this page. You can still continue and use
+          this app, but it would be much more enjoyable on a larger screen.
+          Quick solution: try using your device in the landscape mode.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="grey darken-1" block text @click="tooSmall = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
@@ -122,6 +139,7 @@ export default {
   data() {
     return {
       outlined: false,
+      tooSmall: false,
       flat: true,
       selectedTopic: '',
       color: 'transparent',
@@ -237,6 +255,7 @@ export default {
   mounted() {
     window.addEventListener('resize', this.resize)
     this.resize()
+    this.tooSmall = window.innerWidth < 960
   },
   updated() {
     this.resize()

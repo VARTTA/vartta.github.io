@@ -270,13 +270,9 @@ export default {
     },
     mouseover(data, tweet) {
       tweet.hover = true
-      // eslint-disable-next-line no-console
-      console.log(tweet.hover)
     },
     mouseleave(data, tweet) {
       tweet.hover = false
-      // eslint-disable-next-line no-console
-      console.log(tweet.hover)
     },
   },
 }
