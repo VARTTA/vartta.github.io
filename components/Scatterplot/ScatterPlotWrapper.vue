@@ -1,10 +1,9 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-card :color="color" :flat="flat">
+  <v-card outlined>
     <v-card-title v-if="showMeta">
-      <h3>
-        {{ label }}
-      </h3>
+      {{ label }}
     </v-card-title>
+    <v-divider></v-divider>
     <v-card-text>
       <div :id="divId">
         <scatter-plot
@@ -24,46 +23,46 @@
         />
       </div>
     </v-card-text>
-    <v-card-actions>
-      <v-btn icon small @click="meta.show = !meta.show">
-        <v-icon>
-          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}
-        </v-icon>
-      </v-btn>
-    </v-card-actions>
-    <v-slide-y-transition>
-      <v-card-actions v-show="meta.show">
-        <v-btn icon small @click="reset">
-          <v-icon>mdi-refresh</v-icon>
-        </v-btn>
+    <!--    <v-card-actions>-->
+    <!--      <v-btn icon small @click="meta.show = !meta.show">-->
+    <!--        <v-icon>-->
+    <!--          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}-->
+    <!--        </v-icon>-->
+    <!--      </v-btn>-->
+    <!--    </v-card-actions>-->
+    <!--    <v-slide-y-transition>-->
+    <!--      <v-card-actions v-show="meta.show">-->
+    <!--        <v-btn icon small @click="reset">-->
+    <!--          <v-icon>mdi-refresh</v-icon>-->
+    <!--        </v-btn>-->
 
-        <v-spacer></v-spacer>
+    <!--        <v-spacer></v-spacer>-->
 
-        <span class="caption theme--light">Old:</span>
-        <input v-model="colorRange[0]" type="color" />
+    <!--        <span class="caption theme&#45;&#45;light">Old:</span>-->
+    <!--        <input v-model="colorRange[0]" type="color" />-->
 
-        <v-spacer></v-spacer>
+    <!--        <v-spacer></v-spacer>-->
 
-        <span class="caption theme--light">Recent:</span>
-        <input v-model="colorRange[1]" type="color" />
+    <!--        <span class="caption theme&#45;&#45;light">Recent:</span>-->
+    <!--        <input v-model="colorRange[1]" type="color" />-->
 
-        <v-spacer></v-spacer>
+    <!--        <v-spacer></v-spacer>-->
 
-        <v-slider
-          v-model="radius"
-          hint="Circle size"
-          persistent-hint
-          thumb-label="always"
-          min="1"
-          max="20"
-          prepend-icon="mdi-minus-circle"
-          append-icon="mdi-plus-circle"
-          @click:prepend="decrement"
-          @click:append="increment"
-        >
-        </v-slider>
-      </v-card-actions>
-    </v-slide-y-transition>
+    <!--        <v-slider-->
+    <!--          v-model="radius"-->
+    <!--          hint="Circle size"-->
+    <!--          persistent-hint-->
+    <!--          thumb-label="always"-->
+    <!--          min="1"-->
+    <!--          max="20"-->
+    <!--          prepend-icon="mdi-minus-circle"-->
+    <!--          append-icon="mdi-plus-circle"-->
+    <!--          @click:prepend="decrement"-->
+    <!--          @click:append="increment"-->
+    <!--        >-->
+    <!--        </v-slider>-->
+    <!--      </v-card-actions>-->
+    <!--    </v-slide-y-transition>-->
   </v-card>
 </template>
 

@@ -1,13 +1,31 @@
 <template>
-  <div id="timeline-target" style="max-height: 650px; overflow: auto;">
-    <time-line
-      v-if="username"
-      :id="username"
-      ref="timeline"
-      source-type="profile"
-      :options="options"
-    ></time-line>
-  </div>
+  <v-card outlined>
+    <v-card-title>
+      User Profile
+    </v-card-title>
+    <v-divider></v-divider>
+    <v-card-text
+      id="timeline-target"
+      style="max-height: 638px; overflow: auto;"
+    >
+      <v-skeleton-loader
+        v-if="username === '' || username === null"
+        type="card-heading, divider, list-item-avatar-three-line, divider,
+          list-item-avatar-three-line, divider, list-item-avatar-three-line, divider,
+          list-item-avatar-three-line, divider, list-item-avatar-three-line, divider,
+          list-item-avatar-three-line, divider"
+        width="100%"
+      >
+      </v-skeleton-loader>
+      <time-line
+        v-if="username"
+        :id="username"
+        ref="timeline"
+        source-type="profile"
+        :options="options"
+      ></time-line>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>

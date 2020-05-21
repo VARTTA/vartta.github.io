@@ -1,11 +1,10 @@
 <template>
-  <v-card :color="color" :flat="flat">
+  <v-card outlined>
     <v-card-title>
-      <h3>
-        {{ label }}
-        ({{ selectedMlMethod }})
-      </h3>
+      {{ label }}
+      ({{ selectedMlMethod }})
     </v-card-title>
+    <v-divider></v-divider>
     <!--    <v-card-actions>-->
     <!--      <v-btn icon @click="meta.show = !meta.show">-->
     <!--        <v-icon>mdi-{{ meta.show ? 'help_circle' : 'help_circle_outline' }}</v-icon>-->

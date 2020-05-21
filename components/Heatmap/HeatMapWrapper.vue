@@ -1,11 +1,10 @@
 <template>
-  <v-card :color="color" :flat="flat">
+  <v-card outlined>
     <v-card-title>
-      <h3>
-        {{ label }}
-        ({{ selectedTopic }} {{ selectedAnalysisMethod }} )
-      </h3>
+      {{ label }}
+      ({{ selectedTopic }} {{ selectedAnalysisMethod }} )
     </v-card-title>
+    <v-divider></v-divider>
     <v-card-text>
       <div :id="divId">
         <heat-map
@@ -17,24 +16,24 @@
         />
       </div>
     </v-card-text>
-    <v-card-actions>
-      <v-btn icon small @click="meta.show = !meta.show">
-        <v-icon>
-          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}
-        </v-icon>
-      </v-btn>
-    </v-card-actions>
-    <v-slide-y-transition>
-      <v-card-actions v-show="meta.show">
-        <span class="caption theme--light">Low Values:</span>
-        <input v-model="colorRange[0]" type="color" />
+    <!--    <v-card-actions>-->
+    <!--      <v-btn icon small @click="meta.show = !meta.show">-->
+    <!--        <v-icon>-->
+    <!--          mdi-{{ meta.show ? 'help-circle' : 'help-circle-outline' }}-->
+    <!--        </v-icon>-->
+    <!--      </v-btn>-->
+    <!--    </v-card-actions>-->
+    <!--    <v-slide-y-transition>-->
+    <!--      <v-card-actions v-show="meta.show">-->
+    <!--        <span class="caption theme&#45;&#45;light">Low Values:</span>-->
+    <!--        <input v-model="colorRange[0]" type="color" />-->
 
-        <v-spacer></v-spacer>
+    <!--        <v-spacer></v-spacer>-->
 
-        <span class="caption theme--light">High Values:</span>
-        <input v-model="colorRange[1]" type="color" />
-      </v-card-actions>
-    </v-slide-y-transition>
+    <!--        <span class="caption theme&#45;&#45;light">High Values:</span>-->
+    <!--        <input v-model="colorRange[1]" type="color" />-->
+    <!--      </v-card-actions>-->
+    <!--    </v-slide-y-transition>-->
   </v-card>
 </template>
 

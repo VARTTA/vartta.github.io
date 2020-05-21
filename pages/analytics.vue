@@ -1,15 +1,15 @@
 <template>
-  <v-row dense>
+  <v-row dense no-gutters>
     <v-col cols="12">
       <v-card flat color="transparent">
         <v-card-actions>
           <v-row align="center" justify="space-around">
-            <v-col v-if="mlMethods.length === 0" class="text-center">
-              <v-progress-circular
-                :size="50"
-                color="orange"
-                indeterminate
-              ></v-progress-circular>
+            <v-col v-if="mlMethods.length === 0" cols="12" md="7">
+              <v-skeleton-loader
+                v-if="mlMethods.length === 0"
+                type="card-heading, divider, list-item-three-line"
+              >
+              </v-skeleton-loader>
             </v-col>
             <v-col v-if="mlMethods.length !== 0" md="7">
               <h4>Text Categorization Methods</h4>
@@ -22,12 +22,12 @@
                 label="Text Categorization Method"
               ></v-select>
             </v-col>
-            <v-col v-if="analysisMethods.length === 0" class="text-center">
-              <v-progress-circular
-                :size="50"
-                color="cyan"
-                indeterminate
-              ></v-progress-circular>
+            <v-col v-if="analysisMethods.length === 0" cols="12" md="5">
+              <v-skeleton-loader
+                v-if="analysisMethods.length === 0"
+                type="card-heading, divider, list-item-three-line"
+              >
+              </v-skeleton-loader>
             </v-col>
             <v-col v-if="analysisMethods.length !== 0" md="5">
               <h4>Sentiment Analysis Methods</h4>
@@ -76,11 +76,12 @@
         :dataset="aggregatedKeywords"
       ></heat-map-wrapper>
     </v-col>
-    <v-col class="text-center" cols="12" md="8">
+    <v-col class="text-center" cols="12" md="7">
       <scatter-plot-wrapper
         :id="charts.scatterplot.id"
         :div-id="charts.scatterplot.divId"
         :label="charts.scatterplot.label"
+        :show-meta="true"
         :width="charts.scatterplot.width"
         :height="charts.scatterplot.height"
         :selected-analysis-method="selectedSentimentAnalysisMethod"
@@ -90,7 +91,7 @@
         @circleClicked="updateTweets"
       ></scatter-plot-wrapper>
     </v-col>
-    <v-col class="text-center" cols="12" md="4">
+    <v-col class="text-center" cols="12" md="5">
       <!--   TODO: make it transparent   -->
       <user-profile :username="selectedUser.screen_name"></user-profile>
     </v-col>
