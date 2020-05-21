@@ -1,5 +1,5 @@
 <template>
-  <v-card outlined>
+  <v-card :outlined="outlined" :flat="flat">
     <v-card-title>
       {{ label }}
       ({{ selectedTopic }} {{ selectedAnalysisMethod }} )
@@ -66,6 +66,10 @@ export default {
       default: 'transparent',
     },
     flat: {
+      type: Boolean,
+      default: true,
+    },
+    outlined: {
       type: Boolean,
       default: true,
     },
