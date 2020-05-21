@@ -41,7 +41,10 @@
           <v-img :aspect-ratio="16 / 9" :src="scenario.cloud">
             <v-expand-transition>
               <div
-                v-if="selectedScenario && selectedScenario.id !== scenario.id"
+                v-if="
+                  selectedScenario !== null &&
+                  selectedScenario.id !== scenario.id
+                "
                 class="d-flex text-center transition-fast-in-fast-out grey darken-2 v-card--reveal--disconnected display-3 white--text"
                 style="height: 100%;"
               >
@@ -55,7 +58,13 @@
                 "
                 style="height: 100%;"
               >
-                {{ scenario.consuming ? 'Pause' : 'Start' }}
+                {{
+                  selectedScenario !== null
+                    ? selectedScenario.id === scenario.id
+                      ? 'Pause'
+                      : 'Start'
+                    : 'Start'
+                }}
               </div>
             </v-expand-transition>
           </v-img>
@@ -68,11 +77,17 @@
               large
               right
               top
-              :disabled="(selectedScenario && selectedScenario.id !== scenario.id)"
+              :disabled="(selectedScenario !== null && selectedScenario.id !== scenario.id)"
               @click.stop="toggleConsuming(scenario)"
             >
               <v-icon>
-                mdi-{{ scenario.consuming ? 'pause' : 'power' }}
+                mdi-{{
+                  selectedScenario !== null
+                    ? selectedScenario.id === scenario.id
+                      ? 'pause'
+                      : 'power'
+                    : 'power'
+                }}
               </v-icon>
             </v-btn>
             <h3
@@ -89,7 +104,7 @@
         </v-card>
       </v-hover>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="12" md="6">
       <v-hover>
         <v-card slot-scope="{ hover }" class="mx-auto" max-width="600">
           <v-img :aspect-ratio="16 / 9" src="/form.png">
@@ -150,23 +165,46 @@
 <script>
 import socket from '../lib/socket.io'
 export default {
+  name: 'PageIndex',
   components: {},
   data() {
     return {
       disconnected: socket.disconnected,
+      topics: null,
+      scenarios: [
+        {
+          id: 'phealth',
+          title: 'Public Health',
+          subtitle:
+            'Causes of mortality, diseases, natural disasters, and more',
+          color: 'orange',
+          cloud: '/samples/phealth/cloud.png',
+        },
+        {
+          id: 'smartcity',
+          title: 'Smart City / Urban Planning',
+          subtitle: "Citizens' comments about urban spaces...",
+          color: 'blue',
+          cloud: '/samples/smartcity/cloud.png',
+        },
+        {
+          id: 'politics',
+          title: 'U.S. Elections',
+          subtitle: 'Debates about policies, political parties, and more',
+          color: 'purple',
+          cloud: '/samples/politics/cloud.png',
+        },
+      ],
     }
   },
   computed: {
-    scenarios: {
+    selectedScenario: {
       set(val) {
-        this.$store.commit('updateScenarios', val)
+        this.$store.commit('updateSelectedScenario', val)
       },
       get() {
-        return this.$store.state.scenarios
+        return this.$store.state.selectedScenario
       },
-    },
-    selectedScenario() {
-      return this.scenarios.find((a) => a.consuming)
     },
   },
   beforeMount() {
@@ -180,37 +218,39 @@ export default {
 
   methods: {
     toggleConsuming(scenario) {
-      if (scenario.consuming) {
-        this.$store.commit('updateConsumingScenario', {
-          id: scenario.id,
-          flag: false,
-        })
-        socket.emit('pause_consuming')
-      }
       // Was not already consuming streams or was consuming another stream
-      else {
-        this.$store.commit('reset')
-        this.$store.commit('analytics/reset')
-        this.$store.commit('compare/reset')
-        this.$store.commit('shuffler/reset')
-        this.$store.commit('triage/reset')
-        this.$store.commit('updateConsumingScenario', {
-          id: scenario.id,
-          flag: true,
+      if (this.selectedScenario === null) {
+        this.$store.dispatch('reset')
+        this.$store.dispatch('analytics/reset')
+        this.$store.dispatch('compare/reset')
+        this.$store.dispatch('shuffler/reset')
+        this.$store.dispatch('triage/reset')
+        this.$store.commit('updateSelectedScenario', scenario)
+        this.$store.dispatch('fetchData', {
+          agtopics:
+            'http://localhost:3000/samples/' + scenario.id + '/agtopics.json',
+          agusers:
+            'http://localhost:3000/samples/' + scenario.id + '/agusers.json',
+          agkeywords:
+            'http://localhost:3000/samples/' + scenario.id + '/agkeywords.json',
+          tweets:
+            'http://localhost:3000/samples/' + scenario.id + '/tweets.json',
+          users: 'http://localhost:3000/samples/' + scenario.id + '/users.json',
+          topics:
+            'http://localhost:3000/samples/' + scenario.id + '/topics.json',
         })
         // eslint-disable-next-line no-console
         console.log('Starting with fresh data...')
-        this.$store.commit('updateTopics', scenario.channels)
-        this.$store.commit('updateAggregatedTopics', scenario.data.agtopics)
-        this.$store.commit('updateAggregatedUsers', scenario.data.agusers.a)
-        this.$store.commit('updateAggregatedKeywords', scenario.data.agkeywords)
-        this.$store.commit('addToRawTweets', scenario.data.tweets)
-        this.$store.commit('triage/updateUsersSet', scenario.data.users)
         socket.emit('pause_consuming')
-        // eslint-disable-next-line no-console
-        console.log(scenario.channels)
-        socket.emit('update_channels', scenario.channels)
+        socket.emit('update_channels', this.$store.state.topics)
         socket.emit('initial_data_request', {})
+      } else {
+        this.$store.dispatch('reset')
+        this.$store.dispatch('analytics/reset')
+        this.$store.dispatch('compare/reset')
+        this.$store.dispatch('shuffler/reset')
+        this.$store.dispatch('triage/reset')
+        socket.emit('pause_consuming')
       }
     },
   },
@@ -218,6 +258,9 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none !important;
+}
 .v-card--reveal--disconnected {
   align-items: center;
   bottom: 0;

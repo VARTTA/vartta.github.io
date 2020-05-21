@@ -5,12 +5,7 @@
     :height="height"
     class="svg heatmap"
   >
-    <transition-group
-      id="rects"
-      tag="g"
-      name="fade"
-      :duration="transitionDuration"
-    >
+    <g id="rects">
       <rect
         v-for="item in dataset"
         :key="JSON.stringify(item)"
@@ -21,7 +16,7 @@
         :style="'fill: ' + colorScale(item.v) + ';'"
         class="rect"
       ></rect>
-    </transition-group>
+    </g>
     <g
       :class="'x-axis heatmap-' + chartDomID + '-x-axis'"
       :transform="'translate(0,' + chartBottom + ')'"
@@ -88,7 +83,6 @@ export default {
           element: null,
         },
       },
-      transitionDuration: 500,
     }
   },
   computed: {
@@ -165,17 +159,17 @@ export default {
       this.axes.x.element
         .call(this.xAxisFunction)
         .selectAll('text')
-        .attr('class', 'body-2')
+        .attr('class', 'body-1')
         .attr('dx', '-0.8em')
         .attr('dy', '-0.35em')
-        .attr('transform', 'rotate(-90)')
+        .attr('transform', 'rotate(-75)')
         .style('text-anchor', 'end')
 
       // Draw Y axis
       this.axes.y.element
         .call(this.yAxisFunction)
         .selectAll('text')
-        .attr('class', 'body-2')
+        .attr('class', 'body-1')
     },
   },
 }
@@ -185,10 +179,5 @@ export default {
 .x-axis >>> .tick,
 .y-axis >>> .tick {
   font-family: 'Roboto', sans-serif;
-}
-
-.svg >>> rect {
-  transition: all 250ms;
-  -webkit-transition: all 250ms;
 }
 </style>

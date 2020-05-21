@@ -1,11 +1,18 @@
 <template>
-  <v-card :color="color" :flat="flat">
-    <v-card-title v-if="topics.length > 0">
+  <v-card outlined>
+    <v-card-title>
       <h4>{{ label }}</h4>
     </v-card-title>
     <v-card-text>
       <div :id="divId">
+        <v-skeleton-loader
+          v-if="topics.length === 0"
+          type="divider"
+          width="100%"
+        >
+        </v-skeleton-loader>
         <context-map
+          v-if="topics.length !== 0"
           :chart-dom-i-d="id"
           :width="width"
           :height="height"
@@ -17,15 +24,58 @@
         />
       </div>
     </v-card-text>
+    <v-divider></v-divider>
+    <v-card-text>
+      <v-row>
+        <v-skeleton-loader
+          v-if="examMenu.length === 0"
+          type="list-item-avatar-three-line"
+          width="25%"
+        >
+        </v-skeleton-loader>
+        <v-skeleton-loader
+          v-if="examMenu.length === 0"
+          type="list-item-avatar-three-line"
+          width="25%"
+        >
+        </v-skeleton-loader>
+        <v-skeleton-loader
+          v-if="examMenu.length === 0"
+          type="list-item-avatar-three-line"
+          width="25%"
+        >
+        </v-skeleton-loader>
+        <v-skeleton-loader
+          v-if="examMenu.length === 0"
+          type="list-item-avatar-three-line"
+          width="25%"
+        >
+        </v-skeleton-loader>
+        <v-col
+          v-for="(tweet, index) in examMenu"
+          :key="'examMenu-' + index"
+          cols="3"
+        >
+          <tweet
+            :tweet="tweet"
+            :selected="tweet.selected"
+            :context-menu="true"
+            @deselected="toggleTweetExamMenu"
+          ></tweet>
+        </v-col>
+      </v-row>
+    </v-card-text>
   </v-card>
 </template>
 
 <script>
 import ContextMap from './ContextMap'
+import Tweet from '~/components/Twitter/Tweet'
 export default {
   name: 'ContextMapWrapper',
   components: {
     'context-map': ContextMap,
+    tweet: Tweet,
   },
   props: {
     id: {
@@ -48,15 +98,17 @@ export default {
       type: String,
       default: 'transparent',
     },
-    flat: {
-      type: Boolean,
-      default: true,
-    },
     label: {
       type: String,
       default: 'This Amazing Scatter Plot',
     },
     tweets: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    examMenu: {
       type: Array,
       default() {
         return []
@@ -89,6 +141,9 @@ export default {
     },
     tweetClicked(data) {
       this.$emit('tweetClicked', data)
+    },
+    toggleTweetExamMenu(tweet) {
+      this.$emit('toggleTweetExamMenu', tweet)
     },
   },
 }

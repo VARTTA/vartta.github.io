@@ -10,8 +10,8 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
-    "deploy": "nuxt build && nuxt generate && push-dir --dir=build --branch=gh-pages --cleanup --verbose",
+    "lint-fix": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
+    "deploy": "push-dir --dir=build --branch=gh-pages --cleanup --verbose",
     "test": "jest"
   },
   "lint-staged": {
@@ -24,6 +24,7 @@
     }
   },
   "dependencies": {
+    "@nuxt/http": "^0.5.1",
     "@nuxtjs/axios": "^5.10.3",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/pwa": "3.0.0-beta.20",

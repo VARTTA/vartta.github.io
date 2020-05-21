@@ -211,21 +211,13 @@ export default {
       for (const link of [...item.targetLinks, ...item.sourceLinks]) {
         // The link itself
         whiteList.push(
-          document.getElementById(
-            this.specialID + '-path-' + link.source.id + '-' + link.target.id
-          )
+          this.specialID + '-path-' + link.source.id + '-' + link.target.id
         )
         // Target and source nodes
-        whiteList.push(
-          document.getElementById(this.specialID + '-node-' + link.source.id)
-        )
-        whiteList.push(
-          document.getElementById(this.specialID + '-node-' + link.target.id)
-        )
+        whiteList.push(this.specialID + '-node-' + link.source.id)
+        whiteList.push(this.specialID + '-node-' + link.target.id)
       }
-      whiteList.push(
-        document.getElementById(this.specialID + '-node-' + item.id)
-      )
+      whiteList.push(this.specialID + '-node-' + item.id)
 
       // Add greyed class to all of objects
       const elems = document.getElementsByClassName(this.specialID + '-object')
@@ -240,9 +232,10 @@ export default {
       // Highlight the known elements
       for (const elem of whiteList) {
         // Prevent error while brushing
-        if (elem) {
-          elem.classList.remove('greyed')
-          elem.classList.add('highlighted')
+        const element = document.getElementById(elem)
+        if (element) {
+          element.classList.remove('greyed')
+          element.classList.add('highlighted')
         }
       }
       if (!manual) this.$emit('nodeMouseover', item)
@@ -276,9 +269,7 @@ export default {
   stroke-opacity: unset;
 }
 
-.svg >>> .rect,
-.svg >>> .path {
-  transition: all 250ms;
-  -webkit-transition: all 250ms;
+.svg >>> * {
+  transition: 50ms;
 }
 </style>

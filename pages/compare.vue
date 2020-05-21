@@ -1,8 +1,6 @@
 <template>
-  <!--  TODO: update grid system-->
-  <v-row>
+  <v-row dense no-gutters>
     <v-col cols="12" class="mt-5 text-center">
-      <span>Comparisons:</span>
       <v-slider
         v-model="comparisonSlider"
         :tick-labels="[1, 2, 3, 4, 6, 12]"
@@ -19,146 +17,109 @@
       :key="index"
       :cols="12 / comparisons.length"
     >
-      <v-col cols="12">
-        <v-card flat color="transparent">
-          <!--          <v-card-title>-->
-          <!--            <h2>{{ index + 1 }} - Control Box</h2>-->
-          <!--          </v-card-title>-->
-          <v-card-actions>
-            <v-row align="center" justify="center">
-              <v-col cols="6" class="text-center">
-                <h4>Text Categorization Methods</h4>
-                <v-progress-circular
-                  v-if="mlMethods.length === 0"
-                  :size="50"
-                  color="orange"
-                  indeterminate
-                ></v-progress-circular>
-                <v-select
-                  v-if="mlMethods.length !== 0"
-                  :value="comparison.machineLearning"
-                  class="no-overflow"
-                  :items="mlMethods"
-                  item-text="title"
-                  item-value="id"
-                  label="Text Categorization Method"
-                  @change="commitMLChange.call(this, arguments[0], index)"
-                ></v-select>
-              </v-col>
-              <v-col cols="6" class="text-center">
-                <h4>Sentiment Analysis Methods</h4>
-                <v-progress-circular
-                  v-if="analysisMethods.length === 0"
-                  :size="50"
-                  color="cyan"
-                  indeterminate
-                ></v-progress-circular>
-                <v-select
-                  v-if="analysisMethods.length !== 0"
-                  :value="comparison.analysis"
-                  class="no-overflow"
-                  :items="analysisMethods"
-                  item-text="title"
-                  item-value="id"
-                  label="Sentiment Analysis Methods"
-                  @change="
-                    commitAnalysisMethodChange.call(this, arguments[0], index)
-                  "
-                ></v-select>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <!--      <v-flex xs12>-->
-      <!--        <v-card flat color="transparent">-->
-      <!--          &lt;!&ndash;          <v-card-title>&ndash;&gt;-->
-      <!--          &lt;!&ndash;            <h2>{{ index + 1 }} - Control Box</h2>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          </v-card-title>&ndash;&gt;-->
-      <!--          <v-card-actions>-->
-      <!--            <v-layout row align-center justify-space-around>-->
-      <!--              <v-flex v-if="analysisMethods.length === 0" text-xs-center>-->
-      <!--                <v-progress-circular-->
-      <!--                  :size="50"-->
-      <!--                  color="cyan"-->
-      <!--                  indeterminate-->
-      <!--                ></v-progress-circular>-->
-      <!--              </v-flex>-->
-      <!--              <v-flex v-if="analysisMethods.length !== 0" xs12>-->
-      <!--                <h4>Sentiment Analysis Methods</h4>-->
-      <!--                <v-select-->
-      <!--                  :value="comparison.analysis"-->
-      <!--                  class="no-overflow"-->
-      <!--                  :items="analysisMethods"-->
-      <!--                  item-text="title"-->
-      <!--                  item-value="id"-->
-      <!--                  label="Sentiment Analysis Methods"-->
-      <!--                  @change="-->
-      <!--                    commitAnalysisMethodChange.call(this, arguments[0], index)-->
-      <!--                  "-->
-      <!--                ></v-select>-->
-      <!--                &lt;!&ndash;                <v-radio-group v-model="comparison.analysis" column>&ndash;&gt;-->
-      <!--                &lt;!&ndash;                  <v-radio&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    v-for="method in analysisMethods"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :key="method.id + '-' + index"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :label="method.title"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    :value="method.id"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                    color="cyan"&ndash;&gt;-->
-      <!--                &lt;!&ndash;                  ></v-radio>&ndash;&gt;-->
-      <!--                &lt;!&ndash;                </v-radio-group>&ndash;&gt;-->
-      <!--              </v-flex>-->
-      <!--            </v-layout>-->
-      <!--          </v-card-actions>-->
-      <!--        </v-card>-->
-      <!--      </v-flex>-->
-      <v-col class="text-center" cols="12">
-        <sankey-diagram-wrapper
-          :id="charts.sankey.id + '-comparison-' + index"
-          :ref="'comparison-' + index"
-          :div-id="charts.sankey.divId + '-comparison-' + index"
-          :label="index + 1 + ' - ' + charts.sankey.label"
-          :width="charts.sankey.width"
-          :height="charts.sankey.height"
-          :color="color"
-          :flat="flat"
-          :topics="topics"
-          :selected-ml-method="comparison.machineLearning"
-          :dataset="aggregatedTopics"
-          @itemClick="updateSelectedTopic"
-          @itemMouseover="applyHighlight"
-          @itemMouseout="removeHighlight"
-        ></sankey-diagram-wrapper>
-      </v-col>
-      <v-col class="text-center" cols="12">
-        <heat-map-wrapper
-          :id="charts.heatmap.id + '-comparison-' + index"
-          :div-id="charts.heatmap.divId + '-comparison-' + index"
-          :label="index + 1 + ' - ' + charts.heatmap.label"
-          :width="charts.heatmap.width"
-          :height="charts.heatmap.height"
-          :selected-analysis-method="comparison.analysis"
-          :selected-machine-learning-method="comparison.machineLearning"
-          :selected-topic="comparison.topic"
-          :color="color"
-          :flat="flat"
-          :dataset="aggregatedKeywords"
-        ></heat-map-wrapper>
-      </v-col>
-      <!--      <v-flex text-xs-center xs12>-->
-      <!--        <scatter-plot-wrapper-->
-      <!--          :id="charts.scatterplot.id + '-comparison-' + index"-->
-      <!--          :div-id="charts.scatterplot.divId + '-comparison-' + index"-->
-      <!--          :label="index + 1 + ' - ' + charts.scatterplot.label"-->
-      <!--          :width="charts.scatterplot.width"-->
-      <!--          :height="charts.scatterplot.height"-->
-      <!--          :selected-analysis-method="comparison.analysis"-->
-      <!--          :color="color"-->
-      <!--          :flat="flat"-->
-      <!--          :dataset="aggregatedUsers"-->
-      <!--          @circleClicked="updateTweets"-->
-      <!--        ></scatter-plot-wrapper>-->
-      <!--      </v-flex>-->
+      <v-card outlined flat>
+        <v-card-text>
+          <v-row align="center" justify="center">
+            <v-col v-if="mlMethods.length === 0" cols="6">
+              <v-skeleton-loader
+                type="card-heading, divider, list-item-three-line"
+              >
+              </v-skeleton-loader>
+            </v-col>
+            <v-col v-if="mlMethods.length === 0" cols="6">
+              <v-skeleton-loader
+                type="card-heading, divider, list-item-three-line"
+              >
+              </v-skeleton-loader>
+            </v-col>
+            <v-col v-if="mlMethods.length !== 0" cols="6" class="text-center">
+              <h4>Text Categorization Methods</h4>
+              <v-select
+                :value="comparison.machineLearning"
+                class="no-overflow"
+                :items="mlMethods"
+                item-text="title"
+                item-value="id"
+                label="Text Categorization Method"
+                @change="commitMLChange.call(this, arguments[0], index)"
+              ></v-select>
+            </v-col>
+            <v-col
+              v-if="analysisMethods.length !== 0"
+              cols="6"
+              class="text-center"
+            >
+              <h4>Sentiment Analysis Methods</h4>
+              <v-select
+                :value="comparison.analysis"
+                class="no-overflow"
+                :items="analysisMethods"
+                item-text="title"
+                item-value="id"
+                label="Sentiment Analysis Methods"
+                @change="
+                  commitAnalysisMethodChange.call(this, arguments[0], index)
+                "
+              ></v-select>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-text>
+          <sankey-diagram-wrapper
+            :id="charts.sankey.id + '-comparison-' + index"
+            :ref="'comparison-' + index"
+            :div-id="charts.sankey.divId + '-comparison-' + index"
+            :label="index + 1 + ' - ' + charts.sankey.label"
+            :width="charts.sankey.width"
+            :height="charts.sankey.height"
+            :color="color"
+            :outlined="outlined"
+            :flat="flat"
+            :topics="topics"
+            :selected-ml-method="comparison.machineLearning"
+            :dataset="aggregatedTopics"
+            @itemClick="updateSelectedTopic"
+            @itemMouseover="applyHighlight"
+            @itemMouseout="removeHighlight"
+          ></sankey-diagram-wrapper>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-text>
+          <heat-map-wrapper
+            :id="charts.heatmap.id + '-comparison-' + index"
+            :div-id="charts.heatmap.divId + '-comparison-' + index"
+            :label="index + 1 + ' - ' + charts.heatmap.label"
+            :width="charts.heatmap.width"
+            :height="charts.heatmap.height"
+            :selected-analysis-method="comparison.analysis"
+            :selected-machine-learning-method="comparison.machineLearning"
+            :selected-topic="comparison.topic"
+            :color="color"
+            :outlined="outlined"
+            :flat="flat"
+            :dataset="aggregatedKeywords"
+          ></heat-map-wrapper>
+        </v-card-text>
+      </v-card>
     </v-col>
+    <v-dialog v-model="tooSmall" max-width="290">
+      <v-card>
+        <v-card-title class="headline">
+          Too Small!
+        </v-card-title>
+        <v-card-text>
+          The screen is too small for this page. You can still continue and use
+          this app, but it would be much more enjoyable on a larger screen.
+          Quick solution: try using your device in the landscape mode.
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="grey darken-1" block text @click="tooSmall = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 
@@ -177,6 +138,8 @@ export default {
   },
   data() {
     return {
+      outlined: false,
+      tooSmall: false,
       flat: true,
       selectedTopic: '',
       color: 'transparent',
@@ -292,6 +255,7 @@ export default {
   mounted() {
     window.addEventListener('resize', this.resize)
     this.resize()
+    this.tooSmall = window.innerWidth < 960
   },
   updated() {
     this.resize()
@@ -335,17 +299,20 @@ export default {
     updateComparisons(count) {
       this.$store.commit('compare/updateComparisons', count)
     },
-    highlightTopic(item) {
-      if (this.topics.map((a) => a.id).includes(item.id)) {
-        for (const comparison of this.comparisons) {
-          comparison.topic = item.id
+    highlightTopic(id) {
+      if (this.topics.map((a) => a.id).includes(id)) {
+        for (const i in this.comparisons) {
+          this.$store.commit('compare/updateComparisonTopic', {
+            index: i,
+            value: id,
+          })
         }
       }
     },
     updateSelectedTopic(item) {
       if (this.topics.map((a) => a.id).includes(item.id)) {
         this.selectedTopic = item.id
-        this.highlightTopic(item)
+        this.highlightTopic(item.id)
       }
     },
     applyHighlight(item) {
@@ -353,14 +320,14 @@ export default {
         const comps = this.$refs[index]
         for (const comp of comps) comp.applyHighlight(item)
       }
-      this.highlightTopic(item)
+      this.highlightTopic(item.id)
     },
     removeHighlight(item) {
       for (const index of Object.keys(this.$refs)) {
         const comps = this.$refs[index]
         for (const comp of comps) comp.removeHighlight(item)
       }
-      this.highlightTopic({ id: this.selectedTopic })
+      this.highlightTopic(this.selectedTopic)
     },
   },
 }

@@ -1,26 +1,26 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-row align="start" justify="start">
-    <v-col :cols="minimizeTopics ? '2' : '3'">
+  <v-row align="start" justify="start" no-gutters>
+    <v-col :lg="minimizeTopics ? '2' : '3'" :cols="minimizeTopics ? '4' : '5'">
       <v-card outlined>
         <v-card-title>
-          <v-toolbar-title>Topics</v-toolbar-title>
+          <span class="title">Topics</span>
           <v-spacer></v-spacer>
-          <v-btn
-            color="indigo"
-            icon
-            text
-            dark
-            @click="minimizeTopics = !minimizeTopics"
-          >
+          <v-btn icon text @click="minimizeTopics = !minimizeTopics">
             <v-icon>
-              mdi-{{ `unfold-${minimizeTopics ? 'more' : 'less'}-vertical` }}
+              mdi-chevron-double-{{ minimizeTopics ? 'right' : 'left' }}
             </v-icon>
           </v-btn>
-          <v-btn text icon color="red" @click="topicsTreeSelections = []">
+          <v-btn text icon color="warning" @click="topicsTreeSelections = []">
             <v-icon>mdi-replay</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-text class="text-truncate">
+        <v-divider></v-divider>
+        <v-card-text
+          class="text-truncate"
+          :style="
+            'overflow: auto !important; max-height: ' + verticalPortion + 'vh;'
+          "
+        >
           <v-treeview
             v-model="topicsTreeSelections"
             class="text-truncate"
@@ -39,7 +39,7 @@
         </v-card-text>
       </v-card>
     </v-col>
-    <v-col :cols="minimizeTopics ? '10' : '9'">
+    <v-col :lg="minimizeTopics ? '10' : '9'" :cols="minimizeTopics ? '8' : '7'">
       <v-row class="fill-height" justify="center">
         <v-col cols="12">
           <v-row
@@ -51,6 +51,24 @@
             dense
             no-gutters
           >
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
+            <v-skeleton-loader
+              v-if="selectedChannels.length === 0"
+              type="card-heading, divider, list-item-avatar-three-line, actions, divider, list-item-avatar-three-line, actions, divider, table-tfoot"
+              width="33%"
+            >
+            </v-skeleton-loader>
             <tweet-collection
               v-for="(channel, index) in selectedChannels"
               :id="'column-' + channel"
@@ -61,31 +79,31 @@
                 )
               "
               :title="channel"
+              :vertical-portion="verticalPortion - 9"
               @tweetSelect="tweetSelect"
               @tweetDeselect="tweetDeselect"
               @updateTweet="updateTweet"
             ></tweet-collection>
           </v-row>
-          <v-responsive
-            v-if="selectedChannels.length === 0"
-            max-height="70vh"
-            class="text-center pa-2"
-          >
-            <v-row
-              class="text-center fill-height"
-              justify="center"
-              align="center"
-            >
-              <h3 class="display-2 grey--text">
-                Please select some topics or keywords...
-              </h3>
-              <v-btn loading disabled icon></v-btn>
-            </v-row>
-          </v-responsive>
         </v-col>
       </v-row>
     </v-col>
-    <v-col :id="charts.contextMap.divId" class="grow text-center">
+    <v-col :cols="12">
+      <v-btn
+        block
+        text
+        @click="
+          $vuetify.goTo('#' + charts.contextMap.divId, {
+            duration: 300,
+            offset: 60,
+            easing: 'easeInOutCubic',
+          })
+        "
+      >
+        <v-icon>mdi-chevron-triple-down</v-icon>
+      </v-btn>
+    </v-col>
+    <v-col :id="charts.contextMap.divId" cols="12" class="grow text-center">
       <context-map-wrapper
         :id="charts.contextMap.id"
         :div-id="charts.contextMap.divId"
@@ -94,26 +112,11 @@
         :height="charts.contextMap.height"
         :topics="topics.map((a) => a.id).sort()"
         :tweets="selectedTweets"
-        :flat="flat"
+        :exam-menu="examMenu"
         @topicSelected="topicSelected"
         @tweetClicked="toggleTweetExamMenu"
+        @toggleTweetExamMenu="toggleTweetExamMenu"
       ></context-map-wrapper>
-    </v-col>
-    <v-divider></v-divider>
-    <v-col>
-      <v-row>
-        <v-col
-          v-for="(tweet, index) in examMenu"
-          :key="'examMenu-' + index"
-          cols="3"
-        >
-          <tweet
-            :tweet="tweet"
-            :selected="tweet.selected"
-            :context-menu="true"
-          ></tweet>
-        </v-col>
-      </v-row>
     </v-col>
   </v-row>
 </template>
@@ -122,19 +125,17 @@
 import socket from '../lib/socket.io'
 import TweetCollection from '../components/Twitter/TweetCollection'
 import ContextMapWrapper from '../components/ContextMap/ContextMapWrapper'
-import Tweet from '../components/Twitter/Tweet'
 export default {
   name: 'PageShuffler',
   // layout: 'shuffler',
   components: {
     TweetCollection,
     'context-map-wrapper': ContextMapWrapper,
-    tweet: Tweet,
   },
   data() {
     return {
+      verticalPortion: 70,
       dialog: false,
-      flat: true,
       contentThemeTreeSelections: [],
       userGroupsTreeSelections: [],
       selectedTweets: [],
@@ -143,7 +144,7 @@ export default {
         contextMap: {
           id: 'scatter-plot',
           divId: 'scatter-plot-div',
-          label: 'Context Menu',
+          label: 'Context Map',
           width: 700,
           height: 300,
           line: {
@@ -175,12 +176,6 @@ export default {
               show: false,
             },
           },
-        },
-        sunburst: {
-          id: 'sunburst',
-          divId: 'sunburst-div',
-          width: 300,
-          height: 300,
         },
       },
     }
@@ -231,6 +226,12 @@ export default {
         const tweets = this.tweets.filter((t) => t.keywords.includes(kw))
         res = [...res, ...tweets]
       }
+      // Making unique
+      const temp = {}
+      res.forEach((t, i) => {
+        if (t._id in temp) res.splice(i, 1)
+        temp[t._id] = null
+      })
       return res
     },
     selectedChannels() {
@@ -364,7 +365,7 @@ export default {
       //   this.charts.sunburst.height = sunburstDiv.clientWidth - 5
       // }
       const contextDiv = document.getElementById(this.charts.contextMap.divId)
-      if (contextDiv) this.charts.contextMap.width = contextDiv.clientWidth - 5
+      if (contextDiv) this.charts.contextMap.width = contextDiv.clientWidth - 50
     },
     getChildren(topic) {
       if (!topic || topic === '') return []
@@ -427,7 +428,7 @@ export default {
       if (container)
         container.scrollIntoView({
           behavior: 'smooth',
-          block: 'nearest',
+          block: 'start',
           inline: 'start',
         })
     },

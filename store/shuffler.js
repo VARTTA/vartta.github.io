@@ -1,22 +1,18 @@
-export const strict = false
-function initialState() {
-  return {
-    topicsTreeSelections: [],
-    treeViewOpenItems: [],
-    minimizeTopics: false,
-  }
-}
 export const state = () => ({
   topicsTreeSelections: [],
+  treeViewOpenItems: [],
   minimizeTopics: false,
 })
 
 export const mutations = {
-  reset(state) {
-    const initial = initialState()
-    Object.keys(initial).forEach((key) => {
-      state[key] = initial[key]
-    })
+  resetTopicsTreeSelections(state) {
+    state.topicsTreeSelections = []
+  },
+  resetTreeViewOpenItems(state) {
+    state.treeViewOpenItems = []
+  },
+  resetMinimizeTopics(state) {
+    state.minimizeTopics = false
   },
   updateTopicsTreeSelections(state, val) {
     state.topicsTreeSelections = val
@@ -26,5 +22,13 @@ export const mutations = {
   },
   updateTreeViewOpenItems(state, val) {
     state.treeViewOpenItems = val
+  },
+}
+
+export const actions = {
+  reset({ commit }) {
+    commit('resetMinimizeTopics')
+    commit('resetTopicsTreeSelections')
+    commit('resetTreeViewOpenItems')
   },
 }

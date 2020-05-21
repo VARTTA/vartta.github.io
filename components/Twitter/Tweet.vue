@@ -1,17 +1,101 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <v-row class="text-left">
-      <v-col cols="2">
-        <v-row justify="start" align="center">
-          <v-avatar>
-            <img
-              :src="tweet.user.profile_image_url_https || '/person.png'"
-              :alt="tweet.user.screen_name"
-            />
-          </v-avatar>
+      <v-col cols="2" class="pb-0">
+        <v-row justify="center" align="center">
+          <div>
+            <v-avatar>
+              <img
+                :src="tweet.user.profile_image_url_https || '/person.png'"
+                :alt="tweet.user.screen_name"
+              />
+            </v-avatar>
+          </div>
+          <div>
+            <v-btn
+              alt="Remove tweet to bottom pane"
+              icon
+              text
+              color="yellow accent-4"
+              @click="clicked"
+            >
+              <v-icon>{{ selected ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
+            </v-btn>
+          </div>
+          <div>
+            <v-dialog v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn text icon color="error" v-on="on">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </template>
+              <v-card flat>
+                <v-card-title>
+                  <span class="title">Edit Tweet Labeling</span>
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <v-row dense no-gutters>
+                    <v-col cols="12" v-html="decoratedText"></v-col>
+                    <v-col cols="6">
+                      <v-combobox
+                        v-model="customGroup"
+                        :items="groups"
+                        chips
+                        label="User Category"
+                        clearable
+                      >
+                        <template v-slot:selection="data">
+                          <v-chip
+                            :key="JSON.stringify(data.item)"
+                            :selected="data.selected"
+                            @click.stop="data.parent.selectedIndex = data.index"
+                            @input="data.parent.selectItem(data.item)"
+                          >
+                            <v-icon left>mdi-account</v-icon>
+                            {{ data.item }}
+                          </v-chip>
+                        </template>
+                      </v-combobox>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-combobox
+                        v-model="customTheme"
+                        :items="themes"
+                        chips
+                        label="Content Theme"
+                        clearable
+                      >
+                        <template v-slot:selection="data">
+                          <v-chip
+                            :key="JSON.stringify(data.item)"
+                            :selected="data.selected"
+                            @click.stop="data.parent.selectedIndex = data.index"
+                            @input="data.parent.selectItem(data.item)"
+                          >
+                            <v-icon left>mdi-tag</v-icon>
+                            {{ data.item }}
+                          </v-chip>
+                        </template>
+                      </v-combobox>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="closeDialog(false)">
+                    Close
+                  </v-btn>
+                  <v-btn color="blue darken-1" text @click="closeDialog(true)">
+                    Save
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
         </v-row>
       </v-col>
-      <v-col cols="10">
+      <v-col cols="10" class="pb-0">
         <v-row justify="start" align="center">
           <div class="text-truncate" style="max-width: 85%;">
             <a
@@ -22,7 +106,12 @@
               <span class="font-weight-bold">
                 {{ tweet.user.name }}
               </span>
-              <v-icon v-if="true" color="primary" small class="subheading">
+              <v-icon
+                v-if="tweet.user.verified"
+                color="primary"
+                small
+                class="subheading"
+              >
                 mdi-check-decagram
               </v-icon>
               <span class="text--grey">@{{ tweet.user.screen_name }}</span>
@@ -33,10 +122,79 @@
         <v-row justify="start" align="start">
           <div class="body-2" v-html="decoratedText"></div>
         </v-row>
+        <v-btn block text @click="expand = !expand">
+          <v-icon>{{
+            expand ? 'mdi-chevron-double-up' : 'mdi-chevron-double-down'
+          }}</v-icon>
+        </v-btn>
       </v-col>
-      <v-col cols="12">
-        <v-btn icon text large><v-icon>mdi-account-circle</v-icon></v-btn>
-        <v-btn icon text large><v-icon>mdi-text-box</v-icon></v-btn>
+      <v-col v-if="expand" cols="12" class="pt-0">
+        <v-tabs v-model="active" centered grow>
+          <v-tab ripple>
+            <v-icon>mdi-emoticon</v-icon>
+          </v-tab>
+          <v-tab ripple>
+            <v-icon>mdi-account</v-icon>
+          </v-tab>
+          <v-tab-item>
+            <v-data-table
+              :headers="[
+                {
+                  text: 'Method',
+                  value: 'id',
+                  align: 'center',
+                  class: 'body-1',
+                },
+                { text: 'Result', value: 'result', align: 'center' },
+              ]"
+              :items="sortedAnalysis"
+              hide-default-header
+              hide-default-footer
+              class="elevation-1"
+            >
+              <template v-slot:item.result="{ item }">
+                <v-chip :color="item.result > 0 ? 'green' : 'orange'" outlined>
+                  <v-icon left>
+                    mdi-emoticon-{{
+                      item.result > 0 ? 'happy-outline' : 'sad-outline'
+                    }}
+                  </v-icon>
+                  <strong>{{ (+item.result).toPrecision(2) }}</strong>
+                </v-chip>
+              </template>
+            </v-data-table>
+          </v-tab-item>
+          <v-tab-item>
+            <v-data-table
+              :headers="[
+                { text: 'Method', value: 'id' },
+                { text: 'Group', value: 'result.group' },
+                { text: 'Theme', value: 'result.theme' },
+              ]"
+              :items="sortedLabels"
+              hide-default-header
+              hide-default-footer
+              class="elevation-1"
+            >
+              <template v-slot:item.result.group="{ item }">
+                <v-chip :color="colorScale(item.result.group)" outlined>
+                  <v-icon left>mdi-account-circle</v-icon>
+                  <span class="overline">
+                    {{ item.result.group }}
+                  </span>
+                </v-chip>
+              </template>
+              <template v-slot:item.result.theme="{ item }">
+                <v-chip :color="colorScale(item.result.theme)" outlined>
+                  <v-icon left>mdi-tag</v-icon>
+                  <span class="overline">
+                    {{ item.result.theme }}
+                  </span>
+                </v-chip>
+              </template>
+            </v-data-table>
+          </v-tab-item>
+        </v-tabs>
       </v-col>
     </v-row>
     <v-divider></v-divider>
@@ -450,8 +608,6 @@ export default {
           theme: this.tempTheme,
         })
       this.dialog = false
-      // eslint-disable-next-line no-console
-      console.log(this.tweet.text, this.customGroup, this.customTheme)
     },
   },
 }
