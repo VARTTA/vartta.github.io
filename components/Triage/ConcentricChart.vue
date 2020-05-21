@@ -81,11 +81,12 @@
             )
           "
           :r="circleSize"
-          :stroke="token.stroke"
+          :stroke="strokeColor(candid.name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
-          :fill="circleFill(candid.userIndex)"
+          :stroke-width="strokeSize(candid.name)"
+          :fill="'url(#' + candid.name + ')'"
           :fill-opacity="token.opacity"
+          @click="(ev) => clicked.call({}, ev, candid)"
         >
           <!-- <title>{{ candid.name }}</title>-->
           <title>{{ candid.tweet.created_at }}</title>
@@ -135,6 +136,12 @@ export default {
       type: Number,
       default() {
         return 3
+      },
+    },
+    selectedList: {
+      type: Array,
+      default() {
+        return []
       },
     },
     axis: {
@@ -199,6 +206,18 @@ export default {
   computed: {
     radius() {
       return Math.min(this.meta.width) / 2
+    },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return this.colorToken(id)
+        else return 'grey'
+      }
     },
     /**
      * Returns labels of outer circle based on selected time unit(e.g. Jan - Dec , or Sun - Sat)
@@ -407,7 +426,7 @@ export default {
     },
     circleFill() {
       return (d) => {
-        return this.colorToken(d)
+        return this.users
       }
     },
     circleSize() {
@@ -416,7 +435,7 @@ export default {
     colorToken() {
       const that = this
       return d3.scaleOrdinal(
-        d3.quantize(d3.interpolateTurbo, that.numberOfCandidateUsers)
+        d3.quantize(d3.interpolateRainbow, that.users.length)
       )
     },
     /**
@@ -437,6 +456,7 @@ export default {
         return scale(userIndex)
       }
     },
+
     /**
      * the value of minimum acceptable date in ms
      **/
@@ -446,12 +466,12 @@ export default {
       if (this.meta.timeUnit === '12') {
         // years ago
         temp =
-          new Date(now.getFullYear() + 1, 0, 1) -
+          new Date(now.getFullYear(), now.getMonth(), now.getDate()) -
           new Date(now.getFullYear() - (this.numberOfTracks - 1), 0, 1)
       } else if (this.meta.timeUnit === '30') {
         // months ago
         temp =
-          new Date(now.getFullYear(), now.getMonth() + 1, 1) -
+          new Date(now.getFullYear(), now.getMonth(), now.getDate()) -
           new Date(
             now.getFullYear(),
             now.getMonth() - (this.numberOfTracks - 1),
@@ -473,7 +493,13 @@ export default {
       } else if (this.meta.timeUnit === '24') {
         // Days ago
         temp =
-          new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) -
+          new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            now.getHours(),
+            now.getMinutes()
+          ) -
           new Date(
             now.getFullYear(),
             now.getMonth(),
@@ -495,8 +521,7 @@ export default {
             now.getHours() - (this.numberOfTracks - 1)
           )
       }
-      temp = new Date(this.maxDate.getTime() - temp)
-      return temp
+      return new Date(this.maxDate.getTime() - temp)
     },
     /**
      * List of tweets that can be shown based on selected time unit and number of tracks
@@ -541,14 +566,25 @@ export default {
      **/
     findTrack() {
       return (tweet) => {
-        return (
-          this.numberOfTracks -
-          Math.floor(
-            (new Date().getTime() - new Date(tweet.created_at).getTime()) /
-              this.unitRange
-          ) -
-          1
+        const now = new Date()
+        const twTime = new Date(tweet.created_at)
+        if (this.meta.timeUnit === '12') {
+          const timeSpan = now.getFullYear() - twTime.getFullYear()
+          return this.numberOfTracks - timeSpan - 1
+        }
+        let timeSpan = Math.floor(
+          (new Date().getTime() - twTime.getTime()) / this.unitRange
         )
+        if (this.meta.timeUnit === '30') {
+          if (now.getDate() - twTime.getDate() <= 0) timeSpan = timeSpan + 1
+        }
+        if (this.meta.timeUnit === '7') {
+          if (now.getDay() - twTime.getDay() <= 0) timeSpan = timeSpan + 1
+        }
+        if (this.meta.timeUnit === '24') {
+          if (now.getHours() - twTime.getHours() <= 0) timeSpan = timeSpan + 1
+        }
+        return this.numberOfTracks - timeSpan - 1
       }
     },
     /**
@@ -614,6 +650,9 @@ export default {
     },
     PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
+    },
+    clicked(ev, candid) {
+      this.$emit('candidSelected', candid)
     },
   },
 }

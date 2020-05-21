@@ -37,6 +37,7 @@
         class="highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
         @mouseout="removeHighlights"
+        @click="(ev) => arcClicked.call({}, ev, arc)"
       >
         <path
           class="line"
@@ -105,13 +106,14 @@
           :cx="circleX(item)"
           :cy="circleY(item)"
           :r="circleSize"
-          :stroke="token.strokeColor"
+          :stroke="strokeColor(item.data.screen_name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
+          :stroke-width="strokeSize(item.data.screen_name)"
           :fill="'url(#' + item.data.screen_name + ')'"
           :transform="circleTransform"
           @mouseover="highlightConnectedSet({ user: item })"
           @mouseout="removeHighlights"
+          @click="(ev) => userClicked.call({}, ev, item)"
         />
       </g>
     </g>
@@ -129,6 +131,12 @@ export default {
       default: 'topic-user',
     },
     topics: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    selectedList: {
       type: Array,
       default() {
         return []
@@ -207,6 +215,9 @@ export default {
       arcsCoefficient: 0.85,
       transitionDuration: 50,
       sunburst: false,
+      tokenShiftRatio: 0.65,
+      packSizeRatio: 0.7,
+      selectedArcs: [],
     }
   },
   computed: {
@@ -379,7 +390,7 @@ export default {
     },
     pack() {
       return function (d) {
-        const packRadius = this.radius * 0.78
+        const packRadius = this.radius * this.packSizeRatio
         return d3.pack().size([packRadius, packRadius]).padding(30)(
           d3.hierarchy(d).sum((d) => d.value)
         )
@@ -388,8 +399,18 @@ export default {
     packed() {
       return this.pack(this.hierarchizeUsersData)
     },
+    /***
+     *  tokenShiftRatio should change with packSizeRatio to keep bubbles in right place
+     *  tokenShiftRatio = 1 - (packSizeRatio / 2 )
+     * */
     circleTransform() {
-      return 'translate(' + this.radius * 0.6 + ',' + this.radius * 0.6 + ')'
+      return (
+        'translate(' +
+        this.radius * this.tokenShiftRatio +
+        ',' +
+        this.radius * this.tokenShiftRatio +
+        ')'
+      )
     },
     circleX() {
       return (d) => {
@@ -408,6 +429,18 @@ export default {
     },
     circleSize() {
       return this.radius * 0.02
+    },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2.5
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return '#69a63b'
+        else return '#61768e'
+      }
     },
     /**
      * Related arcs to a user, only at one of depth 1 or 2
@@ -475,8 +508,8 @@ export default {
       return (arc, userNode) => {
         const { start, end } = this.calculateCoordinate(arc)
         const node = {}
-        node.x = userNode.x + this.radius * 0.6
-        node.y = userNode.y + this.radius * 0.6
+        node.x = userNode.x + this.radius * this.tokenShiftRatio
+        node.y = userNode.y + this.radius * this.tokenShiftRatio
         start.x = start.x + this.radius
         start.y = start.y + this.radius
         end.x = end.x + this.radius
@@ -629,6 +662,46 @@ export default {
           el.classList.add('highlighted')
         }
       }
+    },
+    userClicked(ev, selected) {
+      this.$emit('userSelected', selected.data)
+      if (!this.selectedList.includes(selected.data.screen_name)) {
+        this.highlightConnectedSet({ user: selected })
+      }
+    },
+    // TODO: add keyword seach ( searching users with keywords), right now we only have topic search for
+    // TODO: emit remove to the original selectedList to sync other charts
+    arcClicked(ev, arc) {
+      let keywordList = []
+      // If keyword is selected add its parent
+      if (arc.depth === 2) {
+        keywordList = keywordList.concat(arc)
+      } // If topic is selected add all its used keywords
+      else if (arc.depth === 1) {
+        for (const el of arc.children)
+          if (this.isUsed(el)) {
+            keywordList = keywordList.concat(el)
+          }
+      }
+      for (const kw of keywordList)
+        for (const tw of this.relatedUsers(kw)) {
+          // if arc is not selected, select all deselected users
+          if (!this.selectedArcs.includes(arc.data.name)) {
+            if (!this.selectedList.includes(tw.data.screen_name))
+              this.selectedList.push(tw.data.screen_name)
+          } // else it means the arc was selected and we should deselect selected users
+          else if (this.selectedList.includes(tw.data.screen_name)) {
+            this.selectedList = this.selectedList.filter(function (ele) {
+              return ele !== tw.data.screen_name
+            })
+          }
+        }
+      if (!this.selectedArcs.includes(arc.data.name))
+        this.selectedArcs.push(arc.data.name)
+      else
+        this.selectedArcs = this.selectedArcs.filter(function (ele) {
+          return ele !== arc.data.name
+        })
     },
   },
 }

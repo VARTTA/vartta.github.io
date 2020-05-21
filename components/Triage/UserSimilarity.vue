@@ -58,11 +58,12 @@
             )
           "
           :r="circleSize"
-          :stroke="token.stroke"
+          :stroke="strokeColor(candid.screen_name)"
           :stroke-opacity="token.strokeOpacity"
-          :stroke-width="token.strokeSize"
-          :fill="circleFill(index)"
+          :stroke-width="strokeSize(candid.screen_name)"
+          :fill="'url(#' + candid.screen_name + ')'"
           :fill-opacity="token.opacity"
+          @click="(ev) => clicked.call({}, ev, candid)"
         >
           <title>{{ candid.screen_name }}</title>
         </circle>
@@ -102,6 +103,18 @@ export default {
       },
     },
     users: {
+      type: Array,
+      default() {
+        return []
+      },
+    },
+    lastSelected: {
+      type: String,
+      default() {
+        return ''
+      },
+    },
+    selectedList: {
       type: Array,
       default() {
         return []
@@ -228,11 +241,32 @@ export default {
     circleSize() {
       return this.radius * 0.06
     },
+    strokeSize() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return 2.5
+        else return 0.8
+      }
+    },
+    strokeColor() {
+      return (id) => {
+        if (this.selectedList.includes(id)) return '#69a63b'
+        // if (this.selectedList.includes(id)) return this.colorToken(id)
+        else return 'grey'
+      }
+    },
     colorToken() {
       const that = this
       return d3.scaleOrdinal(
         d3.quantize(d3.interpolateViridis, that.users.length)
       )
+    },
+    centralUserW2v() {
+      return (username) => {
+        const findUser = this.users.find(function (ele) {
+          return ele.screen_name === username
+        })
+        return findUser
+      }
     },
     /**
      * List of users that can be shown based on selected user
@@ -240,19 +274,22 @@ export default {
     candidates() {
       const array = []
       let newIndex = 0
-      for (const userIndex in this.users)
-        if (
-          this.users[userIndex].w2v - this.meta.focalUser <=
-          this.meta.tracks
-        ) {
-          array.push({
-            index: newIndex,
-            userIndex,
-            screen_name: this.users[userIndex].screen_name,
-            w2v: this.users[userIndex].w2v,
-          })
-          newIndex += 1
-        }
+      if (this.lastSelected) {
+        const focalW2v = this.centralUserW2v(this.lastSelected).w2v
+        for (const userIndex in this.users)
+          if (
+            Math.abs(this.users[userIndex].w2v - focalW2v) <
+            this.meta.tracks - 1
+          ) {
+            array.push({
+              index: newIndex,
+              userIndex,
+              screen_name: this.users[userIndex].screen_name,
+              w2v: this.users[userIndex].w2v,
+            })
+            newIndex += 1
+          }
+      }
       return array
     },
     /**
@@ -317,6 +354,9 @@ export default {
     },
     PolarToCartesianY(angle, radius) {
       return radius * Math.cos(-(angle + Math.PI))
+    },
+    clicked(ev, neighbor) {
+      this.$emit('neighborSelected', neighbor)
     },
   },
 }
