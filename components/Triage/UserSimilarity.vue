@@ -61,7 +61,7 @@
           :stroke="strokeColor(candid.screen_name)"
           :stroke-opacity="token.strokeOpacity"
           :stroke-width="strokeSize(candid.screen_name)"
-          :fill="circleFill(index)"
+          :fill="'url(#' + candid.screen_name + ')'"
           :fill-opacity="token.opacity"
           @click="(ev) => clicked.call({}, ev, candid)"
         >
@@ -271,7 +271,7 @@ export default {
     /**
      * List of users that can be shown based on selected user
      **/
-    candidates() {
+    /* candidates() {
       const array = []
       let newIndex = 0
       if (this.lastSelected) {
@@ -291,25 +291,26 @@ export default {
           }
       }
       return array
-    },
-    /*    candidates() {
+    }, */
+    // TODO: this version is just for testing pics. after adding w2v delete this and use the above
+    candidates() {
       const array = []
       let newIndex = 0
-      for (const userIndex in this.users)
-        if (
-          this.users[userIndex].w2v - this.meta.focalUser <=
-          this.meta.tracks
-        ) {
-          array.push({
-            index: newIndex,
-            userIndex,
-            screen_name: this.users[userIndex].screen_name,
-            w2v: this.users[userIndex].w2v,
-          })
-          newIndex += 1
-        }
+      if (this.lastSelected) {
+        const focalW2v = this.centralUserW2v(this.lastSelected).id
+        for (const userIndex in this.users)
+          if (this.users[userIndex].id % 3 === focalW2v % 3) {
+            array.push({
+              index: newIndex,
+              userIndex,
+              screen_name: this.users[userIndex].screen_name,
+              w2v: this.users[userIndex].id % 3,
+            })
+            newIndex += 1
+          }
+      }
       return array
-    }, */
+    },
     /**
      * Returns the distance of a tweet from the beginning of its corresponded track to scatter users in same level
      * to feed the tokenRadialScale()
