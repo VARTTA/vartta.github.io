@@ -128,11 +128,11 @@ export default {
           title: 'Triage',
           to: '/triage',
         },
-        {
-          icon: 'mdi-badge-account-alert-outline',
-          title: 'Triage-Step',
-          to: '/triageStep',
-        },
+        // {
+        //   icon: 'mdi-badge-account-alert-outline',
+        //   title: 'Triage-Step',
+        //   to: '/triageStep',
+        // },
       ],
       // Data required for connection metrics
       pingPong: {
