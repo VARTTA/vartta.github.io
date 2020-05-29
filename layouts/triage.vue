@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" :clipped-right="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>
@@ -39,23 +39,54 @@
       <v-btn icon @click.stop="dark = !dark">
         <v-icon>mdi-{{ `brightness-${dark ? '5' : '4'}` }}</v-icon>
       </v-btn>
+      <v-btn icon @click.stop="rightMini = !rightMini">
+        <v-icon>
+          mdi-{{ `chevron-double-${rightMini ? 'left' : 'right'}` }}
+        </v-icon>
+      </v-btn>
     </v-app-bar>
     <v-content>
       <v-container fluid>
         <nuxt />
       </v-container>
     </v-content>
-    <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
+    <v-navigation-drawer
+      v-model="rightDrawer"
+      right
+      clipped
+      :mini-variant="rightMini"
+      fixed
+      app
+    >
+      <v-list-item
+        v-for="user in selectedUsers"
+        :key="user.screen_name"
+        two-line
+      >
+        <v-list-item-avatar>
+          <img :src="user.profile_image_url_https" />
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>
+            {{ user.name }} @{{ user.screen_name }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <v-btn
+              icon
+              color="warning"
+              @click="(ev) => removeUser.call({}, ev, user)"
+            >
+              <v-icon>mdi-account-remove</v-icon>
+            </v-btn>
+            <v-btn icon color="grey">
+              <v-icon>mdi-account-question</v-icon>
+            </v-btn>
+            <v-btn icon color="blue">
+              <v-icon>mdi-account-search</v-icon>
+            </v-btn>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
     <v-footer height="auto" app>
       <v-row justify="center">
@@ -90,7 +121,7 @@
 <script>
 import socket from '../lib/socket.io'
 export default {
-  name: 'DefaultLayout',
+  name: 'TriageLayout',
   data() {
     return {
       fluid: true,
@@ -99,8 +130,8 @@ export default {
       drawer: false,
       fixed: false,
       miniVariant: true,
-      right: true,
-      rightDrawer: false,
+      rightDrawer: true,
+      rightMini: true,
       title: 'VARTTA',
       items: [
         {
@@ -144,6 +175,9 @@ export default {
     }
   },
   computed: {
+    selectedUsers() {
+      return this.$store.state.triage.selectedUsers
+    },
     /*
      * Current delay in ms
      */
@@ -173,6 +207,7 @@ export default {
     },
   },
   mounted() {
+    this.rightMini = false
     const that = this
     window.setInterval(() => {
       if (socket.connected) {
@@ -232,6 +267,9 @@ export default {
       this.$store.commit('updateAggregatedKeywords', msg.aggregatedKeywords)
       this.$store.commit('addToRawTweets', msg.tweets)
       // this.$store.commit('addToRawTweets', msg.users)
+    },
+    removeUser(ev, user) {
+      this.$store.commit('triage/removeSelectedUser', user.screen_name)
     },
   },
 }

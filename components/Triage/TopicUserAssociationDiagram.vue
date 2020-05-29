@@ -4,12 +4,11 @@
     :width="meta.width"
     :height="meta.height"
     :fill-opacity="meta.fillOpacity"
-    class="svg chord"
   >
     <defs>
       <pattern
         v-for="(user, index) in users"
-        :id="user.screen_name"
+        :id="user.screen_name + '-profile'"
         :key="index + '-' + user.screen_name + '-image'"
         patternContentUnits="objectBoundingBox"
         height="100%"
@@ -55,9 +54,9 @@
       <!--Labels-->
       <g
         v-for="(arc, index) in rootText"
-        :id="'arc-' + arc.data.name"
+        :id="'arc-text-' + arc.data.name"
         :key="'label-arc-' + index"
-        class="highlightable"
+        class="arc-text highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
         @mouseout="removeHighlights"
       >
@@ -68,7 +67,6 @@
           :font-size="labelFont(arc)"
           style="user-select: none;"
           dy="0.35em"
-          class="sunburst-text"
           :transform="labelTransform(arc)"
         >
           {{ arc.data.name }}
@@ -82,7 +80,7 @@
           v-for="arc in findArcs(node)"
           :id="'path-' + node.data.name + '-' + arc.data.name"
           :key="'path-' + node.data.name + '-' + arc.data.name"
-          class="ribbon highlightable"
+          :class="ribbonClass(node, arc)"
           :fill="ribbon.fill"
           :fill-opacity="ribbon.fillOpacity"
           :stroke="ribbon.stroke"
@@ -109,11 +107,11 @@
           :stroke="strokeColor(item.data.screen_name)"
           :stroke-opacity="token.strokeOpacity"
           :stroke-width="strokeSize(item.data.screen_name)"
-          :fill="'url(#' + item.data.screen_name + ')'"
+          :fill="'url(#' + item.data.screen_name + '-profile)'"
           :transform="circleTransform"
           @mouseover="highlightConnectedSet({ user: item })"
           @mouseout="removeHighlights"
-          @click="(ev) => userClicked.call({}, ev, item)"
+          @click="(ev) => userClicked.call({}, ev, item.data)"
         />
       </g>
     </g>
@@ -214,7 +212,7 @@ export default {
       arcGroup: null,
       arcsCoefficient: 0.85,
       transitionDuration: 50,
-      sunburst: false,
+      sunburst: true,
       tokenShiftRatio: 0.65,
       packSizeRatio: 0.7,
       selectedArcs: [],
@@ -232,7 +230,7 @@ export default {
         .arc()
         .startAngle((d) => d.x0)
         .endAngle((d) => d.x1)
-        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.018))
+        .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.02))
         .padRadius(this.radius / 2)
         .innerRadius(function (d) {
           return this.innerRadiusTerm(d)
@@ -240,6 +238,30 @@ export default {
         .outerRadius(function (d) {
           return this.outerRadiusTerm(d)
         })
+    },
+    ribbonClass() {
+      return (node, arc) => {
+        return 'ribbon highlightable dim'
+      }
+    },
+    innerRadiusTerm() {
+      const margin = 2
+      return (d) => {
+        return this.meta.sunburst
+          ? d.y0 + margin
+          : this.radius - d.y1 + this.innerAreaRadius + margin
+      }
+    },
+    /**
+     * to magnify sunburst: multiply d.y0 & d.y1 to a value> 1 (and to a value < 1 to reduce)
+     * to magnify the inner area radius (the white circle in the middle): add a term to that
+     **/
+    outerRadiusTerm() {
+      return (d) => {
+        return this.meta.sunburst
+          ? d.y1
+          : this.radius - d.y0 + this.innerAreaRadius
+      }
     },
     /**
      * formatting Topic data, to apply arc() on it
@@ -357,25 +379,6 @@ export default {
           .join('/')}\n`
       }
     },
-    innerRadiusTerm() {
-      const margin = 2
-      return (d) => {
-        return this.meta.sunburst
-          ? d.y0 + margin
-          : this.radius - d.y1 + this.innerAreaRadius + margin
-      }
-    },
-    /**
-     * to magnify sunburst: multiply d.y0 & d.y1 to a value> 1 (and to a value < 1 to reduce)
-     * to magnify the inner area radius (the white circle in the middle): add a term to that
-     **/
-    outerRadiusTerm() {
-      return (d) => {
-        return this.meta.sunburst
-          ? d.y1
-          : this.radius - d.y0 + this.innerAreaRadius
-      }
-    },
     labelTransferX() {
       return (d) => {
         return (((d.x0 + d.x1) / 2) * 180) / Math.PI
@@ -449,12 +452,16 @@ export default {
       return (user) => {
         let res = []
         const desiredDepth = this.meta.sunburst ? 1 : 2
-        const desiredField = this.meta.sunburst ? 'topics' : 'keywords'
         const arcs = this.root.filter((d) => d.depth === desiredDepth)
-        for (const tw of user.data.children)
+        for (const tw of user.data.children) {
+          const toCheck = this.meta.sunburst
+            ? Object.keys(tw.tweets.topics)
+            : tw.tweets.keywords
+          toCheck.map((i) => i.toLowerCase())
           res = res.concat(
-            arcs.filter((d) => tw.tweets[desiredField].includes(d.data.name))
+            arcs.filter((d) => toCheck.includes(d.data.name.toLowerCase()))
           )
+        }
         return res
       }
     },
@@ -663,11 +670,11 @@ export default {
         }
       }
     },
-    userClicked(ev, selected) {
-      this.$emit('userSelected', selected.data)
-      if (!this.selectedList.includes(selected.data.screen_name)) {
-        this.highlightConnectedSet({ user: selected })
-      }
+    userClicked(ev, user) {
+      this.$emit('userSelected', user)
+      // if (!this.selectedList.includes(user.screen_name)) {
+      //   this.highlightConnectedSet({ user })
+      // }
     },
     // TODO: add keyword seach ( searching users with keywords), right now we only have topic search for
     // TODO: emit remove to the original selectedList to sync other charts
@@ -708,12 +715,17 @@ export default {
 </script>
 
 <style scoped>
-.svg >>> .greyed {
-  opacity: 0.2;
-  stroke-opacity: 0.2;
+.greyed {
+  opacity: 0.1;
+  stroke-opacity: 0.1;
 }
 
-.svg >>> .highlighted {
+.dim {
+  opacity: 0.4;
+  stroke-opacity: 0.4;
+}
+
+.highlighted {
   opacity: 1;
   stroke-opacity: unset;
 }

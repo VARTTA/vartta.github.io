@@ -134,10 +134,7 @@ export default {
     },
   },
   methods: {
-    clicked(ev) {
-      // eslint-disable-next-line no-console
-      console.log('hi!', ev)
-    },
+    clicked(ev) {},
   },
 }
 </script>

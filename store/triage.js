@@ -13,8 +13,20 @@ export const mutations = {
   updateSelectedUsers(state, val) {
     state.selectedUsers = val
   },
-  updateUsersSet(state, val) {
-    state.usersSet = val
+  addSelectedUser(state, user) {
+    if (
+      !state.selectedUsers.map((a) => a.screen_name).includes(user.screen_name)
+    )
+      state.selectedUsers.push(user)
+  },
+  removeSelectedUser(state, username) {
+    const index = state.selectedUsers
+      .map((a) => a.screen_name)
+      .indexOf(username)
+    state.selectedUsers.splice(index, 1)
+  },
+  updateUsers(state, val) {
+    state.users = val
   },
 }
 

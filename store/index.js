@@ -104,6 +104,6 @@ export const actions = {
     commit('updateAggregatedUsers', agusers.a)
     commit('updateAggregatedKeywords', agkeywords)
     commit('addToRawTweets', tweets)
-    commit('triage/updateUsersSet', users)
+    commit('triage/updateUsers', users)
   },
 }

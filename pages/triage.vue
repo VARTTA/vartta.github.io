@@ -1,9 +1,19 @@
 <template>
-  <v-container class="fill-height" fluid>
-    <v-row justify="center">
-      <v-col cols="3"></v-col>
-      <v-col cols="6">
-        <div :id="charts.topicUserDiagram.id">
+  <v-row justify="center" dense no-gutters>
+    <v-col cols="6">
+      <v-card outlined class="mx-0 px-0">
+        <v-card-title>User-Topic Association</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text :id="charts.topicUserDiagram.id" class="mx-0 px-1">
+          <topic-user
+            :meta="charts.topicUserDiagram"
+            :topics="topics"
+            :users="usersRawSet"
+            :selected-list="allSelected"
+            @userSelected="updateSelectedUsers"
+          ></topic-user>
+        </v-card-text>
+        <v-card-actions>
           <v-btn
             @click="
               charts.topicUserDiagram.sunburst = !charts.topicUserDiagram
@@ -12,19 +22,24 @@
           >
             Topic/Keyword
           </v-btn>
-          <topic-user
-            :meta="charts.topicUserDiagram"
-            :topics="topics"
-            :users="userSet"
-            :selected-list="allSelected"
-            @userSelected="updateSelectedUsers"
-          ></topic-user>
-        </div>
-      </v-col>
-      <v-col cols="3"></v-col>
-      <v-col cols="3"></v-col>
-      <v-col cols="6">
-        <div :id="charts.concentricChart.id">
+        </v-card-actions>
+      </v-card>
+    </v-col>
+    <v-col cols="6">
+      <v-card outlined class="mx-0 px-0">
+        <v-card-title>Appearance Timeline</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text :id="charts.concentricChart.id" class="mx-0 px-1">
+          <!--          <concentric-chart-->
+          <!--            :meta="charts.concentricChart"-->
+          <!--            :topics="topics"-->
+          <!--            :users="usersRawSet"-->
+          <!--            :number-of-tracks="charts.concentricChart.tracks"-->
+          <!--            :selected-list="allSelected"-->
+          <!--            @candidSelected="updateSelectedCandid"-->
+          <!--          ></concentric-chart>-->
+        </v-card-text>
+        <v-card-actions>
           <v-btn
             @click="
               charts.concentricChart.tracks =
@@ -45,80 +60,61 @@
             <v-radio label="Daily" value="24"></v-radio>
             <v-radio label="Hourly" value="60"></v-radio>
           </v-radio-group>
-          <concentric-chart
-            :meta="charts.concentricChart"
-            :topics="topics"
-            :users="userSet"
-            :number-of-tracks="charts.concentricChart.tracks"
-            :selected-list="allSelected"
-            @candidSelected="updateSelectedCandid"
-          ></concentric-chart>
-        </div>
-      </v-col>
-      <v-col cols="3"></v-col>
-      <v-col cols="3"></v-col>
-      <v-col cols="6">
-        <div :id="charts.userSimilarity.id">
-          <div>
-            <v-btn
-              @click="
-                charts.userSimilarity.tracks =
-                  charts.userSimilarity.tracks < 4
-                    ? charts.userSimilarity.tracks + 1
-                    : 1
-              "
-            >
-              NUMBER OF Neighbors {{ charts.userSimilarity.tracks }}
-            </v-btn>
-          </div>
-          <div></div>
-          <div>
-            <v-btn
-              @click="
-                charts.userSimilarity.adjacency = !charts.userSimilarity
-                  .adjacency
-              "
-            >
-              Adjacency
-            </v-btn>
-          </div>
-          <user-similarity
-            :meta="charts.userSimilarity"
-            :topics="topics"
-            :users="userSet"
-            :selected-list="allSelected"
-            :number-of-tracks="charts.userSimilarity.tracks"
-            :last-selected="lastSelectedUser"
-            @neighborSelected="updateSelectedUsers"
-          ></user-similarity>
-        </div>
-      </v-col>
-      <v-col cols="3"></v-col>
-      <v-col class="text-center" cols="12" md="4">
-        <user-info
-          :selected-list="allSelected"
-          :last-selected="lastSelectedUser"
-          @removeFromPile="removeSelected"
-          @searchClicked="updateLastSelect"
-        ></user-info>
-      </v-col>
-    </v-row>
-    <v-row justify="center"></v-row>
-  </v-container>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+    <v-col cols="6">
+      <v-card outlined class="mx-0 px-0">
+        <v-card-title>User Distance</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text :id="charts.userSimilarity.id" class="mx-0 px-1">
+          <!--          <user-similarity-->
+          <!--            :meta="charts.userSimilarity"-->
+          <!--            :topics="topics"-->
+          <!--            :users="usersRawSet"-->
+          <!--            :selected-list="allSelected"-->
+          <!--            :number-of-tracks="charts.userSimilarity.tracks"-->
+          <!--            :last-selected="lastSelectedUser"-->
+          <!--            @neighborSelected="updateSelectedUsers"-->
+          <!--          ></user-similarity>-->
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            @click="
+              charts.userSimilarity.tracks =
+                charts.userSimilarity.tracks < 4
+                  ? charts.userSimilarity.tracks + 1
+                  : 1
+            "
+          >
+            NUMBER OF Neighbors {{ charts.userSimilarity.tracks }}
+          </v-btn>
+          <v-btn
+            @click="
+              charts.userSimilarity.adjacency = !charts.userSimilarity.adjacency
+            "
+          >
+            Adjacency
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import TopicUser from '../components/Triage/TopicUserAssociationDiagram'
-import ConcentricChart from '../components/Triage/ConcentricChart'
-import UserSimilarity from '../components/Triage/UserSimilarity'
-import UserInfo from '../components/Triage/UserInfo'
+// import ConcentricChart from '../components/Triage/ConcentricChart'
+// import UserSimilarity from '../components/Triage/UserSimilarity'
+// import UserInfo from '../components/Triage/UserInfo'
 export default {
   name: 'Triage',
+  layout: 'triage',
   components: {
-    UserInfo,
-    UserSimilarity,
+    // UserInfo,
+    // UserSimilarity,
     TopicUser,
-    ConcentricChart,
+    // ConcentricChart,
     // Treemap,
   },
   data() {
@@ -129,7 +125,7 @@ export default {
           w2v: 7,
           id_str: '2382499392',
           name: 'Eric Edwards',
-          screen_name: 'UCFONEBIGOHANA',
+          screen_name: 'eric',
           location: null,
           url: null,
           description: null,
@@ -785,7 +781,7 @@ export default {
           w2v: 5.2,
           id_str: '192797312',
           name: 'Osman Naqs',
-          screen_name: 'jinkinggon',
+          screen_name: 'osman',
           location: null,
           url: null,
           description: null,
@@ -1544,1602 +1540,6 @@ export default {
             },
           ],
         },
-        {
-          id: 1134775576714260500,
-          w2v: 2.9,
-          id_str: '1134775576714260480',
-          name: 'ron',
-          screen_name: 'ron84750909',
-          location: null,
-          url: null,
-          description: '##',
-          translator_type: 'none',
-          protected: false,
-          verified: false,
-          followers_count: 191,
-          friends_count: 1077,
-          listed_count: 0,
-          favourites_count: 16252,
-          statuses_count: 16748,
-          created_at: 'Sat Jun 01 10:55:55 +0000 2019',
-          utc_offset: null,
-          time_zone: null,
-          geo_enabled: false,
-          lang: null,
-          contributors_enabled: false,
-          is_translator: false,
-          profile_background_color: 'F5F8FA',
-          profile_background_image_url: '',
-          profile_background_image_url_https: '',
-          profile_background_tile: false,
-          profile_link_color: '1DA1F2',
-          profile_sidebar_border_color: 'C0DEED',
-          profile_sidebar_fill_color: 'DDEEF6',
-          profile_text_color: '333333',
-          profile_use_background_image: true,
-          profile_image_url:
-            'http://pbs.twimg.com/profile_images/1134776538652692481/DgjEfqvD_normal.jpg',
-          profile_image_url_https:
-            'https://pbs.twimg.com/profile_images/1134776538652692481/DgjEfqvD_normal.jpg',
-          default_profile: true,
-          default_profile_image: false,
-          following: null,
-          follow_request_sent: null,
-          notifications: null,
-          tweets: [
-            {
-              keywords: ['trump'],
-              analysis: [
-                {
-                  id: 'ibm',
-                  title: 'IBM Natural Language Understanding API',
-                  result: -0.502636,
-                  meta: {
-                    usage: {
-                      text_units: 1,
-                      text_characters: 125,
-                      features: 5,
-                    },
-                    sentiment: {
-                      document: {
-                        score: -0.502636,
-                        label: 'negative',
-                      },
-                    },
-                    semantic_roles: [
-                      {
-                        subject: {
-                          text: 'realdonaldtrump',
-                          keywords: [
-                            {
-                              text: 'realdonaldtrump',
-                            },
-                          ],
-                        },
-                        sentence:
-                          'realdonaldtrump on all trump or trump related matters while “elections have consequences” i only ask for fairness especially…',
-                        object: {
-                          text: 'related matters',
-                          keywords: [
-                            {
-                              text: 'matters',
-                            },
-                          ],
-                        },
-                        action: {
-                          verb: {
-                            text: 'trump',
-                            tense: 'present',
-                          },
-                          text: 'trump',
-                          normalized: 'trump',
-                        },
-                      },
-                      {
-                        subject: {
-                          text: 'elections',
-                          keywords: [
-                            {
-                              text: 'elections',
-                            },
-                          ],
-                        },
-                        sentence:
-                          'realdonaldtrump on all trump or trump related matters while “elections have consequences” i only ask for fairness especially…',
-                        object: {
-                          text:
-                            'consequences” i only ask for fairness especially…',
-                          keywords: [
-                            {
-                              text: 'fairness especially…',
-                            },
-                            {
-                              text: 'consequences',
-                            },
-                          ],
-                        },
-                        action: {
-                          verb: {
-                            text: 'have',
-                            tense: 'present',
-                          },
-                          text: 'have',
-                          normalized: 'have',
-                        },
-                      },
-                    ],
-                    language: 'en',
-                    keywords: [
-                      {
-                        text: 'related matters',
-                        sentiment: {
-                          score: -0.502636,
-                          label: 'negative',
-                        },
-                        relevance: 0.985513,
-                        emotion: {
-                          sadness: 0.450132,
-                          joy: 0.075811,
-                          fear: 0.193404,
-                          disgust: 0.119732,
-                          anger: 0.247106,
-                        },
-                        count: 1,
-                      },
-                      {
-                        text: 'trump',
-                        sentiment: {
-                          score: -0.502636,
-                          label: 'negative',
-                        },
-                        relevance: 0.829817,
-                        emotion: {
-                          sadness: 0.450132,
-                          joy: 0.075811,
-                          fear: 0.193404,
-                          disgust: 0.119732,
-                          anger: 0.247106,
-                        },
-                        count: 2,
-                      },
-                      {
-                        text: 'elections',
-                        sentiment: {
-                          score: -0.502636,
-                          label: 'negative',
-                        },
-                        relevance: 0.624372,
-                        emotion: {
-                          sadness: 0.450132,
-                          joy: 0.075811,
-                          fear: 0.193404,
-                          disgust: 0.119732,
-                          anger: 0.247106,
-                        },
-                        count: 1,
-                      },
-                    ],
-                    entities: [],
-                    concepts: [
-                      {
-                        text: 'Don Cherry',
-                        relevance: 0.837761,
-                        dbpedia_resource:
-                          'http://dbpedia.org/resource/Don_Cherry_(jazz)',
-                      },
-                    ],
-                    warnings: ['emotion: cannot locate keyphrase'],
-                  },
-                },
-                {
-                  id: 'naturaljs-afinn165',
-                  title: 'Natural JS Library - AFINN-165 Vocab.',
-                  result: 0.03333333333333333,
-                },
-                {
-                  id: 'naturaljs-senticon',
-                  title: 'Natural JS Library - SENTICON Vocab.',
-                  result: 0.024655555555555552,
-                },
-                {
-                  id: 'naturaljs-pattern',
-                  title: 'Natural JS Library - PATTERN Vocab.',
-                  result: 0.016666666666666666,
-                },
-                {
-                  id: 'sentimentjs',
-                  title: 'Sentiment JS Library',
-                  result: 0.03333333333333333,
-                  meta: {
-                    score: 3,
-                    comparative: 0.16666666666666666,
-                    tokens: [
-                      'realdonaldtrump',
-                      'on',
-                      'all',
-                      'trump',
-                      'or',
-                      'trump',
-                      'related',
-                      'matters',
-                      'while',
-                      '“elections',
-                      'have',
-                      'consequences”',
-                      'i',
-                      'only',
-                      'ask',
-                      'for',
-                      'fairness',
-                      'especially…',
-                    ],
-                    words: ['fairness', 'matters'],
-                    positive: ['fairness', 'matters'],
-                    negative: [],
-                  },
-                },
-              ],
-              labels: [
-                {
-                  id: 'LSTM',
-                  title: 'Long Short-Term Memory Model',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'CNN',
-                  title: 'Convolutional Neural Network Model',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'SVM',
-                  title: 'Support Vector Machine',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'KNN',
-                  title: 'K-nearest Neighbors',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'RF',
-                  title: 'Random Forests',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'MLP',
-                  title: 'Multilayer Perceptron',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-              ],
-              _id: '5e54bd3beff6c34770c8c7fa',
-              created_at: '2020-02-25T06:22:43.000Z',
-              id: '1232189160204710000',
-              id_str: '1232189160204709888',
-              text:
-                'realdonaldtrump on all trump or trump related matters while “elections have consequences” i only ask for fairness especially…',
-              source:
-                '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
-              truncated: false,
-              in_reply_to_status_id: null,
-              in_reply_to_status_id_str: null,
-              in_reply_to_user_id: null,
-              in_reply_to_user_id_str: null,
-              in_reply_to_screen_name: null,
-              user: {
-                id: 1134775576714260500,
-                id_str: '1134775576714260480',
-                name: 'ron',
-                screen_name: 'ron84750909',
-                location: null,
-                url: null,
-                description: '##',
-                translator_type: 'none',
-                protected: false,
-                verified: false,
-                followers_count: 191,
-                friends_count: 1077,
-                listed_count: 0,
-                favourites_count: 16252,
-                statuses_count: 16748,
-                created_at: 'Sat Jun 01 10:55:55 +0000 2019',
-                utc_offset: null,
-                time_zone: null,
-                geo_enabled: false,
-                lang: null,
-                contributors_enabled: false,
-                is_translator: false,
-                profile_background_color: 'F5F8FA',
-                profile_background_image_url: '',
-                profile_background_image_url_https: '',
-                profile_background_tile: false,
-                profile_link_color: '1DA1F2',
-                profile_sidebar_border_color: 'C0DEED',
-                profile_sidebar_fill_color: 'DDEEF6',
-                profile_text_color: '333333',
-                profile_use_background_image: true,
-                profile_image_url:
-                  'http://pbs.twimg.com/profile_images/1134776538652692481/DgjEfqvD_normal.jpg',
-                profile_image_url_https:
-                  'https://pbs.twimg.com/profile_images/1134776538652692481/DgjEfqvD_normal.jpg',
-                default_profile: true,
-                default_profile_image: false,
-                following: null,
-                follow_request_sent: null,
-                notifications: null,
-              },
-              geo: null,
-              coordinates: null,
-              place: null,
-              contributors: null,
-              retweeted_status: {
-                created_at: 'Tue Feb 25 04:09:20 +0000 2020',
-                id: 1232155595438018600,
-                id_str: '1232155595438018567',
-                text:
-                  '....on all Trump, or Trump related, matters! While “elections have consequences”, I only ask for fairness, especial… https://t.co/XrgUWEAHlS',
-                source:
-                  '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>',
-                truncated: true,
-                in_reply_to_status_id: 1232155591537254400,
-                in_reply_to_status_id_str: '1232155591537254400',
-                in_reply_to_user_id: 25073877,
-                in_reply_to_user_id_str: '25073877',
-                in_reply_to_screen_name: 'realDonaldTrump',
-                user: {
-                  id: 25073877,
-                  id_str: '25073877',
-                  name: 'Donald J. Trump',
-                  screen_name: 'realDonaldTrump',
-                  location: 'Washington, DC',
-                  url: 'http://www.Instagram.com/realDonaldTrump',
-                  description:
-                    '45th President of the United States of America🇺🇸',
-                  translator_type: 'regular',
-                  protected: false,
-                  verified: true,
-                  followers_count: 72985185,
-                  friends_count: 47,
-                  listed_count: 115097,
-                  favourites_count: 7,
-                  statuses_count: 49283,
-                  created_at: 'Wed Mar 18 13:46:38 +0000 2009',
-                  utc_offset: null,
-                  time_zone: null,
-                  geo_enabled: true,
-                  lang: null,
-                  contributors_enabled: false,
-                  is_translator: false,
-                  profile_background_color: '6D5C18',
-                  profile_background_image_url:
-                    'http://abs.twimg.com/images/themes/theme1/bg.png',
-                  profile_background_image_url_https:
-                    'https://abs.twimg.com/images/themes/theme1/bg.png',
-                  profile_background_tile: true,
-                  profile_link_color: '1B95E0',
-                  profile_sidebar_border_color: 'BDDCAD',
-                  profile_sidebar_fill_color: 'C5CEC0',
-                  profile_text_color: '333333',
-                  profile_use_background_image: true,
-                  profile_image_url:
-                    'http://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_normal.jpg',
-                  profile_image_url_https:
-                    'https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_normal.jpg',
-                  profile_banner_url:
-                    'https://pbs.twimg.com/profile_banners/25073877/1580873630',
-                  default_profile: false,
-                  default_profile_image: false,
-                  following: null,
-                  follow_request_sent: null,
-                  notifications: null,
-                },
-                geo: null,
-                coordinates: null,
-                place: null,
-                contributors: null,
-                is_quote_status: false,
-                extended_tweet: {
-                  full_text:
-                    '....on all Trump, or Trump related, matters! While “elections have consequences”, I only ask for fairness, especially when it comes to decisions made by the United States Supreme Court!',
-                  display_text_range: [0, 185],
-                  entities: {
-                    hashtags: [],
-                    urls: [],
-                    user_mentions: [],
-                    symbols: [],
-                  },
-                },
-                quote_count: 185,
-                reply_count: 1957,
-                retweet_count: 4525,
-                favorite_count: 18002,
-                entities: {
-                  hashtags: [],
-                  urls: [
-                    {
-                      url: 'https://t.co/XrgUWEAHlS',
-                      expanded_url:
-                        'https://twitter.com/i/web/status/1232155595438018567',
-                      display_url: 'twitter.com/i/web/status/1…',
-                      indices: [117, 140],
-                    },
-                  ],
-                  user_mentions: [],
-                  symbols: [],
-                },
-                favorited: false,
-                retweeted: false,
-                filter_level: 'low',
-                lang: 'en',
-              },
-              is_quote_status: false,
-              retweet_count: 0,
-              favorite_count: 0,
-              entities: {
-                hashtags: [],
-                urls: [],
-                user_mentions: [
-                  {
-                    screen_name: 'realDonaldTrump',
-                    name: 'Donald J. Trump',
-                    id: 25073877,
-                    id_str: '25073877',
-                    indices: [3, 19],
-                  },
-                ],
-                symbols: [],
-              },
-              favorited: false,
-              retweeted: false,
-              topics: {
-                republican: ['trump'],
-              },
-              original_text:
-                'RT @realDonaldTrump: ....on all Trump, or Trump related, matters! While “elections have consequences”, I only ask for fairness, especially…',
-              arrived_at: '1582611771892',
-              updated_at: '2020-02-25T06:22:43.000Z',
-            },
-          ],
-        },
-        {
-          id: 3104950051,
-          w2v: 4,
-          id_str: '3104950051',
-          name: 'Tommy',
-          screen_name: 'birdman8272',
-          location: 'United States',
-          url: null,
-          description:
-            'Christian:God Bless President Trump! \nUS Army Signal Corps.Honor to be  followed by @GenFlynn  @AlvedaCKing\n#AmericaFirst\n#KAG',
-          translator_type: 'none',
-          protected: false,
-          verified: false,
-          followers_count: 30596,
-          friends_count: 19832,
-          listed_count: 105,
-          favourites_count: 204938,
-          statuses_count: 260366,
-          created_at: 'Mon Mar 23 14:20:59 +0000 2015',
-          utc_offset: null,
-          time_zone: null,
-          geo_enabled: true,
-          lang: null,
-          contributors_enabled: false,
-          is_translator: false,
-          profile_background_color: 'C0DEED',
-          profile_background_image_url:
-            'http://abs.twimg.com/images/themes/theme1/bg.png',
-          profile_background_image_url_https:
-            'https://abs.twimg.com/images/themes/theme1/bg.png',
-          profile_background_tile: false,
-          profile_link_color: '1DA1F2',
-          profile_sidebar_border_color: 'C0DEED',
-          profile_sidebar_fill_color: 'DDEEF6',
-          profile_text_color: '333333',
-          profile_use_background_image: true,
-          profile_image_url:
-            'http://pbs.twimg.com/profile_images/1224194711637909504/qr-sdQzQ_normal.jpg',
-          profile_image_url_https:
-            'https://pbs.twimg.com/profile_images/1224194711637909504/qr-sdQzQ_normal.jpg',
-          profile_banner_url:
-            'https://pbs.twimg.com/profile_banners/3104950051/1526753847',
-          default_profile: true,
-          default_profile_image: false,
-          following: null,
-          follow_request_sent: null,
-          notifications: null,
-          tweets: [
-            {
-              keywords: ['joe biden'],
-              analysis: [
-                {
-                  id: 'ibm',
-                  title: 'IBM Natural Language Understanding API',
-                  result: 0.55589,
-                  meta: {
-                    usage: {
-                      text_units: 1,
-                      text_characters: 129,
-                      features: 5,
-                    },
-                    sentiment: {
-                      document: {
-                        score: 0.55589,
-                        label: 'positive',
-                      },
-                    },
-                    semantic_roles: [
-                      {
-                        subject: {
-                          text: 'we',
-                        },
-                        sentence:
-                          'shawng927 so in this brief speech we learned 1 joe biden is a candidate for the us senate 2 if you don’t like him vote for the o…',
-                        action: {
-                          verb: {
-                            text: 'learn',
-                            tense: 'past',
-                          },
-                          text: 'learned',
-                          normalized: 'learn',
-                        },
-                      },
-                      {
-                        subject: {
-                          text: 'the us',
-                          entities: [
-                            {
-                              type: 'Location',
-                              text: 'us',
-                              disambiguation: {
-                                subtype: [
-                                  'Region',
-                                  'AdministrativeDivision',
-                                  'Country',
-                                  'GovernmentalJurisdiction',
-                                  'FilmEditor',
-                                  'Country',
-                                ],
-                                name: 'United States',
-                                dbpedia_resource:
-                                  'http://dbpedia.org/resource/United_States',
-                              },
-                            },
-                          ],
-                        },
-                        sentence:
-                          'shawng927 so in this brief speech we learned 1 joe biden is a candidate for the us senate 2 if you don’t like him vote for the o…',
-                        object: {
-                          text: '2',
-                        },
-                        action: {
-                          verb: {
-                            text: 'senate',
-                            tense: 'present',
-                          },
-                          text: 'senate',
-                          normalized: 'senate',
-                        },
-                      },
-                      {
-                        subject: {
-                          text: 'you',
-                        },
-                        sentence:
-                          'shawng927 so in this brief speech we learned 1 joe biden is a candidate for the us senate 2 if you don’t like him vote for the o…',
-                        object: {
-                          text: 'n’t',
-                          keywords: [
-                            {
-                              text: 'n’t',
-                            },
-                          ],
-                        },
-                        action: {
-                          verb: {
-                            text: 'do',
-                            tense: 'present',
-                          },
-                          text: 'do',
-                          normalized: 'do',
-                        },
-                      },
-                    ],
-                    language: 'en',
-                    keywords: [
-                      {
-                        text: 'joe biden',
-                        sentiment: {
-                          score: 0.55589,
-                          label: 'positive',
-                        },
-                        relevance: 0.967447,
-                        emotion: {
-                          sadness: 0.218587,
-                          joy: 0.327037,
-                          fear: 0.057367,
-                          disgust: 0.378184,
-                          anger: 0.105524,
-                        },
-                        count: 1,
-                      },
-                      {
-                        text: 'brief speech',
-                        sentiment: {
-                          score: 0.55589,
-                          label: 'positive',
-                        },
-                        relevance: 0.901143,
-                        emotion: {
-                          sadness: 0.218587,
-                          joy: 0.327037,
-                          fear: 0.057367,
-                          disgust: 0.378184,
-                          anger: 0.105524,
-                        },
-                        count: 1,
-                      },
-                      {
-                        text: 'candidate',
-                        sentiment: {
-                          score: 0.55589,
-                          label: 'positive',
-                        },
-                        relevance: 0.601989,
-                        emotion: {
-                          sadness: 0.218587,
-                          joy: 0.327037,
-                          fear: 0.057367,
-                          disgust: 0.378184,
-                          anger: 0.105524,
-                        },
-                        count: 1,
-                      },
-                    ],
-                    entities: [
-                      {
-                        type: 'Person',
-                        text: 'joe biden',
-                        sentiment: {
-                          score: 0,
-                          label: 'neutral',
-                        },
-                        relevance: 0.33,
-                        emotion: {
-                          sadness: 0.218587,
-                          joy: 0.327037,
-                          fear: 0.057367,
-                          disgust: 0.378184,
-                          anger: 0.105524,
-                        },
-                        disambiguation: {
-                          subtype: [
-                            'Politician',
-                            'Celebrity',
-                            'CompanyFounder',
-                            'FootballPlayer',
-                            'OperaCharacter',
-                            'PoliticalAppointer',
-                            'U.S.Congressperson',
-                            'USVicePresident',
-                          ],
-                          name: 'Joe Biden',
-                          dbpedia_resource:
-                            'http://dbpedia.org/resource/Joe_Biden',
-                        },
-                        count: 3,
-                      },
-                      {
-                        type: 'Location',
-                        text: 'us',
-                        sentiment: {
-                          score: 0,
-                          label: 'neutral',
-                        },
-                        relevance: 0.33,
-                        emotion: {
-                          sadness: 0.218587,
-                          joy: 0.327037,
-                          fear: 0.057367,
-                          disgust: 0.378184,
-                          anger: 0.105524,
-                        },
-                        disambiguation: {
-                          subtype: [
-                            'Region',
-                            'AdministrativeDivision',
-                            'GovernmentalJurisdiction',
-                            'FilmEditor',
-                            'Country',
-                          ],
-                          name: 'United States',
-                          dbpedia_resource:
-                            'http://dbpedia.org/resource/United_States',
-                        },
-                        count: 1,
-                      },
-                    ],
-                    concepts: [
-                      {
-                        text: 'United States Senate',
-                        relevance: 0.97294,
-                        dbpedia_resource:
-                          'http://dbpedia.org/resource/United_States_Senate',
-                      },
-                      {
-                        text: 'Vice President of the United States',
-                        relevance: 0.952689,
-                        dbpedia_resource:
-                          'http://dbpedia.org/resource/Vice_President_of_the_United_States',
-                      },
-                      {
-                        text: 'Democratic Party',
-                        relevance: 0.929408,
-                        dbpedia_resource:
-                          'http://dbpedia.org/resource/Democratic_Party_(United_States)',
-                      },
-                    ],
-                    warnings: ['emotion: cannot locate keyphrase'],
-                  },
-                },
-                {
-                  id: 'naturaljs-afinn165',
-                  title: 'Natural JS Library - AFINN-165 Vocab.',
-                  result: 0.027586206896551724,
-                },
-                {
-                  id: 'naturaljs-senticon',
-                  title: 'Natural JS Library - SENTICON Vocab.',
-                  result: 0.01473103448275862,
-                },
-                {
-                  id: 'naturaljs-pattern',
-                  title: 'Natural JS Library - PATTERN Vocab.',
-                  result: 0.006206896551724137,
-                },
-                {
-                  id: 'sentimentjs',
-                  title: 'Sentiment JS Library',
-                  result: 0.014285714285714285,
-                  meta: {
-                    score: 2,
-                    comparative: 0.07142857142857142,
-                    tokens: [
-                      'shawng927',
-                      'so',
-                      'in',
-                      'this',
-                      'brief',
-                      'speech',
-                      'we',
-                      'learned',
-                      '1',
-                      'joe',
-                      'biden',
-                      'is',
-                      'a',
-                      'candidate',
-                      'for',
-                      'the',
-                      'us',
-                      'senate',
-                      '2',
-                      'if',
-                      'you',
-                      'don’t',
-                      'like',
-                      'him',
-                      'vote',
-                      'for',
-                      'the',
-                      'o…',
-                    ],
-                    words: ['like'],
-                    positive: ['like'],
-                    negative: [],
-                  },
-                },
-              ],
-              labels: [
-                {
-                  id: 'LSTM',
-                  title: 'Long Short-Term Memory Model',
-                  result: {
-                    theme: 'unrelated',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'CNN',
-                  title: 'Convolutional Neural Network Model',
-                  result: {
-                    theme: 'unrelated',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'SVM',
-                  title: 'Support Vector Machine',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'KNN',
-                  title: 'K-nearest Neighbors',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'RF',
-                  title: 'Random Forests',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'MLP',
-                  title: 'Multilayer Perceptron',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-              ],
-              _id: '5e54bd3ceff6c34770c8c7fb',
-              created_at: '2020-02-25T06:22:44.000Z',
-              id: '1232189162855522300',
-              id_str: '1232189162855522306',
-              text:
-                'shawng927 so in this brief speech we learned 1 joe biden is a candidate for the us senate 2 if you don’t like him vote for the o…',
-              source:
-                '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
-              truncated: false,
-              in_reply_to_status_id: null,
-              in_reply_to_status_id_str: null,
-              in_reply_to_user_id: null,
-              in_reply_to_user_id_str: null,
-              in_reply_to_screen_name: null,
-              user: {
-                id: 3104950051,
-                id_str: '3104950051',
-                name: 'Tommy',
-                screen_name: 'birdman8272',
-                location: 'United States',
-                url: null,
-                description:
-                  'Christian:God Bless President Trump! \nUS Army Signal Corps.Honor to be  followed by @GenFlynn  @AlvedaCKing\n#AmericaFirst\n#KAG',
-                translator_type: 'none',
-                protected: false,
-                verified: false,
-                followers_count: 30596,
-                friends_count: 19832,
-                listed_count: 105,
-                favourites_count: 204938,
-                statuses_count: 260366,
-                created_at: 'Mon Mar 23 14:20:59 +0000 2015',
-                utc_offset: null,
-                time_zone: null,
-                geo_enabled: true,
-                lang: null,
-                contributors_enabled: false,
-                is_translator: false,
-                profile_background_color: 'C0DEED',
-                profile_background_image_url:
-                  'http://abs.twimg.com/images/themes/theme1/bg.png',
-                profile_background_image_url_https:
-                  'https://abs.twimg.com/images/themes/theme1/bg.png',
-                profile_background_tile: false,
-                profile_link_color: '1DA1F2',
-                profile_sidebar_border_color: 'C0DEED',
-                profile_sidebar_fill_color: 'DDEEF6',
-                profile_text_color: '333333',
-                profile_use_background_image: true,
-                profile_image_url:
-                  'http://pbs.twimg.com/profile_images/1224194711637909504/qr-sdQzQ_normal.jpg',
-                profile_image_url_https:
-                  'https://pbs.twimg.com/profile_images/1224194711637909504/qr-sdQzQ_normal.jpg',
-                profile_banner_url:
-                  'https://pbs.twimg.com/profile_banners/3104950051/1526753847',
-                default_profile: true,
-                default_profile_image: false,
-                following: null,
-                follow_request_sent: null,
-                notifications: null,
-              },
-              geo: null,
-              coordinates: null,
-              place: null,
-              contributors: null,
-              retweeted_status: {
-                created_at: 'Tue Feb 25 05:38:09 +0000 2020',
-                id: 1232177944199561200,
-                id_str: '1232177944199561216',
-                text:
-                  'So in this brief speech we learned:\n1. Joe Biden is a candidate for the U.S. Senate!\n2. If you don’t like him vote… https://t.co/6CVt0LCdE3',
-                source:
-                  '<a href="http://twitter.com/download/iphone" rel="nofollow">Twitter for iPhone</a>',
-                truncated: true,
-                in_reply_to_status_id: null,
-                in_reply_to_status_id_str: null,
-                in_reply_to_user_id: null,
-                in_reply_to_user_id_str: null,
-                in_reply_to_screen_name: null,
-                user: {
-                  id: 948391038242164700,
-                  id_str: '948391038242164737',
-                  name: 'Shawnasaurus Rex',
-                  screen_name: 'ShawnG927',
-                  location: 'Cleveland, OH',
-                  url: null,
-                  description:
-                    'Political humor 😄 Patriot 🇺🇸 MAGA KAG, Military, Police 1A 2A followback Followed by @rosedc11 @deplorablejujuv @rbigzs @lilibellmia @zyrofoxtrot',
-                  translator_type: 'none',
-                  protected: false,
-                  verified: false,
-                  followers_count: 70375,
-                  friends_count: 74330,
-                  listed_count: 23,
-                  favourites_count: 67535,
-                  statuses_count: 128768,
-                  created_at: 'Wed Jan 03 03:10:18 +0000 2018',
-                  utc_offset: null,
-                  time_zone: null,
-                  geo_enabled: true,
-                  lang: null,
-                  contributors_enabled: false,
-                  is_translator: false,
-                  profile_background_color: 'F5F8FA',
-                  profile_background_image_url: '',
-                  profile_background_image_url_https: '',
-                  profile_background_tile: false,
-                  profile_link_color: '1DA1F2',
-                  profile_sidebar_border_color: 'C0DEED',
-                  profile_sidebar_fill_color: 'DDEEF6',
-                  profile_text_color: '333333',
-                  profile_use_background_image: true,
-                  profile_image_url:
-                    'http://pbs.twimg.com/profile_images/1215367614018605057/ryIro3rl_normal.jpg',
-                  profile_image_url_https:
-                    'https://pbs.twimg.com/profile_images/1215367614018605057/ryIro3rl_normal.jpg',
-                  profile_banner_url:
-                    'https://pbs.twimg.com/profile_banners/948391038242164737/1580829017',
-                  default_profile: true,
-                  default_profile_image: false,
-                  following: null,
-                  follow_request_sent: null,
-                  notifications: null,
-                },
-                geo: null,
-                coordinates: null,
-                place: null,
-                contributors: null,
-                is_quote_status: false,
-                extended_tweet: {
-                  full_text:
-                    'So in this brief speech we learned:\n1. Joe Biden is a candidate for the U.S. Senate!\n2. If you don’t like him vote for the other Biden! \nWait ... What ??? 😂😂\nhttps://t.co/Ti4P6kTFGx',
-                  display_text_range: [0, 181],
-                  entities: {
-                    hashtags: [],
-                    urls: [],
-                    user_mentions: [],
-                    symbols: [],
-                    media: [
-                      {
-                        id: 1232170836896948200,
-                        id_str: '1232170836896948225',
-                        indices: [158, 181],
-                        additional_media_info: {
-                          monetizable: false,
-                        },
-                        media_url:
-                          'http://pbs.twimg.com/ext_tw_video_thumb/1232170836896948225/pu/img/pVHaQNOMv2JJG4s6.jpg',
-                        media_url_https:
-                          'https://pbs.twimg.com/ext_tw_video_thumb/1232170836896948225/pu/img/pVHaQNOMv2JJG4s6.jpg',
-                        url: 'https://t.co/Ti4P6kTFGx',
-                        display_url: 'pic.twitter.com/Ti4P6kTFGx',
-                        expanded_url:
-                          'https://twitter.com/heckyessica/status/1232171077629075456/video/1',
-                        type: 'video',
-                        video_info: {
-                          aspect_ratio: [80, 37],
-                          duration_millis: 22028,
-                          variants: [
-                            {
-                              bitrate: 832000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/778x360/vTvk9nSVp1CNAYWi.mp4?tag=10',
-                            },
-                            {
-                              content_type: 'application/x-mpegURL',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/pl/jBIZlEaMmKaSVp9j.m3u8?tag=10',
-                            },
-                            {
-                              bitrate: 256000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/582x270/XBAyMi9aqPkW7L35.mp4?tag=10',
-                            },
-                            {
-                              bitrate: 2176000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/1280x592/xh2fm_FxwUzwUGuG.mp4?tag=10',
-                            },
-                          ],
-                        },
-                        sizes: {
-                          thumb: {
-                            w: 150,
-                            h: 150,
-                            resize: 'crop',
-                          },
-                          medium: {
-                            w: 1200,
-                            h: 555,
-                            resize: 'fit',
-                          },
-                          small: {
-                            w: 680,
-                            h: 315,
-                            resize: 'fit',
-                          },
-                          large: {
-                            w: 1280,
-                            h: 592,
-                            resize: 'fit',
-                          },
-                        },
-                        source_status_id: 1232171077629075500,
-                        source_status_id_str: '1232171077629075456',
-                        source_user_id: 845689249,
-                        source_user_id_str: '845689249',
-                      },
-                    ],
-                  },
-                  extended_entities: {
-                    media: [
-                      {
-                        id: 1232170836896948200,
-                        id_str: '1232170836896948225',
-                        indices: [158, 181],
-                        additional_media_info: {
-                          monetizable: false,
-                        },
-                        media_url:
-                          'http://pbs.twimg.com/ext_tw_video_thumb/1232170836896948225/pu/img/pVHaQNOMv2JJG4s6.jpg',
-                        media_url_https:
-                          'https://pbs.twimg.com/ext_tw_video_thumb/1232170836896948225/pu/img/pVHaQNOMv2JJG4s6.jpg',
-                        url: 'https://t.co/Ti4P6kTFGx',
-                        display_url: 'pic.twitter.com/Ti4P6kTFGx',
-                        expanded_url:
-                          'https://twitter.com/heckyessica/status/1232171077629075456/video/1',
-                        type: 'video',
-                        video_info: {
-                          aspect_ratio: [80, 37],
-                          duration_millis: 22028,
-                          variants: [
-                            {
-                              bitrate: 832000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/778x360/vTvk9nSVp1CNAYWi.mp4?tag=10',
-                            },
-                            {
-                              content_type: 'application/x-mpegURL',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/pl/jBIZlEaMmKaSVp9j.m3u8?tag=10',
-                            },
-                            {
-                              bitrate: 256000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/582x270/XBAyMi9aqPkW7L35.mp4?tag=10',
-                            },
-                            {
-                              bitrate: 2176000,
-                              content_type: 'video/mp4',
-                              url:
-                                'https://video.twimg.com/ext_tw_video/1232170836896948225/pu/vid/1280x592/xh2fm_FxwUzwUGuG.mp4?tag=10',
-                            },
-                          ],
-                        },
-                        sizes: {
-                          thumb: {
-                            w: 150,
-                            h: 150,
-                            resize: 'crop',
-                          },
-                          medium: {
-                            w: 1200,
-                            h: 555,
-                            resize: 'fit',
-                          },
-                          small: {
-                            w: 680,
-                            h: 315,
-                            resize: 'fit',
-                          },
-                          large: {
-                            w: 1280,
-                            h: 592,
-                            resize: 'fit',
-                          },
-                        },
-                        source_status_id: 1232171077629075500,
-                        source_status_id_str: '1232171077629075456',
-                        source_user_id: 845689249,
-                        source_user_id_str: '845689249',
-                      },
-                    ],
-                  },
-                },
-                quote_count: 7,
-                reply_count: 18,
-                retweet_count: 87,
-                favorite_count: 110,
-                entities: {
-                  hashtags: [],
-                  urls: [
-                    {
-                      url: 'https://t.co/6CVt0LCdE3',
-                      expanded_url:
-                        'https://twitter.com/i/web/status/1232177944199561216',
-                      display_url: 'twitter.com/i/web/status/1…',
-                      indices: [116, 139],
-                    },
-                  ],
-                  user_mentions: [],
-                  symbols: [],
-                },
-                favorited: false,
-                retweeted: false,
-                possibly_sensitive: false,
-                filter_level: 'low',
-                lang: 'en',
-              },
-              is_quote_status: false,
-              retweet_count: 0,
-              favorite_count: 0,
-              entities: {
-                hashtags: [],
-                urls: [],
-                user_mentions: [
-                  {
-                    screen_name: 'ShawnG927',
-                    name: 'Shawnasaurus Rex',
-                    id: 948391038242164700,
-                    id_str: '948391038242164737',
-                    indices: [3, 13],
-                  },
-                ],
-                symbols: [],
-              },
-              favorited: false,
-              retweeted: false,
-              topics: {
-                democratic: ['joe biden'],
-              },
-              original_text:
-                'RT @ShawnG927: So in this brief speech we learned:\n1. Joe Biden is a candidate for the U.S. Senate!\n2. If you don’t like him vote for the o…',
-              arrived_at: '1582611772928',
-              updated_at: '2020-02-25T06:22:44.000Z',
-            },
-          ],
-        },
-        {
-          id: 253110749,
-          w2v: 5.2,
-          id_str: '253110749',
-          name: 'Bobby From The Bronx',
-          screen_name: 'newkingofmedia',
-          location: 'NYC',
-          url: null,
-          description:
-            'Lazy Proofreader Prophet.\nBig fan of sacred cows & hypocrisy.\nKnown to debunk from my toilet\nThe hero Murica deserves.\nBaseball Galaxy Brain\nTwitter Comedian',
-          translator_type: 'none',
-          protected: false,
-          verified: false,
-          followers_count: 2201,
-          friends_count: 1678,
-          listed_count: 149,
-          favourites_count: 63108,
-          statuses_count: 205964,
-          created_at: 'Wed Feb 16 15:40:51 +0000 2011',
-          utc_offset: null,
-          time_zone: null,
-          geo_enabled: true,
-          lang: null,
-          contributors_enabled: false,
-          is_translator: false,
-          profile_background_color: '000000',
-          profile_background_image_url:
-            'http://abs.twimg.com/images/themes/theme9/bg.gif',
-          profile_background_image_url_https:
-            'https://abs.twimg.com/images/themes/theme9/bg.gif',
-          profile_background_tile: false,
-          profile_link_color: '1B95E0',
-          profile_sidebar_border_color: '000000',
-          profile_sidebar_fill_color: '000000',
-          profile_text_color: '000000',
-          profile_use_background_image: false,
-          profile_image_url:
-            'http://pbs.twimg.com/profile_images/1118962660752723968/88wWAbYo_normal.jpg',
-          profile_image_url_https:
-            'https://pbs.twimg.com/profile_images/1118962660752723968/88wWAbYo_normal.jpg',
-          profile_banner_url:
-            'https://pbs.twimg.com/profile_banners/253110749/1530936300',
-          default_profile: false,
-          default_profile_image: false,
-          following: null,
-          follow_request_sent: null,
-          notifications: null,
-          tweets: [
-            {
-              keywords: ['trump'],
-              analysis: [
-                {
-                  id: 'ibm',
-                  title: 'IBM Natural Language Understanding API',
-                  result: 0,
-                  meta: {
-                    usage: {
-                      text_units: 1,
-                      text_characters: 151,
-                      features: 5,
-                    },
-                    sentiment: {
-                      document: {
-                        score: 0,
-                        label: 'neutral',
-                      },
-                    },
-                    semantic_roles: [
-                      {
-                        subject: {
-                          text: 'him',
-                        },
-                        sentence:
-                          'zigmanfreud trumps due for a couple big ls this year by scotus taxes mcghan etc and this is him laying that frame work to delegitimize those pending la',
-                        object: {
-                          text:
-                            'that frame work to delegitimize those pending la',
-                          keywords: [
-                            {
-                              text: 'frame',
-                            },
-                            {
-                              text: 'work',
-                            },
-                            {
-                              text: 'la',
-                            },
-                          ],
-                        },
-                        action: {
-                          verb: {
-                            text: 'lay',
-                            tense: 'present',
-                          },
-                          text: 'laying',
-                          normalized: 'lay',
-                        },
-                      },
-                      {
-                        subject: {
-                          text: 'him',
-                        },
-                        sentence:
-                          'zigmanfreud trumps due for a couple big ls this year by scotus taxes mcghan etc and this is him laying that frame work to delegitimize those pending la',
-                        object: {
-                          text: 'those',
-                        },
-                        action: {
-                          verb: {
-                            text: 'delegitimize',
-                            tense: 'future',
-                          },
-                          text: 'to delegitimize',
-                          normalized: 'to delegitimize',
-                        },
-                      },
-                    ],
-                    language: 'en',
-                    keywords: [
-                      {
-                        text: 'big ls',
-                        sentiment: {
-                          score: 0,
-                          label: 'neutral',
-                        },
-                        relevance: 0.826135,
-                        emotion: {
-                          sadness: 0.276552,
-                          joy: 0.110742,
-                          fear: 0.300632,
-                          disgust: 0.041461,
-                          anger: 0.055884,
-                        },
-                        count: 1,
-                      },
-                      {
-                        text: 'scotus taxes',
-                        sentiment: {
-                          score: 0,
-                          label: 'neutral',
-                        },
-                        relevance: 0.723129,
-                        emotion: {
-                          sadness: 0.276552,
-                          joy: 0.110742,
-                          fear: 0.300632,
-                          disgust: 0.041461,
-                          anger: 0.055884,
-                        },
-                        count: 1,
-                      },
-                      {
-                        text: 'couple',
-                        sentiment: {
-                          score: 0,
-                          label: 'neutral',
-                        },
-                        relevance: 0.615148,
-                        emotion: {
-                          sadness: 0.276552,
-                          joy: 0.110742,
-                          fear: 0.300632,
-                          disgust: 0.041461,
-                          anger: 0.055884,
-                        },
-                        count: 1,
-                      },
-                    ],
-                    entities: [],
-                    concepts: [
-                      {
-                        text: 'United States',
-                        relevance: 0.863434,
-                        dbpedia_resource:
-                          'http://dbpedia.org/resource/United_States',
-                      },
-                    ],
-                    warnings: ['emotion: cannot locate keyphrase'],
-                  },
-                },
-                {
-                  id: 'naturaljs-afinn165',
-                  title: 'Natural JS Library - AFINN-165 Vocab.',
-                  result: 0.007142857142857143,
-                },
-                {
-                  id: 'naturaljs-senticon',
-                  title: 'Natural JS Library - SENTICON Vocab.',
-                  result: 0.013571428571428571,
-                },
-                {
-                  id: 'naturaljs-pattern',
-                  title: 'Natural JS Library - PATTERN Vocab.',
-                  result: 0,
-                },
-                {
-                  id: 'sentimentjs',
-                  title: 'Sentiment JS Library',
-                  result: 0.007142857142857143,
-                  meta: {
-                    score: 1,
-                    comparative: 0.03571428571428571,
-                    tokens: [
-                      'zigmanfreud',
-                      'trumps',
-                      'due',
-                      'for',
-                      'a',
-                      'couple',
-                      'big',
-                      'ls',
-                      'this',
-                      'year',
-                      'by',
-                      'scotus',
-                      'taxes',
-                      'mcghan',
-                      'etc',
-                      'and',
-                      'this',
-                      'is',
-                      'him',
-                      'laying',
-                      'that',
-                      'frame',
-                      'work',
-                      'to',
-                      'delegitimize',
-                      'those',
-                      'pending',
-                      'la',
-                    ],
-                    words: ['big'],
-                    positive: ['big'],
-                    negative: [],
-                  },
-                },
-              ],
-              labels: [
-                {
-                  id: 'LSTM',
-                  title: 'Long Short-Term Memory Model',
-                  result: {
-                    theme: 'unrelated',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'CNN',
-                  title: 'Convolutional Neural Network Model',
-                  result: {
-                    theme: 'unrelated',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'SVM',
-                  title: 'Support Vector Machine',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'KNN',
-                  title: 'K-nearest Neighbors',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'RF',
-                  title: 'Random Forests',
-                  result: {
-                    theme: 'educational',
-                    group: 'public',
-                  },
-                },
-                {
-                  id: 'MLP',
-                  title: 'Multilayer Perceptron',
-                  result: {
-                    theme: 'personal',
-                    group: 'public',
-                  },
-                },
-              ],
-              _id: '5e54bd3ceff6c34770c8c7fc',
-              created_at: '2020-02-25T06:22:43.000Z',
-              id: '1232189162348040200',
-              id_str: '1232189162348040194',
-              text:
-                'zigmanfreud trumps due for a couple big ls this year by scotus taxes mcghan etc and this is him laying that frame work to delegitimize those pending la',
-              source:
-                '<a href="http://twitter.com/download/android" rel="nofollow">Twitter for Android</a>',
-              truncated: true,
-              in_reply_to_status_id: '1232181715168198700',
-              in_reply_to_status_id_str: '1232181715168198656',
-              in_reply_to_user_id: '558360059',
-              in_reply_to_user_id_str: '558360059',
-              in_reply_to_screen_name: 'Zigmanfreud',
-              user: {
-                id: 253110749,
-                id_str: '253110749',
-                name: 'Bobby From The Bronx',
-                screen_name: 'newkingofmedia',
-                location: 'NYC',
-                url: null,
-                description:
-                  'Lazy Proofreader Prophet.\nBig fan of sacred cows & hypocrisy.\nKnown to debunk from my toilet\nThe hero Murica deserves.\nBaseball Galaxy Brain\nTwitter Comedian',
-                translator_type: 'none',
-                protected: false,
-                verified: false,
-                followers_count: 2201,
-                friends_count: 1678,
-                listed_count: 149,
-                favourites_count: 63108,
-                statuses_count: 205964,
-                created_at: 'Wed Feb 16 15:40:51 +0000 2011',
-                utc_offset: null,
-                time_zone: null,
-                geo_enabled: true,
-                lang: null,
-                contributors_enabled: false,
-                is_translator: false,
-                profile_background_color: '000000',
-                profile_background_image_url:
-                  'http://abs.twimg.com/images/themes/theme9/bg.gif',
-                profile_background_image_url_https:
-                  'https://abs.twimg.com/images/themes/theme9/bg.gif',
-                profile_background_tile: false,
-                profile_link_color: '1B95E0',
-                profile_sidebar_border_color: '000000',
-                profile_sidebar_fill_color: '000000',
-                profile_text_color: '000000',
-                profile_use_background_image: false,
-                profile_image_url:
-                  'http://pbs.twimg.com/profile_images/1118962660752723968/88wWAbYo_normal.jpg',
-                profile_image_url_https:
-                  'https://pbs.twimg.com/profile_images/1118962660752723968/88wWAbYo_normal.jpg',
-                profile_banner_url:
-                  'https://pbs.twimg.com/profile_banners/253110749/1530936300',
-                default_profile: false,
-                default_profile_image: false,
-                following: null,
-                follow_request_sent: null,
-                notifications: null,
-              },
-              geo: null,
-              coordinates: null,
-              place: null,
-              contributors: null,
-              is_quote_status: false,
-              retweet_count: 0,
-              favorite_count: 0,
-              entities: {
-                hashtags: [],
-                urls: [
-                  {
-                    url: 'https://t.co/P4YQ0wUUu7',
-                    expanded_url:
-                      'https://twitter.com/i/web/status/1232189162348040194',
-                    display_url: 'twitter.com/i/web/status/1…',
-                    indices: [117, 140],
-                  },
-                ],
-                user_mentions: [
-                  {
-                    screen_name: 'Zigmanfreud',
-                    name: 'John Ziegler',
-                    id: 558360059,
-                    id_str: '558360059',
-                    indices: [0, 12],
-                  },
-                ],
-                symbols: [],
-              },
-              favorited: false,
-              retweeted: false,
-              topics: {
-                republican: ['trump'],
-              },
-              original_text:
-                "@Zigmanfreud Trump's due for a couple  big Ls this year by SCOTUS Taxes, Mcghan etc and this is him laying that frame work to delegitimize those pending La",
-              arrived_at: '1582611772981',
-              updated_at: '2020-02-25T06:22:43.000Z',
-            },
-          ],
-        },
       ], */
       /*
       usersSet: [
@@ -3615,21 +2015,20 @@ export default {
       msg: '',
       temp: [],
       lastSelectedUser: '',
-      allSelected: [],
       // Charts and all of their configurations
       charts: {
         topicUserDiagram: {
           id: 'topic-user-diagram',
           label: 'Agent-Topic Association ',
-          width: 600,
-          height: 1000,
-          sunburst: false,
+          width: 400,
+          height: 400,
+          sunburst: true,
         },
         concentricChart: {
           id: 'concentric-chart',
           label: 'Agent-Time Association ',
-          width: 600,
-          height: 1000,
+          width: 400,
+          height: 400,
           padding: { top: 20, bottom: 0, left: 0, right: 0 },
           tracks: 3,
           timeUnit: '12',
@@ -3637,8 +2036,8 @@ export default {
         userSimilarity: {
           id: 'user-similarity',
           label: 'Agents Similarity',
-          width: 600,
-          height: 1000,
+          width: 400,
+          height: 400,
           padding: { top: 20, bottom: 0, left: 0, right: 0 },
           tracks: 3,
           focalUser: 0,
@@ -3648,58 +2047,19 @@ export default {
     }
   },
   computed: {
-    topics: {
-      set(val) {
-        this.$store.commit('topics', val)
-      },
-      get() {
-        return this.$store.state.topics
-      },
+    allSelected() {
+      return this.$store.state.triage.selectedUsers
     },
-    usersRawSet: {
-      set(val) {
-        this.$store.commit('triage/updateUsersSet', val)
-      },
-      get() {
-        return this.$store.state.triage.usersSet
-      },
+    usersRawSet() {
+      return this.$store.state.triage.users
     },
-    /***
-     *  Add any required attribute of data to users
-     * */
-    userSet() {
-      const users = []
-      let createdAt = ''
-      let id = ''
-      let w2v = 1
-      for (const item of this.usersRawSet) {
-        const topicArray = []
-        const keywordArray = []
-        for (const tweet of item.tweets) {
-          topicArray.push(Object.keys(tweet.topics))
-          keywordArray.push(Object.values(tweet.topics))
-          id = tweet.id
-          createdAt = tweet.created_at
-          w2v = tweet.id % 10
-        }
-        item.tweets.topics = []
-        for (const tpc of topicArray) item.tweets.topics.push(tpc)
-        item.tweets.keyword = []
-        for (const kw of keywordArray)
-          for (const k of kw) item.tweets.keyword.push(k)
-        item.tweets.id = id
-        item.tweets.created_at = createdAt
-        item.w2v = w2v
-        users.push(item)
-        console.log('item is here', item)
-      }
-      console.log('users are **', users)
-      return users
+    topics() {
+      return this.$store.state.topics
     },
   },
   mounted() {
-    this.resize()
     window.addEventListener('resize', this.resize)
+    this.resize()
   },
   methods: {
     resize() {
@@ -3707,11 +2067,20 @@ export default {
       const concentricDiv = document.getElementById(
         this.charts.concentricChart.id
       )
+      const similarityDiv = document.getElementById(
+        this.charts.userSimilarity.id
+      )
       if (chordDiv) {
-        this.charts.topicUserDiagram.width = chordDiv.clientWidth - 5
+        this.charts.topicUserDiagram.width = chordDiv.clientWidth - 9
+        this.charts.topicUserDiagram.height = chordDiv.clientWidth - 9
       }
       if (concentricDiv) {
-        this.charts.concentricChart.width = concentricDiv.clientWidth - 5
+        this.charts.concentricChart.width = concentricDiv.clientWidth - 20
+        this.charts.concentricChart.height = concentricDiv.clientWidth - 20
+      }
+      if (similarityDiv) {
+        this.charts.userSimilarity.width = similarityDiv.clientWidth - 20
+        this.charts.userSimilarity.height = similarityDiv.clientWidth - 20
       }
     },
     /***
@@ -3732,14 +2101,24 @@ export default {
     },
     updateSelectedUsers(user) {
       this.lastSelectedUser = user.screen_name
-      if (!this.allSelected.includes(user.screen_name)) {
-        this.allSelected.push(user.screen_name)
-        // ToDo: add users profile when they are in the list
+      if (
+        !this.allSelected.map((u) => u.screen_name).includes(user.screen_name)
+      ) {
+        this.$store.commit('triage/addSelectedUser', user)
       } else {
-        this.allSelected = this.allSelected.filter(function (ele) {
-          return ele !== user.screen_name
-        })
+        this.$store.commit('triage/removeSelectedUser', user)
       }
+      // this.lastSelectedUser = user.screen_name
+      // if (
+      //   !this.allSelected
+      //     .map((a) => a.screen_name.toLowerCase())
+      //     .includes(user.screen_name.toLowerCase())
+      // ) {
+      //   this.$store.commit('triage/addSelectedUser', user.screen_name)
+      //   // ToDo: add users profile when they are in the list
+      // } else {
+      //   this.$store.commit('triage/removeSelectedUser', user.screen_name)
+      // }
     },
     removeSelected(user) {
       this.allSelected = this.allSelected.filter(function (ele) {

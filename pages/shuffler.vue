@@ -100,7 +100,7 @@
           })
         "
       >
-        <v-icon>mdi-chevron-triple-down</v-icon>
+        <v-icon>mdi-chevron-double-down</v-icon>
       </v-btn>
     </v-col>
     <v-col :id="charts.contextMap.divId" cols="12" class="grow text-center">
@@ -407,7 +407,6 @@ export default {
     updateTweet(data) {
       socket.emit('update_labeling', data)
       // eslint-disable-next-line no-console
-      console.log('emitted', data)
       const tweet = data.tweet
       const label = tweet.labels.find((a) => a.id === 'custom')
       if (label) {
