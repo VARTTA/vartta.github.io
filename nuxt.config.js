@@ -61,7 +61,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://localhost:4050/',
+      target: 'https://vartta.now.sh',
       pathRewrite: {
         '^/api': '/',
       },
