@@ -8,8 +8,8 @@
     <defs>
       <pattern
         v-for="(user, index) in users"
-        :id="user.screen_name + '-profile'"
-        :key="index + '-' + user.screen_name + '-image'"
+        :id="normal(user.screen_name) + '-profile'"
+        :key="index + '-' + normal(user.screen_name) + '-image'"
         patternContentUnits="objectBoundingBox"
         height="100%"
         width="100%"
@@ -31,7 +31,7 @@
       <!--SLICES-->
       <g
         v-for="(arc, index) in root"
-        :id="'arc-' + arc.data.name"
+        :id="'arc-' + normal(arc.data.name)"
         :key="'arc-' + index"
         class="highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
@@ -54,7 +54,7 @@
       <!--Labels-->
       <g
         v-for="(arc, index) in rootText"
-        :id="'arc-text-' + arc.data.name"
+        :id="'arc-text-' + normal(arc.data.name)"
         :key="'label-arc-' + index"
         class="arc-text highlightable"
         @mouseover="highlightConnectedSet({ arc: arc })"
@@ -78,8 +78,8 @@
       <g v-for="(node, index) in packed.children" :key="'ribbon-' + index">
         <path
           v-for="arc in findArcs(node)"
-          :id="'path-' + node.data.name + '-' + arc.data.name"
-          :key="'path-' + node.data.name + '-' + arc.data.name"
+          :id="'path-' + normal(node.data.name) + '-' + normal(arc.data.name)"
+          :key="'path-' + normal(node.data.name) + '-' + normal(arc.data.name)"
           :class="ribbonClass(node, arc)"
           :fill="ribbon.fill"
           :fill-opacity="ribbon.fillOpacity"
@@ -99,7 +99,7 @@
       <g v-for="(item, index) in packed.children" :key="'user-' + index">
         <!--TODO: tranform and colors need to be changed-->
         <circle
-          :id="'user-' + item.data.screen_name"
+          :id="'user-' + normal(item.data.screen_name)"
           :class="'user-circle highlightable'"
           :cx="circleX(item)"
           :cy="circleY(item)"
@@ -120,7 +120,7 @@
 
 <script>
 import * as d3 from 'd3'
-
+import helper from '../../lib/helper'
 export default {
   name: 'TopicUserDiagram',
   props: {
@@ -333,7 +333,7 @@ export default {
     sliceColor() {
       return (d) => {
         while (d.depth > 1) d = d.parent
-        return this.color(d.data.name)
+        return this.color(helper.normalizeString(d.data.name))
       }
     },
     color() {
@@ -454,12 +454,14 @@ export default {
         const desiredDepth = this.meta.sunburst ? 1 : 2
         const arcs = this.root.filter((d) => d.depth === desiredDepth)
         for (const tw of user.data.children) {
-          const toCheck = this.meta.sunburst
+          let toCheck = this.meta.sunburst
             ? Object.keys(tw.tweets.topics)
             : tw.tweets.keywords
-          toCheck.map((i) => i.toLowerCase())
+          toCheck = toCheck.map((i) => helper.normalizeString(i))
           res = res.concat(
-            arcs.filter((d) => toCheck.includes(d.data.name.toLowerCase()))
+            arcs.filter((d) =>
+              toCheck.includes(helper.normalizeString(d.data.name))
+            )
           )
         }
         return res
@@ -473,12 +475,15 @@ export default {
         let res = []
         for (const tw of user.data.children) {
           const topics = []
-          for (const k in tw.tweets.topics) topics.push(k)
+          for (const k in tw.tweets.topics)
+            topics.push(helper.normalizeString(k))
           res = res.concat(
             this.root.filter(
               (d) =>
-                topics.includes(d.data.name) ||
-                tw.tweets.keywords.includes(d.data.name)
+                Object.keys(topics).includes(
+                  helper.normalizeString(d.data.name)
+                ) ||
+                tw.tweets.keywords.includes(helper.normalizeString(d.data.name))
             )
           )
         }
@@ -488,8 +493,11 @@ export default {
     isUsed() {
       return (arc) => {
         for (const user of this.packed.children)
-          for (const tw of user.data.tweets)
-            if (tw.keywords.includes(arc.data.name)) return true
+          for (const tw of user.data.tweets) {
+            const toCheck = tw.keywords.map((k) => helper.normalizeString(k))
+            if (toCheck.includes(helper.normalizeString(arc.data.name)))
+              return true
+          }
         return false
       }
     },
@@ -500,8 +508,11 @@ export default {
       return (arc) => {
         let res = []
         for (const user of this.packed.children)
-          for (const tw of user.data.tweets)
-            if (tw.keywords.includes(arc.data.name)) res = res.concat(user)
+          for (const tw of user.data.tweets) {
+            const toCheck = tw.keywords.map((k) => helper.normalizeString(k))
+            if (toCheck.includes(helper.normalizeString(arc.data.name)))
+              res = res.concat(user)
+          }
         return res
       }
     },
@@ -563,6 +574,9 @@ export default {
     this.setupSVG()
   },
   methods: {
+    normal(inp) {
+      return helper.normalizeString(inp)
+    },
     setupSVG() {
       this.svg = d3.select('.chord')
       this.arcGroup = d3.select('#arcs')
@@ -583,39 +597,54 @@ export default {
       // Only user is a candidate (the mouse is on user)
       if (elements.user) {
         // The user himself
-        whiteList.push('user-' + elements.user.data.name)
+        whiteList.push(
+          'user-' + helper.normalizeString(elements.user.data.name)
+        )
 
         // The arcs and paths which are related to this user
         const arcs = this.relatedArcs(elements.user)
         for (const arc of arcs) {
-          whiteList.push('arc-' + arc.data.name)
+          whiteList.push('arc-' + helper.normalizeString(arc.data.name))
+          whiteList.push('arc-text-' + helper.normalizeString(arc.data.name))
           whiteList.push(
-            'path-' + elements.user.data.name + '-' + arc.data.name
+            'path-' +
+              helper.normalizeString(elements.user.data.name) +
+              '-' +
+              helper.normalizeString(arc.data.name)
           )
         }
       }
 
       // Only an arc is a candidate (the mouse is on an arc)
       if (elements.arc) {
-        whiteList.push('arc-' + elements.arc.data.name)
+        whiteList.push('arc-' + helper.normalizeString(elements.arc.data.name))
+        whiteList.push(
+          'arc-text-' + helper.normalizeString(elements.arc.data.name)
+        )
         let keywordList = []
         let usersList = []
         // If keyword is selected add its parent
         if (elements.arc.depth === 2) {
-          whiteList.push('arc-' + elements.arc.parent.data.name)
+          whiteList.push(
+            'arc-' + helper.normalizeString(elements.arc.parent.data.name)
+          )
+          whiteList.push(
+            'arc-text' + helper.normalizeString(elements.arc.parent.data.name)
+          )
           keywordList = keywordList.concat(elements.arc)
         } // If topic is selected add all its used keywords
         else if (elements.arc.depth === 1) {
           for (const el of elements.arc.children)
             if (this.isUsed(el)) {
-              whiteList.push('arc-' + el.data.name)
+              whiteList.push('arc-' + helper.normalizeString(el.data.name))
+              whiteList.push('arc-text' + helper.normalizeString(el.data.name))
               keywordList = keywordList.concat(el)
             }
         }
         // Add all related users
         for (const kw of keywordList)
           for (const tw of this.relatedUsers(kw)) {
-            whiteList.push('user-' + tw.data.name)
+            whiteList.push('user-' + helper.normalizeString(tw.data.name))
             usersList = usersList.concat(tw)
           }
         // Add the ribbons between arc and users based on sunburst view
@@ -625,21 +654,34 @@ export default {
             const baseArc = this.meta.sunburst
               ? elements.arc.parent
               : elements.arc
-            whiteList.push('path-' + tw.data.name + '-' + baseArc.data.name)
+            whiteList.push(
+              'path-' +
+                helper.normalizeString(tw.data.name) +
+                '-' +
+                helper.normalizeString(baseArc.data.name)
+            )
           } // If selected arc is a topic
           else if (elements.arc.depth === 1) {
             if (this.meta.sunburst)
               whiteList.push(
-                'path-' + tw.data.name + '-' + elements.arc.data.name
+                'path-' +
+                  helper.normalizeString(tw.data.name) +
+                  '-' +
+                  helper.normalizeString(elements.arc.data.name)
               )
             // If not sunburst, find ribbons between each keyword and user
             else {
               for (const kw of keywordList)
                 for (const user of usersList)
                   for (const tw of user.data.tweets)
-                    if (tw.keywords.includes(kw.data.name))
+                    if (
+                      tw.keywords.includes(helper.normalizeString(kw.data.name))
+                    )
                       whiteList.push(
-                        'path-' + user.data.name + '-' + kw.data.name
+                        'path-' +
+                          helper.normalizeString(user.data.name) +
+                          '-' +
+                          helper.normalizeString(kw.data.name)
                       )
             }
           }
@@ -649,7 +691,13 @@ export default {
       // Only a path is a candidate (the mouse is on a path connecting a user to a (sub)topic)
       if (elements.path) {
         whiteList.push(
-          'path-' + elements.user.data.name + '-' + elements.path.data.name
+          'path-' +
+            helper.normalizeString(elements.user.data.name) +
+            '-' +
+            helper.normalizeString(elements.path.data.name)
+        )
+        whiteList.push(
+          'arc-text-' + helper.normalizeString(elements.path.data.name)
         )
       }
       // Add greyed class to all of objects
