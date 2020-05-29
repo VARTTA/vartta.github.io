@@ -41,6 +41,10 @@ export default {
     '@nuxtjs/stylelint-module',
     '@nuxtjs/vuetify',
   ],
+  server: {
+    port: 4050, // default: 3000
+    host: 'localhost', // default: localhost
+  },
   /*
    ** Nuxt.js modules
    */
@@ -57,7 +61,7 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'http://localhost:4050',
+      target: 'http://localhost:4050/',
       pathRewrite: {
         '^/api': '/',
       },

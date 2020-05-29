@@ -73,10 +73,24 @@
           <v-list-item-subtitle>
             <v-btn
               icon
-              color="grey"
+              :color="
+                selectedUserForComparison
+                  ? selectedUserForComparison.screen_name === user.screen_name
+                    ? 'green'
+                    : 'grey'
+                  : 'grey'
+              "
               @click="(ev) => compareUser.call({}, ev, user)"
             >
-              <v-icon>mdi-order-numeric-ascending</v-icon>
+              <v-icon>
+                {{
+                  selectedUserForComparison
+                    ? selectedUserForComparison.screen_name === user.screen_name
+                      ? 'mdi-sort-numeric-ascending'
+                      : 'mdi-order-numeric-ascending'
+                    : 'mdi-order-numeric-ascending'
+                }}
+              </v-icon>
             </v-btn>
             <v-btn
               icon
@@ -185,6 +199,9 @@ export default {
   computed: {
     selectedUsers() {
       return this.$store.state.triage.selectedUsers
+    },
+    selectedUserForComparison() {
+      return this.$store.state.triage.selectedUserForComparison
     },
     /*
      * Current delay in ms
