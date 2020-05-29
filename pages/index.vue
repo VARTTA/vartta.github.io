@@ -358,6 +358,7 @@ export default {
             tweets: '/api/samples/' + scenario.id + '/tweets.json',
             users: '/api/samples/' + scenario.id + '/users.json',
             topics: '/api/samples/' + scenario.id + '/topics.json',
+            tfidf: '/api/samples/' + scenario.id + '/tfidf.json',
           })
         socket.emit('pause_consuming')
         socket.emit('update_channels', this.$store.state.topics)

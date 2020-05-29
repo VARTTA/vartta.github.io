@@ -82,6 +82,12 @@ export default {
       type: String,
       default: 'user-similarity',
     },
+    tfidf: {
+      tyep: Object,
+      default() {
+        return {}
+      },
+    },
     topics: {
       type: Array,
       default() {
@@ -272,25 +278,26 @@ export default {
      * List of users that can be shown based on selected user
      **/
     candidates() {
-      const array = []
-      let newIndex = 0
-      if (this.lastSelected) {
-        const focalW2v = this.centralUserW2v(this.lastSelected).w2v
-        for (const userIndex in this.users)
-          if (
-            Math.abs(this.users[userIndex].w2v - focalW2v) <
-            this.meta.tracks - 1
-          ) {
-            array.push({
-              index: newIndex,
-              userIndex,
-              screen_name: this.users[userIndex].screen_name,
-              w2v: this.users[userIndex].w2v,
-            })
-            newIndex += 1
-          }
-      }
-      return array
+      return this.tfidf
+      // const array = []
+      // let newIndex = 0
+      // if (this.lastSelected) {
+      //   const focalW2v = this.centralUserW2v(this.lastSelected).w2v
+      //   for (const userIndex in this.users)
+      //     if (
+      //       Math.abs(this.users[userIndex].w2v - focalW2v) <
+      //       this.meta.tracks - 1
+      //     ) {
+      //       array.push({
+      //         index: newIndex,
+      //         userIndex,
+      //         screen_name: this.users[userIndex].screen_name,
+      //         w2v: this.users[userIndex].w2v,
+      //       })
+      //       newIndex += 1
+      //     }
+      // }
+      // return array
     },
     /**
      * Returns the distance of a tweet from the beginning of its corresponded track to scatter users in same level

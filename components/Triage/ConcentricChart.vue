@@ -6,11 +6,28 @@
     :fill-opacity="meta.fillOpacity"
     class="svg concentric"
   >
+    <defs>
+      <pattern
+        v-for="(user, index) in users"
+        :id="normal(user.screen_name) + '-profile'"
+        :key="index + '-' + normal(user.screen_name) + '-image'"
+        patternContentUnits="objectBoundingBox"
+        height="100%"
+        width="100%"
+      >
+        <image
+          width="1"
+          height="1"
+          preserveAspectRatio="none"
+          :xlink:href="user.profile_image_url_https"
+        ></image>
+      </pattern>
+    </defs>
     <!--ConcentricCalendar-->
     <g
       id="concentricCalendar"
       :duration="transitionDuration"
-      :transform="'translate(' + radius + ',' + chartTopPadding + ')'"
+      :transform="'translate(' + meta.width / 2 + ',' + chartTopPadding + ')'"
     >
       <!--ConcentricAxis-->
       <g>
@@ -81,10 +98,10 @@
             )
           "
           :r="circleSize"
+          :fill="'url(#' + normal(candid.name) + '-profile' + ')'"
           :stroke="strokeColor(candid.name)"
           :stroke-opacity="token.strokeOpacity"
           :stroke-width="strokeSize(candid.name)"
-          :fill="'url(#' + candid.name + ')'"
           :fill-opacity="token.opacity"
           @click="(ev) => clicked.call({}, ev, candid)"
         >
@@ -98,7 +115,7 @@
 
 <script>
 import * as d3 from 'd3'
-
+import helper from '../../lib/helper'
 export default {
   name: 'ConcentricChart',
   props: {
@@ -205,7 +222,7 @@ export default {
   },
   computed: {
     radius() {
-      return Math.min(this.meta.width) / 2
+      return (Math.min(this.meta.width, this.meta.height) - 50) / 2
     },
     strokeSize() {
       return (id) => {
@@ -430,7 +447,7 @@ export default {
       }
     },
     circleSize() {
-      return this.radius * 0.015
+      return this.radius * 0.02
     },
     colorToken() {
       const that = this
@@ -542,6 +559,7 @@ export default {
               name: this.users[userIndex].screen_name,
               tweet,
               tweetTime: tweet.created_at,
+              user: this.users[userIndex],
             })
             newIndex += 1
           }
@@ -632,13 +650,16 @@ export default {
       }
     },
     chartTopPadding() {
-      return this.meta.padding.top + this.radius
+      return this.meta.padding.top + this.meta.height / 2
     },
   },
   mounted() {
     this.setupSVG()
   },
   methods: {
+    normal(inp) {
+      return helper.normalizeString(inp)
+    },
     setupSVG() {
       this.svg = d3.select('.concentric')
     },
@@ -652,7 +673,7 @@ export default {
       return radius * Math.cos(-(angle + Math.PI))
     },
     clicked(ev, candid) {
-      this.$emit('candidSelected', candid)
+      this.$emit('candidSelected', candid.user)
     },
   },
 }

@@ -1,6 +1,8 @@
 export const state = () => ({
   selectedUsers: [],
   users: [],
+  TFIDF: {},
+  selectedUserForComparison: null,
 })
 
 export const mutations = {
@@ -9,6 +11,12 @@ export const mutations = {
   },
   resetUsers(state) {
     state.users = []
+  },
+  resetTFIDF(state) {
+    state.TFIDF = {}
+  },
+  resetSelectedUserForComparison(state) {
+    state.selectedUserForComparison = null
   },
   updateSelectedUsers(state, val) {
     state.selectedUsers = val
@@ -28,11 +36,19 @@ export const mutations = {
   updateUsers(state, val) {
     state.users = val
   },
+  updateTFIDF(state, val) {
+    state.TFIDF = val
+  },
+  updateSelectedUserForComparison(state, val) {
+    state.selectedUserForComparison = val
+  },
 }
 
 export const actions = {
   reset({ commit }) {
     commit('resetSelectedUsers')
     commit('resetUsers')
+    commit('resetTFIDF')
+    commit('resetSelectedUserForComparison')
   },
 }

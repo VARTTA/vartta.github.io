@@ -73,16 +73,24 @@
           <v-list-item-subtitle>
             <v-btn
               icon
+              color="grey"
+              @click="(ev) => compareUser.call({}, ev, user)"
+            >
+              <v-icon>mdi-order-numeric-ascending</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              color="blue"
+              @click="(ev) => searchForUser.call({}, ev, user)"
+            >
+              <v-icon>mdi-account-search</v-icon>
+            </v-btn>
+            <v-btn
+              icon
               color="warning"
               @click="(ev) => removeUser.call({}, ev, user)"
             >
               <v-icon>mdi-account-remove</v-icon>
-            </v-btn>
-            <v-btn icon color="grey">
-              <v-icon>mdi-account-question</v-icon>
-            </v-btn>
-            <v-btn icon color="blue">
-              <v-icon>mdi-account-search</v-icon>
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -270,6 +278,18 @@ export default {
     },
     removeUser(ev, user) {
       this.$store.commit('triage/removeSelectedUser', user.screen_name)
+    },
+    compareUser(ev, user) {
+      this.$store.commit('triage/updateSelectedUserForComparison', user)
+    },
+    searchForUser(ev, user) {
+      const col = document.getElementById('column-' + user.screen_name)
+      if (col)
+        col.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'start',
+        })
     },
   },
 }

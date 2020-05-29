@@ -431,7 +431,7 @@ export default {
       }
     },
     circleSize() {
-      return this.radius * 0.02
+      return this.radius * 0.025
     },
     strokeSize() {
       return (id) => {
