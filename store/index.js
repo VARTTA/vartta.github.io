@@ -99,11 +99,13 @@ export const actions = {
     const agkeywords = await this.$http.$get(routes.agkeywords)
     const tweets = await this.$http.$get(routes.tweets)
     const users = await this.$http.$get(routes.users)
+    const tfidf = await this.$http.$get(routes.tfidf)
     commit('updateTopics', topics)
     commit('updateAggregatedTopics', agtopics)
     commit('updateAggregatedUsers', agusers.a)
     commit('updateAggregatedKeywords', agkeywords)
     commit('addToRawTweets', tweets)
-    commit('triage/updateUsersSet', users)
+    commit('triage/updateUsers', users)
+    commit('triage/updateTFIDF', tfidf)
   },
 }

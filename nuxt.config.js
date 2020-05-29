@@ -41,6 +41,10 @@ export default {
     '@nuxtjs/stylelint-module',
     '@nuxtjs/vuetify',
   ],
+  server: {
+    port: 4050, // default: 3000
+    host: 'localhost', // default: localhost
+  },
   /*
    ** Nuxt.js modules
    */
@@ -51,6 +55,18 @@ export default {
     // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
   ],
+  http: {
+    proxy: true, // Can be also an object with default options
+  },
+
+  proxy: {
+    '/api': {
+      target: 'http://localhost:4050/',
+      pathRewrite: {
+        '^/api': '/',
+      },
+    },
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

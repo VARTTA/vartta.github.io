@@ -36,6 +36,7 @@
                 <v-divider></v-divider>
                 <v-card-text>
                   <v-row dense no-gutters>
+                    <!-- eslint-disable vue/no-v-html  -->
                     <v-col cols="12" v-html="decoratedText"></v-col>
                     <v-col cols="6">
                       <v-combobox
@@ -120,6 +121,7 @@
           <span class="caption">· {{ niceDate }}</span>
         </v-row>
         <v-row justify="start" align="start">
+          <!-- eslint-disable vue/no-v-html  -->
           <div class="body-2" v-html="decoratedText"></div>
         </v-row>
         <v-btn block text @click="expand = !expand">

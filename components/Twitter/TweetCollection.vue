@@ -14,7 +14,7 @@
         :style="'overflow: auto; height: ' + verticalPortion + 'vh;'"
       >
         <tweet
-          v-for="(tweet, index) in sortedTweets"
+          v-for="(tweet, index) in tweets"
           :id="'tweet-' + tweet.id_str"
           :key="index"
           :tweet="tweet"

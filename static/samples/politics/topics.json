@@ -1,59 +1,81 @@
 [
   {
-    "id":"transportation",
-    "title":"Public Transportation",
-    "keywords":[
-      "sustainable transportation",
-      "public transportation",
-      "ttc",
-      "ttc subway",
-      "ttc bus",
-      "go ontario",
-      "go shuttle",
-      "go bus",
-      "toronto subway station",
-      "toronto bus station",
-      "toronto metro",
-      "gas station",
-      "pearson airport"
+    "id": "democratic",
+    "title": "Democratic Party Candidates",
+    "keywords": [
+      "democrats",
+      "dems",
+      "Michael Bennet",
+      "Bennet",
+      "Joe Biden",
+      "Biden",
+      "Michael Bloomberg",
+      "Bloomberg",
+      "Cory Booker",
+      "Booker",
+      "Pete Buttigieg",
+      "Julián Castro",
+      "John Delaney",
+      "Tulsi Gabbard",
+      "Amy Klobuchar",
+      "Deval Patrick",
+      "Bernie Sanders",
+      "Tom Steyer",
+      "Elizabeth Warren",
+      "Marianne Williamson",
+      "Andrew Yang"
     ]
   },
   {
-    "id":"urban",
-    "title":"Urban Planning",
-    "keywords":[
-      "urban planning",
-      "urban sprawl",
-      "urban development",
-      "urban governance",
-      "toronto portlands",
-      "sustainable toronto"
+    "id": "impeachment",
+    "title": "Impeachment-related Topics",
+    "keywords": [
+      "Impeachment",
+      "Impeached45",
+      "ImpeachmentHearing",
+      "ImpeachedPresident",
+      "IMPOTUS"
     ]
   },
   {
-    "id":"places",
-    "title":"Venues and Places",
-    "keywords":[
-      "CN Tower",
-      "royal ontario museum",
-      "Aquarium of Canada",
-      "Rogers Centre",
-      "Art Gallery of Ontario",
-      "Entertainment District",
-      "toronto zoo",
-      "casa loma",
-      "St. Lawrence Market",
-      "saint Lawrence market",
-      "Nathan Philips Square",
-      "toronto city hall",
-      "eaton center",
-      "Distillery District",
-      "High Park toronto",
-      "Toronto Islands",
-      "Ontario Science Centre",
-      "Hockey Hall of Fame",
-      "Graffiti Alley",
-      "toronto public library"
+    "id": "republican",
+    "title": "Republican Party Candidates",
+    "keywords": [
+      "Donald Trump",
+      "trump",
+      "Joe Walsh",
+      "Bill Weld",
+      "Mark Sanford"
+    ]
+  },
+  {
+    "id": "libertarian",
+    "title": "Libertarian Party Candidates",
+    "keywords": [
+      "Max Abramson",
+      "Ken Armstrong",
+      "Dan Behrman",
+      "Jacob Hornberger",
+      "Jo Jorgensen",
+      "Adam Kokesh",
+      "John McAfee",
+      "Sam Robb",
+      "Kim Ruff",
+      "Vermin Supreme",
+      "Arvin Vohra"
+    ]
+  },
+  {
+    "id": "green",
+    "title": "Green Party Candidates",
+    "keywords": [
+      "Howie Hawkins",
+      "Dario Hunter",
+      "Sedinam Moyowasifza-Curry",
+      "Dennis Lambert",
+      "Kent Mesplay",
+      "David Rolde",
+      "Chad Wilson"
     ]
   }
 ]
